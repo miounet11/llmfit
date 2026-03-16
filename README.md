@@ -136,6 +136,7 @@ deployment recipe that keeps the site isolated from existing services by default
 
 - Local preview: `make site-preview`
 - Local stack: `make stack-up`
+- Remote deployment helper: `scripts/deploy-site.sh user@host /opt/llmfit`
 - Production deployment guide: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
 
 ## API and data references

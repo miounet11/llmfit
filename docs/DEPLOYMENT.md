@@ -33,6 +33,14 @@ docker compose -f deploy/site.compose.yml up -d
 The site listens on port `18088` by default. Reverse proxy traffic to that port
 from your existing Nginx, Caddy, or load balancer once DNS is ready.
 
+### Remote helper script
+
+You can also drive the same rollout from your local machine:
+
+```sh
+scripts/deploy-site.sh root@your-server /opt/llmfit
+```
+
 ## Reverse proxy example
 
 ```nginx
