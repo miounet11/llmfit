@@ -1,18 +1,15 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LLMFit API | Serve mode and integration patterns</title>
-  <meta name="description" content="Serve node-local model fit analysis over HTTP with LLMFit and integrate it into schedulers, agents, and internal portals.">
-  <link rel="canonical" href="https://www.igeminicli.cn/api/">
+  <title>LLMFit API | 节点侧 serve 模式与集成方式</title>
+  <meta name="description" content="通过 LLMFit 把节点本地的模型适配分析以 HTTP 服务形式输出，接入调度器、Agent 和内部平台。">
+  <link rel="canonical" href="https://www.igeminicli.cn/zh/api/">
   <link rel="alternate" hreflang="en" href="https://www.igeminicli.cn/api/">
   <link rel="alternate" hreflang="zh-CN" href="https://www.igeminicli.cn/zh/api/">
   <link rel="alternate" hreflang="x-default" href="https://www.igeminicli.cn/api/">
   <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body data-page="api">
@@ -21,19 +18,19 @@
 
   <header class="topbar">
     <div class="topbar-shell">
-      <a class="brand" href="/">
-        <img src="/assets/icon.svg" alt="LLMFit logo">
+      <a class="brand" href="/zh/">
+        <img src="/assets/icon.svg" alt="LLMFit 标志">
         <span>LLMFit</span>
       </a>
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">菜单</button>
       <nav class="nav" id="site-nav">
-        <a data-page-link="home" href="/">Home</a>
-        <a data-page-link="docs" href="/docs/">Docs</a>
-        <a data-page-link="use-cases" href="/use-cases/">Use Cases</a>
-        <a data-page-link="api" href="/api/">API</a>
-        <a data-page-link="self-host" href="/self-host/">Self-Host</a>
-        <a data-page-link="faq" href="/faq/">FAQ</a>
-        <div class="language-switcher" aria-label="Language switcher">
+        <a data-page-link="home" href="/zh/">首页</a>
+        <a data-page-link="docs" href="/zh/docs/">文档</a>
+        <a data-page-link="use-cases" href="/zh/use-cases/">应用场景</a>
+        <a data-page-link="api" href="/zh/api/">API</a>
+        <a data-page-link="self-host" href="/zh/self-host/">自托管</a>
+        <a data-page-link="faq" href="/zh/faq/">常见问题</a>
+        <div class="language-switcher" aria-label="切换语言">
           <a data-lang-link="en" href="/api/">EN</a>
           <a data-lang-link="zh" href="/zh/api/">中文</a>
         </div>
@@ -45,11 +42,11 @@
   <main>
     <section class="page-hero reveal">
       <p class="eyebrow">REST API</p>
-      <h1>Expose node-local fit analysis over HTTP.</h1>
+      <h1>把节点本地的适配分析通过 HTTP 暴露出来。</h1>
       <p class="lede">
-        `llmfit serve` publishes the same hardware-aware fit analysis used by the
-        TUI and CLI. This is the right surface when you want schedulers, agents,
-        dashboards, or internal tools to consume recommendations programmatically.
+        `llmfit serve` 会把 TUI 和 CLI 使用的同一套硬件感知判断逻辑转成 API。
+        当你希望调度器、Agent、仪表盘或内部平台以编程方式消费推荐结果时，
+        这是最合适的接口层。
       </p>
       <pre class="code-block hero-code"><code>llmfit serve --host 0.0.0.0 --port 8787</code></pre>
     </section>
@@ -59,36 +56,36 @@
         <table class="docs-table">
           <thead>
             <tr>
-              <th>Method</th>
-              <th>Path</th>
-              <th>Purpose</th>
+              <th>方法</th>
+              <th>路径</th>
+              <th>用途</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>GET</td>
               <td><code>/health</code></td>
-              <td>Liveness probe for node-local API health.</td>
+              <td>节点本地 API 存活检查。</td>
             </tr>
             <tr>
               <td>GET</td>
               <td><code>/api/v1/system</code></td>
-              <td>Detected node identity and hardware profile.</td>
+              <td>返回节点身份与检测到的硬件画像。</td>
             </tr>
             <tr>
               <td>GET</td>
               <td><code>/api/v1/models</code></td>
-              <td>Filtered and sorted model-fit rows for the current node.</td>
+              <td>返回当前节点可筛选、可排序的模型适配结果集。</td>
             </tr>
             <tr>
               <td>GET</td>
               <td><code>/api/v1/models/top</code></td>
-              <td>Top runnable models with conservative top-k semantics.</td>
+              <td>返回保守语义下的 top-k 可运行模型。</td>
             </tr>
             <tr>
               <td>GET</td>
               <td><code>/api/v1/models/{name}</code></td>
-              <td>Path-constrained search for a model family.</td>
+              <td>按模型家族或名称约束进行搜索。</td>
             </tr>
           </tbody>
         </table>
@@ -98,26 +95,26 @@
     <section class="section reveal">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">Recommended query parameters</p>
-          <h2>Control how strict the recommendations should be.</h2>
+          <p class="eyebrow">推荐查询参数</p>
+          <h2>控制推荐结果有多保守。</h2>
         </div>
       </div>
       <div class="card-grid">
         <article class="content-card">
           <h3><code>limit</code> / <code>n</code></h3>
-          <p>Cap the number of rows returned. Use small values for dashboards and top-k schedulers.</p>
+          <p>限制返回行数。仪表盘和调度器通常应该使用较小的 top-k 值。</p>
         </article>
         <article class="content-card">
           <h3><code>min_fit</code></h3>
-          <p>Use `good` for production-style defaults and `marginal` when exploring stretch options.</p>
+          <p>生产默认建议使用 <code>good</code>；如果只是探索拉伸空间，可以放宽到 <code>marginal</code>。</p>
         </article>
         <article class="content-card">
           <h3><code>use_case</code></h3>
-          <p>Target coding, chat, reasoning, embedding, or other workload-specific categories.</p>
+          <p>可按 coding、chat、reasoning、embedding 等工作负载类别进行约束。</p>
         </article>
         <article class="content-card">
           <h3><code>runtime</code></h3>
-          <p>Restrict results when your environment standardizes on a specific runtime such as MLX or llama.cpp.</p>
+          <p>当你的环境统一使用 MLX 或 llama.cpp 等特定运行时时，可以进一步限制结果。</p>
         </article>
       </div>
     </section>
@@ -125,27 +122,27 @@
     <section class="section reveal">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">Integration patterns</p>
-          <h2>How teams usually wire it in.</h2>
+          <p class="eyebrow">集成方式</p>
+          <h2>团队通常这样接入。</h2>
         </div>
       </div>
       <div class="detail-grid">
         <article class="content-card">
-          <h3>Scheduler polling</h3>
+          <h3>调度器轮询</h3>
           <ol class="step-list">
-            <li>Call <code>/health</code>.</li>
-            <li>Capture <code>/api/v1/system</code>.</li>
-            <li>Query <code>/api/v1/models/top?min_fit=good&amp;limit=5</code>.</li>
-            <li>Attach node metadata in your own control plane.</li>
+            <li>先调用 <code>/health</code>。</li>
+            <li>再获取 <code>/api/v1/system</code>。</li>
+            <li>然后查询 <code>/api/v1/models/top?min_fit=good&amp;limit=5</code>。</li>
+            <li>最后把节点信息附加到你自己的控制平面里。</li>
           </ol>
         </article>
         <article class="content-card">
-          <h3>Agent tool use</h3>
-          <p>Let an internal agent query the node-local API before selecting a model or provisioning a workload on a machine.</p>
+          <h3>Agent 工具调用</h3>
+          <p>让内部 Agent 在选模型、排任务或分配工作负载之前，先查询节点本地适配结果。</p>
         </article>
         <article class="content-card">
-          <h3>Internal portal</h3>
-          <p>Expose the top recommendations in a small operations UI so teams stop asking ad hoc fit questions in chat.</p>
+          <h3>内部运营门户</h3>
+          <p>把推荐结果接到一个小型运维界面上，减少团队在聊天工具里反复询问“这台机器能跑什么”。</p>
         </article>
       </div>
     </section>
@@ -153,13 +150,13 @@
     <section class="section reveal">
       <div class="code-grid">
         <article class="content-card">
-          <h3>Quick start</h3>
+          <h3>快速开始</h3>
           <pre class="code-block"><code>curl http://127.0.0.1:8787/health
 curl http://127.0.0.1:8787/api/v1/system
 curl "http://127.0.0.1:8787/api/v1/models?limit=20&min_fit=marginal&sort=score"</code></pre>
         </article>
         <article class="content-card">
-          <h3>Workload targeting</h3>
+          <h3>按工作负载筛选</h3>
           <pre class="code-block"><code>curl "http://127.0.0.1:8787/api/v1/models/top?limit=5&min_fit=good&use_case=coding"
 curl "http://127.0.0.1:8787/api/v1/models/Mistral?runtime=any"</code></pre>
         </article>
@@ -168,19 +165,19 @@ curl "http://127.0.0.1:8787/api/v1/models/Mistral?runtime=any"</code></pre>
 
     <section class="section reveal">
       <div class="callout">
-        <strong>Operational default</strong>
-        <p>For conservative production placement, prefer `min_fit=good`, `include_too_tight=false`, `sort=score`, and a small `limit` value.</p>
+        <strong>生产默认建议</strong>
+        <p>如果希望调度策略更稳妥，优先使用 `min_fit=good`、`include_too_tight=false`、`sort=score` 和较小的 `limit` 值。</p>
       </div>
     </section>
 
     <section class="section section-cta reveal">
       <div>
-        <p class="eyebrow">Need deployment details?</p>
-        <h2>Pair serve mode with your preferred runtime or hosting pattern.</h2>
+        <p class="eyebrow">还需要部署细节？</p>
+        <h2>把 serve 模式与适合你的运行时或托管方案组合起来。</h2>
       </div>
       <div class="cta-actions">
-        <a class="button button-primary" href="/self-host/">Self-hosting guide</a>
-        <a class="button button-secondary" href="/docs/">Read the docs</a>
+        <a class="button button-primary" href="/zh/self-host/">查看自托管指南</a>
+        <a class="button button-secondary" href="/zh/docs/">阅读文档</a>
       </div>
     </section>
   </main>
@@ -188,13 +185,13 @@ curl "http://127.0.0.1:8787/api/v1/models/Mistral?runtime=any"</code></pre>
   <footer class="footer">
     <div>
       <strong>LLMFit API</strong>
-      <p>Node-local fit analysis for schedulers, agents, and internal tooling.</p>
+      <p>为调度器、Agent 与内部平台提供节点本地的适配分析能力。</p>
     </div>
     <div class="footer-links">
-      <a href="/">Home</a>
-      <a href="/docs/">Docs</a>
-      <a href="/self-host/">Self-Host</a>
-      <a href="/faq/">FAQ</a>
+      <a href="/zh/">首页</a>
+      <a href="/zh/docs/">文档</a>
+      <a href="/zh/self-host/">自托管</a>
+      <a href="/zh/faq/">常见问题</a>
     </div>
     <p><span class="year"></span> miounet11/llmfit</p>
   </footer>

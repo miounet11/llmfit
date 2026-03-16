@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLMFit 常见问题 | 关于本地 AI 适配分析的高频解答</title>
+  <meta name="description" content="集中回答 LLMFit 如何工作、适合谁使用、替代什么以及如何部署等常见问题。">
+  <link rel="canonical" href="https://www.igeminicli.cn/zh/faq/">
+  <link rel="alternate" hreflang="en" href="https://www.igeminicli.cn/faq/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.igeminicli.cn/zh/faq/">
+  <link rel="alternate" hreflang="x-default" href="https://www.igeminicli.cn/faq/">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="faq">
+  <div class="background-glow background-glow-a"></div>
+  <div class="background-glow background-glow-b"></div>
+
+  <header class="topbar">
+    <div class="topbar-shell">
+      <a class="brand" href="/zh/">
+        <img src="/assets/icon.svg" alt="LLMFit 标志">
+        <span>LLMFit</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">菜单</button>
+      <nav class="nav" id="site-nav">
+        <a data-page-link="home" href="/zh/">首页</a>
+        <a data-page-link="docs" href="/zh/docs/">文档</a>
+        <a data-page-link="use-cases" href="/zh/use-cases/">应用场景</a>
+        <a data-page-link="api" href="/zh/api/">API</a>
+        <a data-page-link="self-host" href="/zh/self-host/">自托管</a>
+        <a data-page-link="faq" href="/zh/faq/">常见问题</a>
+        <div class="language-switcher" aria-label="切换语言">
+          <a data-lang-link="en" href="/faq/">EN</a>
+          <a data-lang-link="zh" href="/zh/faq/">中文</a>
+        </div>
+        <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero reveal">
+      <p class="eyebrow">常见问题</p>
+      <h1>团队在评估本地 AI 适配分析时最常问的问题。</h1>
+      <p class="lede">
+        当大家理解 LLMFit 是“适配判断层”，而不是又一个模型列表或运行时工具之后，
+        这些问题通常会自然出现。
+      </p>
+    </section>
+
+    <section class="section reveal faq-list">
+      <details open>
+        <summary>LLMFit 是推理运行时吗？</summary>
+        <p>不是。LLMFit 用来判断某台机器更适合哪些模型和运行时，但它不替代 Ollama、MLX、llama.cpp 这类真正执行推理的工具。</p>
+      </details>
+      <details>
+        <summary>它到底更适合哪些用户？</summary>
+        <p>独立开发者、平台团队、方案顾问和 Homelab 用户都适合。尤其是那些反复需要回答“这台机器到底能把什么跑好”的人。</p>
+      </details>
+      <details>
+        <summary>为什么不能只看 Benchmark 榜单？</summary>
+        <p>Benchmark 可以帮助理解模型相对质量，但无法回答一台具体机器是否能以可接受的内存占用和吞吐运行它。</p>
+      </details>
+      <details>
+        <summary>对 Apple Silicon 有帮助吗？</summary>
+        <p>有。项目已经包含面向 Apple 的逻辑、MLX 覆盖和统一内存感知的适配判断。</p>
+      </details>
+      <details>
+        <summary>可以接入内部调度器或门户系统吗？</summary>
+        <p>可以，而且这是它最强的场景之一。你可以在每台节点上运行 `llmfit serve`，再由控制平面统一聚合结果。</p>
+      </details>
+      <details>
+        <summary>纯 CPU 机器还有价值吗？</summary>
+        <p>有价值。纯 CPU 环境下错误选型的代价更高，所以更需要在下载与部署前先做适配分析。</p>
+      </details>
+      <details>
+        <summary>品牌站点一定要和运行时工具部署在同一台机器吗？</summary>
+        <p>不需要。站点是静态内容，可以独立部署。运行时工具和文档站完全可以在不同主机上分别维护。</p>
+      </details>
+      <details>
+        <summary>正式切域名前应该做什么？</summary>
+        <p>先用 `curl --resolve` 验证主机路由，确认所有公开主机名都被 TLS 覆盖，并保留旧站点与反向代理配置备份。</p>
+      </details>
+    </section>
+
+    <section class="section reveal">
+      <div class="link-grid">
+        <a class="link-card" href="/zh/docs/">
+          <strong>需要产品细节？</strong>
+          <span>查看适配等级、接口层和系统行为说明。</span>
+        </a>
+        <a class="link-card" href="/zh/api/">
+          <strong>需要集成细节？</strong>
+          <span>查看 serve 模式 API 与节点侧轮询模式。</span>
+        </a>
+        <a class="link-card" href="/zh/self-host/">
+          <strong>需要部署细节？</strong>
+          <span>查看二进制、容器与静态站点的部署方式。</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <strong>LLMFit 常见问题</strong>
+      <p>为评估严肃本地 AI 工作流的团队提供清晰回答。</p>
+    </div>
+    <div class="footer-links">
+      <a href="/zh/">首页</a>
+      <a href="/zh/docs/">文档</a>
+      <a href="/zh/api/">API</a>
+      <a href="/zh/self-host/">自托管</a>
+    </div>
+    <p><span class="year"></span> miounet11/llmfit</p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

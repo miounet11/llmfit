@@ -15,6 +15,12 @@
   --radius-lg: 20px;
   --radius-md: 14px;
   --max-width: 1180px;
+  --font-sans: "Space Grotesk", "Avenir Next", "Segoe UI Variable",
+    "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: "IBM Plex Mono", "JetBrains Mono", "SFMono-Regular", "Consolas",
+    "Liberation Mono", monospace;
+  --font-cjk: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans CJK SC", sans-serif;
 }
 
 * {
@@ -28,7 +34,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--font-sans);
   color: var(--text);
   background:
     radial-gradient(circle at top left, rgba(214, 91, 45, 0.15), transparent 34%),
@@ -48,7 +54,18 @@ a {
 
 code,
 pre {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: var(--font-mono);
+}
+
+html[lang^="zh"] body {
+  font-family: var(--font-cjk);
+}
+
+html[lang^="zh"] .hero h1,
+html[lang^="zh"] .page-hero h1,
+html[lang^="zh"] .section h2 {
+  line-height: 1.08;
+  letter-spacing: -0.035em;
 }
 
 .background-glow {
@@ -143,6 +160,29 @@ main,
 
 .nav-cta:hover {
   background: #243139 !important;
+}
+
+.language-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: 0.25rem;
+  padding: 0.2rem;
+  border-radius: 999px;
+  background: rgba(23, 33, 38, 0.06);
+}
+
+.language-switcher a {
+  min-width: 3.1rem;
+  text-align: center;
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.language-switcher a.is-active {
+  background: var(--text);
+  color: #fff7ef;
 }
 
 .nav-toggle {
@@ -605,6 +645,12 @@ main {
 
   .nav a {
     width: 100%;
+  }
+
+  .language-switcher {
+    width: 100%;
+    margin-left: 0;
+    justify-content: space-between;
   }
 
   .hero h1,

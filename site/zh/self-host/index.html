@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLMFit 自托管 | 二进制、API 与站点部署方案</title>
+  <meta name="description" content="了解如何以本地二进制、节点侧 API、Compose 栈或静态站点的形式部署 LLMFit，并安全接入现有反向代理。">
+  <link rel="canonical" href="https://www.igeminicli.cn/zh/self-host/">
+  <link rel="alternate" hreflang="en" href="https://www.igeminicli.cn/self-host/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.igeminicli.cn/zh/self-host/">
+  <link rel="alternate" hreflang="x-default" href="https://www.igeminicli.cn/self-host/">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="self-host">
+  <div class="background-glow background-glow-a"></div>
+  <div class="background-glow background-glow-b"></div>
+
+  <header class="topbar">
+    <div class="topbar-shell">
+      <a class="brand" href="/zh/">
+        <img src="/assets/icon.svg" alt="LLMFit 标志">
+        <span>LLMFit</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">菜单</button>
+      <nav class="nav" id="site-nav">
+        <a data-page-link="home" href="/zh/">首页</a>
+        <a data-page-link="docs" href="/zh/docs/">文档</a>
+        <a data-page-link="use-cases" href="/zh/use-cases/">应用场景</a>
+        <a data-page-link="api" href="/zh/api/">API</a>
+        <a data-page-link="self-host" href="/zh/self-host/">自托管</a>
+        <a data-page-link="faq" href="/zh/faq/">常见问题</a>
+        <div class="language-switcher" aria-label="切换语言">
+          <a data-lang-link="en" href="/self-host/">EN</a>
+          <a data-lang-link="zh" href="/zh/self-host/">中文</a>
+        </div>
+        <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero reveal">
+      <p class="eyebrow">自托管</p>
+      <h1>将运行时工具与品牌站点分开部署，会更稳妥。</h1>
+      <p class="lede">
+        运营 LLMFit 最清晰的方式，是把它拆成两个交付物来理解：
+        一部分是运行时工具（`llmfit`、`llmfit serve`），另一部分是静态品牌/文档站。
+        它们可以在同一台机器上，也可以完全分离。
+      </p>
+    </section>
+
+    <section class="section reveal">
+      <div class="card-grid">
+        <article class="content-card">
+          <h3>二进制安装</h3>
+          <p>最适合单机测试、个人开发者或先验证产品能力的运维人员。</p>
+          <pre class="code-block"><code>curl -fsSL https://raw.githubusercontent.com/miounet11/llmfit/main/install.sh | sh</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>源码构建</h3>
+          <p>适合需要自定义修改、深度集成，或已经基于 Rust 工作流的团队。</p>
+          <pre class="code-block"><code>git clone https://github.com/miounet11/llmfit.git
+cd llmfit
+cargo build --release</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>节点侧 API 服务</h3>
+          <p>在目标主机上运行 `llmfit serve`，让上层系统通过轮询节点获取适配分析，而不是重复实现逻辑。</p>
+          <pre class="code-block"><code>llmfit serve --host 0.0.0.0 --port 8787</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>完整本地栈</h3>
+          <p>开发阶段可直接使用仓库内的 Compose 定义，同时启动 API 和静态站点。</p>
+          <pre class="code-block"><code>docker compose up --build</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">生产部署模式</p>
+          <h2>站点应该走隔离发布路径。</h2>
+        </div>
+        <p class="section-intro">
+          更稳妥的上线方式，是在确认新域名映射、证书覆盖和健康检查全部正常之前，
+          不要让新站点直接干扰现有应用服务。
+        </p>
+      </div>
+      <div class="detail-grid">
+        <article class="content-card">
+          <h3>静态目录模式</h3>
+          <p>把 `site/` 输出到独立的 Nginx 或 Caddy 文档根，让反向代理直接服务静态资源。</p>
+        </article>
+        <article class="content-card">
+          <h3>容器模式</h3>
+          <p>先在未使用的内部端口启动独立静态容器，验证完成后再接入线上反向代理。</p>
+        </article>
+        <article class="content-card">
+          <h3>证书模式</h3>
+          <p>对所有对外域名都单独确认 TLS 覆盖，包括 apex 和 `www` 两类主机名。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="code-grid">
+        <article class="content-card">
+          <h3>仓库管理的远程发布</h3>
+          <pre class="code-block"><code>scripts/deploy-site.sh user@host /opt/llmfit</code></pre>
+          <p>这个辅助脚本会在目标主机上克隆或更新仓库，并启动站点部署定义。</p>
+        </article>
+        <article class="content-card">
+          <h3>容器化站点发布</h3>
+          <pre class="code-block"><code>docker compose -f deploy/site.compose.yml up -d</code></pre>
+          <p>仓库内置的站点 compose 文件使用独立端口，方便在切流前先做隔离验证。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">生产检查清单</p>
+          <h2>域名切换前至少做到这些。</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+        <article class="content-card">
+          <h3>备份旧站点</h3>
+          <ul class="checklist">
+            <li>保留当前 docroot</li>
+            <li>备份正在使用的虚拟主机配置</li>
+            <li>记录证书路径和已有 server_name</li>
+          </ul>
+        </article>
+        <article class="content-card">
+          <h3>验证代理栈</h3>
+          <ul class="checklist">
+            <li>reload 前先执行 `nginx -t`</li>
+            <li>确认实际运行中的 nginx 二进制和配置路径</li>
+            <li>检查是否存在重复站点定义</li>
+          </ul>
+        </article>
+        <article class="content-card">
+          <h3>验证主机路由</h3>
+          <ul class="checklist">
+            <li>DNS 切换前使用 `curl --resolve`</li>
+            <li>确认 `robots.txt` 与 sitemap 可访问</li>
+            <li>同时检查 apex 与 `www` 的跳转链路</li>
+          </ul>
+        </article>
+        <article class="content-card">
+          <h3>切流后观察日志</h3>
+          <ul class="checklist">
+            <li>DNS 变更后立即跟踪访问日志和错误日志</li>
+            <li>确认所有公网主机名都被证书覆盖</li>
+            <li>保留回滚所需的配置与站点备份</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section-cta reveal">
+      <div>
+        <p class="eyebrow">下一步</p>
+        <h2>把部署路径与 API 集成一起规划。</h2>
+      </div>
+      <div class="cta-actions">
+        <a class="button button-primary" href="/zh/api/">API 集成</a>
+        <a class="button button-secondary" href="/zh/faq/">查看常见问题</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <strong>LLMFit 自托管</strong>
+      <p>面向二进制工具、节点 API 和静态品牌站的实际部署指南。</p>
+    </div>
+    <div class="footer-links">
+      <a href="/zh/">首页</a>
+      <a href="/zh/docs/">文档</a>
+      <a href="/zh/api/">API</a>
+      <a href="/zh/faq/">常见问题</a>
+    </div>
+    <p><span class="year"></span> miounet11/llmfit</p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

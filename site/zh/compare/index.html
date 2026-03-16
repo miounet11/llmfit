@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLMFit 对比 | 它在本地 AI 工具栈中的位置</title>
+  <meta name="description" content="了解 LLMFit 与模型目录、Benchmark 榜单以及 Ollama、llama.cpp 这类运行时工具之间的关系。">
+  <link rel="canonical" href="https://www.igeminicli.cn/zh/compare/">
+  <link rel="alternate" hreflang="en" href="https://www.igeminicli.cn/compare/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.igeminicli.cn/zh/compare/">
+  <link rel="alternate" hreflang="x-default" href="https://www.igeminicli.cn/compare/">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="compare">
+  <div class="background-glow background-glow-a"></div>
+  <div class="background-glow background-glow-b"></div>
+
+  <header class="topbar">
+    <div class="topbar-shell">
+      <a class="brand" href="/zh/">
+        <img src="/assets/icon.svg" alt="LLMFit 标志">
+        <span>LLMFit</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">菜单</button>
+      <nav class="nav" id="site-nav">
+        <a data-page-link="home" href="/zh/">首页</a>
+        <a data-page-link="docs" href="/zh/docs/">文档</a>
+        <a data-page-link="use-cases" href="/zh/use-cases/">应用场景</a>
+        <a data-page-link="api" href="/zh/api/">API</a>
+        <a data-page-link="self-host" href="/zh/self-host/">自托管</a>
+        <a data-page-link="faq" href="/zh/faq/">常见问题</a>
+        <div class="language-switcher" aria-label="切换语言">
+          <a data-lang-link="en" href="/compare/">EN</a>
+          <a data-lang-link="zh" href="/zh/compare/">中文</a>
+        </div>
+        <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero reveal">
+      <p class="eyebrow">对比</p>
+      <h1>LLMFit 填补的是模型榜单和 Benchmark 之间缺失的一层。</h1>
+      <p class="lede">
+        很多本地 AI 用户会把四类东西混在一起比较：模型目录、Benchmark 榜单、
+        推理运行时，以及实际部署时的适配分析。LLMFit 处在第四类。
+      </p>
+    </section>
+
+    <section class="section reveal">
+      <div class="table-shell">
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>类型</th>
+              <th>它告诉你什么</th>
+              <th>它不会告诉你什么</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>模型目录</td>
+              <td>市场上有哪些模型以及它们的基本元数据</td>
+              <td>它们是否适合你的这台机器</td>
+            </tr>
+            <tr>
+              <td>Benchmark 榜单</td>
+              <td>模型在某些评测任务上的相对成绩</td>
+              <td>它在你的本地硬件上是否可用、是否划算</td>
+            </tr>
+            <tr>
+              <td>运行时安装器</td>
+              <td>如何拉取和运行模型</td>
+              <td>一开始究竟该拉哪个模型家族</td>
+            </tr>
+            <tr>
+              <td>LLMFit</td>
+              <td>哪些模型、量化方式和运行模式符合你的硬件与运营目标</td>
+              <td>它不替代实际执行推理的运行时</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="card-grid">
+        <article class="content-card">
+          <h3>与 Ollama 搭配使用</h3>
+          <p>Ollama 适合拉取和运行模型，而 LLMFit 负责判断哪些 Ollama 模型对当前机器更现实。</p>
+        </article>
+        <article class="content-card">
+          <h3>与 llama.cpp 搭配使用</h3>
+          <p>llama.cpp 提供强大的本地运行时，LLMFit 负责在配置之前先缩小合理的量化和模型规模范围。</p>
+        </article>
+        <article class="content-card">
+          <h3>与 MLX 搭配使用</h3>
+          <p>MLX 是 Apple Silicon 上的重要路线，LLMFit 则帮助判断内存与吞吐目标下哪些 MLX 模型更合适。</p>
+        </article>
+        <article class="content-card">
+          <h3>与内部平台搭配使用</h3>
+          <p>serve 模式可以直接给平台一个“这台机器该跑什么”的答案，而不是把规则硬编码在面板或调度器里。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="callout">
+        <strong>LLMFit 不是什么</strong>
+        <p>它不是训练框架，不是 Benchmark 发布平台，也不是推理运行时。它是模型选择与运行时执行之间缺失的适配分析层。</p>
+      </div>
+    </section>
+
+    <section class="section section-cta reveal">
+      <div>
+        <p class="eyebrow">辅助决策</p>
+        <h2>让每一层都使用正确的工具。</h2>
+      </div>
+      <div class="cta-actions">
+        <a class="button button-primary" href="/zh/docs/">阅读文档</a>
+        <a class="button button-secondary" href="/zh/use-cases/">查看工作流</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <strong>LLMFit 对比</strong>
+      <p>帮助团队理解适配分析在专业本地 AI 工具栈中的位置。</p>
+    </div>
+    <div class="footer-links">
+      <a href="/zh/">首页</a>
+      <a href="/zh/docs/">文档</a>
+      <a href="/zh/api/">API</a>
+      <a href="/zh/faq/">常见问题</a>
+    </div>
+    <p><span class="year"></span> miounet11/llmfit</p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLMFit 文档 | 产品模型、适配逻辑与接口形态</title>
+  <meta name="description" content="了解 LLMFit 如何评估硬件适配度、模型质量、速度、运行时兼容性以及计划模式在本地 AI 部署中的作用。">
+  <link rel="canonical" href="https://www.igeminicli.cn/zh/docs/">
+  <link rel="alternate" hreflang="en" href="https://www.igeminicli.cn/docs/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.igeminicli.cn/zh/docs/">
+  <link rel="alternate" hreflang="x-default" href="https://www.igeminicli.cn/docs/">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="docs">
+  <div class="background-glow background-glow-a"></div>
+  <div class="background-glow background-glow-b"></div>
+
+  <header class="topbar">
+    <div class="topbar-shell">
+      <a class="brand" href="/zh/">
+        <img src="/assets/icon.svg" alt="LLMFit 标志">
+        <span>LLMFit</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">菜单</button>
+      <nav class="nav" id="site-nav">
+        <a data-page-link="home" href="/zh/">首页</a>
+        <a data-page-link="docs" href="/zh/docs/">文档</a>
+        <a data-page-link="use-cases" href="/zh/use-cases/">应用场景</a>
+        <a data-page-link="api" href="/zh/api/">API</a>
+        <a data-page-link="self-host" href="/zh/self-host/">自托管</a>
+        <a data-page-link="faq" href="/zh/faq/">常见问题</a>
+        <div class="language-switcher" aria-label="切换语言">
+          <a data-lang-link="en" href="/docs/">EN</a>
+          <a data-lang-link="zh" href="/zh/docs/">中文</a>
+        </div>
+        <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero reveal">
+      <p class="eyebrow">产品文档</p>
+      <h1>理解 LLMFit 如何判断本地模型适配度。</h1>
+      <p class="lede">
+        LLMFit 是一个面向硬件的判断层。它不替代 Ollama、llama.cpp、MLX
+        等推理运行时，而是在下载、部署和调度之前，先告诉你哪些模型、
+        哪些量化方式、哪些运行路径对当前机器更合理。
+      </p>
+    </section>
+
+    <section class="section reveal">
+      <div class="kpi-grid">
+        <article class="metric-card">
+          <strong>569</strong>
+          <span>当前已内置的模型目录条目数量</span>
+        </article>
+        <article class="metric-card">
+          <strong>142</strong>
+          <span>目录元数据中已覆盖的提供方名称数量</span>
+        </article>
+        <article class="metric-card">
+          <strong>2</strong>
+          <span>当前目录可直接过滤的能力标记：工具调用与视觉能力</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">核心模型</p>
+          <h2>引擎究竟在评估什么。</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+        <article class="content-card">
+          <h3>硬件形态</h3>
+          <p>总内存、可用内存、CPU 核心数、GPU 数量、显存、后端类型、统一内存以及提供方安装状态。</p>
+        </article>
+        <article class="content-card">
+          <h3>模型形态</h3>
+          <p>参数规模、上下文长度、发布时间、MoE 特性、量化选项以及提供方可用性。</p>
+        </article>
+        <article class="content-card">
+          <h3>适配维度</h3>
+          <p>适配度、速度、上下文与质量分数会综合形成排序，而不是依赖单一 Benchmark。</p>
+        </article>
+        <article class="content-card">
+          <h3>运行路径</h3>
+          <p>GPU、CPU offload、纯 CPU 和统一内存场景被分别建模，因为它们的实际可用性差异非常大。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">适配等级</p>
+          <h2>这是运营标签，不是营销标签。</h2>
+        </div>
+      </div>
+      <div class="detail-grid">
+        <article class="content-card">
+          <h3>Perfect</h3>
+          <p>模型可以相对从容地运行，是当前硬件下高置信度的本地部署候选。</p>
+        </article>
+        <article class="content-card">
+          <h3>Good</h3>
+          <p>资源消耗合理、可稳定运行。对于保守部署策略，通常是更合适的默认阈值。</p>
+        </article>
+        <article class="content-card">
+          <h3>Marginal</h3>
+          <p>技术上能跑，但内存压力或预期吞吐更紧张，需要谨慎评估交互体验与稳定性。</p>
+        </article>
+        <article class="content-card">
+          <h3>Too tight</h3>
+          <p>适合做分析参考，但一般不应作为安全的默认部署目标进入生产调度结果。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">接口层</p>
+          <h2>同一套引擎，多种使用入口。</h2>
+        </div>
+      </div>
+      <div class="table-shell">
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>入口</th>
+              <th>适用场景</th>
+              <th>常见命令</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>TUI</td>
+              <td>交互式筛选、模型对比、计划模式</td>
+              <td><code>llmfit</code></td>
+            </tr>
+            <tr>
+              <td>CLI</td>
+              <td>脚本化、JSON 导出、批量审计、重复检查</td>
+              <td><code>llmfit recommend --json</code></td>
+            </tr>
+            <tr>
+              <td>REST API</td>
+              <td>调度器、Agent、内部平台、节点侧服务</td>
+              <td><code>llmfit serve --host 0.0.0.0 --port 8787</code></td>
+            </tr>
+            <tr>
+              <td>Desktop</td>
+              <td>希望保留同一套逻辑但使用图形界面的 macOS 用户</td>
+              <td><code>cargo tauri build</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">运行时覆盖</p>
+          <h2>LLMFit 可以和哪些栈协同。</h2>
+        </div>
+      </div>
+      <div class="link-grid">
+        <div class="link-card">
+          <strong>Ollama</strong>
+          <span>支持检测、已安装模型感知，以及以拉取模型为中心的工作流。</span>
+        </div>
+        <div class="link-card">
+          <strong>llama.cpp / GGUF</strong>
+          <span>面向常见本地 CPU/GPU 路线的量化感知适配分析。</span>
+        </div>
+        <div class="link-card">
+          <strong>MLX</strong>
+          <span>针对 Apple Silicon 的模型处理与吞吐预估。</span>
+        </div>
+        <div class="link-card">
+          <strong>Docker Model Runner</strong>
+          <span>适合正在标准化本地模型栈的团队做容器化运行时覆盖。</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">仓库结构</p>
+          <h2>当前代码库交付了什么。</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+        <article class="content-card">
+          <h3><code>llmfit-core/</code></h3>
+          <p>硬件检测、模型目录、适配评分、计划逻辑与提供方集成都在这里。</p>
+        </article>
+        <article class="content-card">
+          <h3><code>llmfit-tui/</code></h3>
+          <p>终端 UI、经典 CLI 命令和 REST API 入口点。</p>
+        </article>
+        <article class="content-card">
+          <h3><code>llmfit-desktop/</code></h3>
+          <p>面向 macOS 的 Tauri 桌面封装，为图形化使用方式提供入口。</p>
+        </article>
+        <article class="content-card">
+          <h3><code>site/</code></h3>
+          <p>可独立部署的品牌站点与文档站资产，与运行时工具相互解耦。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section-cta reveal">
+      <div>
+        <p class="eyebrow">下一步</p>
+        <h2>按你的评估阶段选择合适入口。</h2>
+      </div>
+      <div class="cta-actions">
+        <a class="button button-primary" href="/zh/api/">研究 API</a>
+        <a class="button button-secondary" href="/zh/compare/">查看对比</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <strong>LLMFit 文档</strong>
+      <p>帮助团队把本地 AI 选型变成可重复执行的技术流程。</p>
+    </div>
+    <div class="footer-links">
+      <a href="/zh/">首页</a>
+      <a href="/zh/api/">API</a>
+      <a href="/zh/self-host/">自托管</a>
+      <a href="/zh/faq/">常见问题</a>
+    </div>
+    <p><span class="year"></span> miounet11/llmfit</p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

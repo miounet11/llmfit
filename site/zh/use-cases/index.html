@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLMFit 应用场景 | 面向开发者、平台团队与顾问交付</title>
+  <meta name="description" content="查看 LLMFit 如何用于笔记本评估、团队标准化、硬件采购规划和内部本地 AI 运营流程。">
+  <link rel="canonical" href="https://www.igeminicli.cn/zh/use-cases/">
+  <link rel="alternate" hreflang="en" href="https://www.igeminicli.cn/use-cases/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.igeminicli.cn/zh/use-cases/">
+  <link rel="alternate" hreflang="x-default" href="https://www.igeminicli.cn/use-cases/">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="use-cases">
+  <div class="background-glow background-glow-a"></div>
+  <div class="background-glow background-glow-b"></div>
+
+  <header class="topbar">
+    <div class="topbar-shell">
+      <a class="brand" href="/zh/">
+        <img src="/assets/icon.svg" alt="LLMFit 标志">
+        <span>LLMFit</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">菜单</button>
+      <nav class="nav" id="site-nav">
+        <a data-page-link="home" href="/zh/">首页</a>
+        <a data-page-link="docs" href="/zh/docs/">文档</a>
+        <a data-page-link="use-cases" href="/zh/use-cases/">应用场景</a>
+        <a data-page-link="api" href="/zh/api/">API</a>
+        <a data-page-link="self-host" href="/zh/self-host/">自托管</a>
+        <a data-page-link="faq" href="/zh/faq/">常见问题</a>
+        <div class="language-switcher" aria-label="切换语言">
+          <a data-lang-link="en" href="/use-cases/">EN</a>
+          <a data-lang-link="zh" href="/zh/use-cases/">中文</a>
+        </div>
+        <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero reveal">
+      <p class="eyebrow">应用场景</p>
+      <h1>LLMFit 在什么情况下最有实际价值。</h1>
+      <p class="lede">
+        只要本地 AI 的选型决策需要更快、更少浪费、更容易向团队解释，
+        LLMFit 就能发挥作用。尤其当同一个问题要在多台机器、多个项目、
+        多个客户环境里反复回答时，它的价值会更明显。
+      </p>
+    </section>
+
+    <section class="section reveal">
+      <div class="detail-grid">
+        <article class="content-card">
+          <h3>1. 笔记本或工作站评估</h3>
+          <p>先按 coding、chat、reasoning 或 multimodal 场景筛选，再比较你手上这台机器真正适合跑哪些模型。</p>
+          <pre class="code-block"><code>llmfit
+llmfit recommend --json --use-case coding --limit 5</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>2. 节点与机型标准化</h3>
+          <p>在每台节点上运行 serve 模式，让调度器或资产平台查询统一格式的可运行模型列表。</p>
+          <pre class="code-block"><code>llmfit serve --host 0.0.0.0 --port 8787
+curl http://node:8787/api/v1/models/top?min_fit=good</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>3. 硬件采购与升级规划</h3>
+          <p>先以目标模型为起点，反推需要怎样的硬件，而不是买完机器之后才发现模型路线不可行。</p>
+          <pre class="code-block"><code>llmfit plan "Qwen/Qwen3-4B-MLX-4bit" --context 8192 --target-tps 25</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>4. 咨询与交付工作</h3>
+          <p>把“这套客户硬件适合跑什么模型”从个人经验判断，提升为一套可审查、可记录、可复用的建议流程。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">用户画像</p>
+          <h2>适合哪些专业使用者。</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+        <article class="content-card">
+          <h3>独立开发者</h3>
+          <p>希望快速得到结论：这台笔记本或工作站到底该跑什么模型，避免浪费存储和配置时间。</p>
+          <ul class="checklist">
+            <li>优先使用 TUI 和 CLI</li>
+            <li>按 coding 或通用用途筛选</li>
+            <li>只对比少量真实可跑的候选模型</li>
+          </ul>
+        </article>
+        <article class="content-card">
+          <h3>平台工程师</h3>
+          <p>需要把节点侧模型可用性暴露给更大的内部平台、调度系统或机器资源目录。</p>
+          <ul class="checklist">
+            <li>优先使用 <code>llmfit serve</code></li>
+            <li>轮询 <code>/api/v1/system</code> 与 <code>/api/v1/models/top</code></li>
+            <li>把 <code>min_fit=good</code> 作为保守基线</li>
+          </ul>
+        </article>
+        <article class="content-card">
+          <h3>解决方案顾问</h3>
+          <p>需要给客户或业务团队提供更有依据的建议，而不是“我个人更喜欢哪个模型”。</p>
+          <ul class="checklist">
+            <li>用计划模式展示升级路径</li>
+            <li>保留 JSON 结果用于交付文档</li>
+            <li>明确解释适配度、速度与上下文权衡</li>
+          </ul>
+        </article>
+        <article class="content-card">
+          <h3>Homelab 运维者</h3>
+          <p>需要在混合 CPU、小显卡和边缘设备上挤出尽可能实用的本地 AI 效果。</p>
+          <ul class="checklist">
+            <li>优先考虑“真能跑”而不是排行榜光环</li>
+            <li>结合上下文限制与量化感知</li>
+            <li>认真区分 marginal 与 perfect 的实际差异</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">工作流示例</p>
+          <h2>三种可重复执行的模式。</h2>
+        </div>
+      </div>
+      <div class="workflow-grid">
+        <article class="workflow-step">
+          <span>01</span>
+          <h3>下载前决策</h3>
+          <p>在拉取模型之前先用 TUI 或 CLI 判断，这是减少无效下载和错误选型最简单的一步。</p>
+        </article>
+        <article class="workflow-step">
+          <span>02</span>
+          <h3>节点侧推荐服务</h3>
+          <p>在每台机器上运行 `llmfit serve`，再由控制平面统一聚合结果并做多节点决策。</p>
+        </article>
+        <article class="workflow-step">
+          <span>03</span>
+          <h3>硬件升级规划</h3>
+          <p>当你已经确定目标模型家族时，计划模式可以帮你反推出达到目标所需的硬件路径。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section-cta reveal">
+      <div>
+        <p class="eyebrow">下一步</p>
+        <h2>把适配判断接入你的运营流程。</h2>
+      </div>
+      <div class="cta-actions">
+        <a class="button button-primary" href="/zh/api/">查看 API</a>
+        <a class="button button-secondary" href="/zh/self-host/">部署方案</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <strong>LLMFit 应用场景</strong>
+      <p>面向真实机器和真实运营约束的本地 AI 模型选型实践。</p>
+    </div>
+    <div class="footer-links">
+      <a href="/zh/">首页</a>
+      <a href="/zh/docs/">文档</a>
+      <a href="/zh/api/">API</a>
+      <a href="/zh/faq/">常见问题</a>
+    </div>
+    <p><span class="year"></span> miounet11/llmfit</p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
