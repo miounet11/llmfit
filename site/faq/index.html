@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLMFit FAQ | Common questions about local AI fit analysis</title>
+  <meta name="description" content="Answers to common questions about how LLMFit works, who it is for, what it replaces, and how to deploy it.">
+  <link rel="canonical" href="https://www.igeminicli.cn/faq/">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="faq">
+  <div class="background-glow background-glow-a"></div>
+  <div class="background-glow background-glow-b"></div>
+
+  <header class="topbar">
+    <div class="topbar-shell">
+      <a class="brand" href="/">
+        <img src="/assets/icon.svg" alt="LLMFit logo">
+        <span>LLMFit</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="nav" id="site-nav">
+        <a data-page-link="home" href="/">Home</a>
+        <a data-page-link="docs" href="/docs/">Docs</a>
+        <a data-page-link="use-cases" href="/use-cases/">Use Cases</a>
+        <a data-page-link="api" href="/api/">API</a>
+        <a data-page-link="self-host" href="/self-host/">Self-Host</a>
+        <a data-page-link="faq" href="/faq/">FAQ</a>
+        <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero reveal">
+      <p class="eyebrow">FAQ</p>
+      <h1>Common questions from teams evaluating local AI fit analysis.</h1>
+      <p class="lede">
+        These are the questions that usually come up once people understand that
+        LLMFit is a fit-analysis layer, not just another model list or runtime.
+      </p>
+    </section>
+
+    <section class="section reveal faq-list">
+      <details open>
+        <summary>Is LLMFit an inference runtime?</summary>
+        <p>No. LLMFit helps decide which models and runtimes make sense for a machine. It does not replace tools like Ollama, MLX, or llama.cpp that actually run inference.</p>
+      </details>
+      <details>
+        <summary>Who is the product really for?</summary>
+        <p>It is useful for solo builders, platform teams, consultants, and homelab users who repeatedly need a defensible answer to “what can this machine run well?”</p>
+      </details>
+      <details>
+        <summary>Why not just use a benchmark chart?</summary>
+        <p>Benchmarks say a lot about relative model quality, but very little about whether a given machine can run the model at an acceptable memory and throughput profile.</p>
+      </details>
+      <details>
+        <summary>Does it help with Apple Silicon?</summary>
+        <p>Yes. The project includes Apple-oriented logic, MLX coverage, and unified-memory-aware fit analysis.</p>
+      </details>
+      <details>
+        <summary>Can I use it for internal schedulers or portals?</summary>
+        <p>Yes. That is one of the strongest use cases. Run `llmfit serve` on each node and aggregate the results in a separate service or control plane.</p>
+      </details>
+      <details>
+        <summary>Can it still be useful on CPU-only machines?</summary>
+        <p>Yes. CPU-only machines are exactly where fit analysis matters because unrealistic model choices become expensive mistakes quickly.</p>
+      </details>
+      <details>
+        <summary>Does the site have to live on the same host as the runtime tool?</summary>
+        <p>No. The site is static and can be deployed independently. The runtime tooling and the docs property can live on different machines if that fits your operations better.</p>
+      </details>
+      <details>
+        <summary>What should I do before pointing the final domain?</summary>
+        <p>Validate direct host routing with `curl --resolve`, confirm TLS coverage for every hostname you intend to expose, and keep a backup of the previous site and reverse proxy config.</p>
+      </details>
+    </section>
+
+    <section class="section reveal">
+      <div class="link-grid">
+        <a class="link-card" href="/docs/">
+          <strong>Need product detail?</strong>
+          <span>Read the documentation for fit levels, interfaces, and system behavior.</span>
+        </a>
+        <a class="link-card" href="/api/">
+          <strong>Need integration detail?</strong>
+          <span>Review the serve-mode API and node-local polling patterns.</span>
+        </a>
+        <a class="link-card" href="/self-host/">
+          <strong>Need deployment detail?</strong>
+          <span>See the binary, container, and site-hosting deployment patterns.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <strong>LLMFit FAQ</strong>
+      <p>Clear answers for teams evaluating a serious local AI workflow.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/docs/">Docs</a>
+      <a href="/api/">API</a>
+      <a href="/self-host/">Self-Host</a>
+    </div>
+    <p><span class="year"></span> miounet11/llmfit</p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

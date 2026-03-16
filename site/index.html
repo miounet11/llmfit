@@ -3,63 +3,77 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LLMFit | Hardware-aware local AI model selection</title>
-  <meta name="description" content="Choose the right open model for your laptop, workstation, or edge server before you waste time downloading the wrong one.">
-  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <title>LLMFit | Professional local AI model selection</title>
+  <meta name="description" content="LLMFit helps builders and platform teams choose the right open model for their hardware with a TUI, CLI, REST API, and deployment-ready docs.">
+  <meta property="og:title" content="LLMFit | Professional local AI model selection">
+  <meta property="og:description" content="Choose the right open model for your machine before you waste time downloading the wrong checkpoint.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.igeminicli.cn/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://www.igeminicli.cn/">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
+<body data-page="home">
   <div class="background-glow background-glow-a"></div>
   <div class="background-glow background-glow-b"></div>
+
   <header class="topbar">
-    <a class="brand" href="#top">
-      <img src="assets/icon.svg" alt="LLMFit logo">
-      <span>LLMFit</span>
-    </a>
-    <nav class="nav">
-      <a href="#features">Features</a>
-      <a href="#users">Users</a>
-      <a href="#workflow">Workflow</a>
-      <a href="#api">API</a>
-      <a href="https://github.com/miounet11/llmfit">GitHub</a>
-    </nav>
+    <div class="topbar-shell">
+      <a class="brand" href="/">
+        <img src="/assets/icon.svg" alt="LLMFit logo">
+        <span>LLMFit</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="nav" id="site-nav">
+        <a data-page-link="home" href="/">Home</a>
+        <a data-page-link="docs" href="/docs/">Docs</a>
+        <a data-page-link="use-cases" href="/use-cases/">Use Cases</a>
+        <a data-page-link="api" href="/api/">API</a>
+        <a data-page-link="self-host" href="/self-host/">Self-Host</a>
+        <a data-page-link="faq" href="/faq/">FAQ</a>
+        <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
+      </nav>
+    </div>
   </header>
 
-  <main id="top">
+  <main>
     <section class="hero reveal">
       <div class="hero-copy">
-        <p class="eyebrow">Local AI, minus the hardware guesswork</p>
-        <h1>Choose the right open model for your machine in one command.</h1>
+        <p class="eyebrow">Hardware-aware local AI operations</p>
+        <h1>Professional model selection for builders, operators, and platform teams.</h1>
         <p class="lede">
-          LLMFit inspects RAM, CPU, GPU, and local runtimes, then recommends the
-          best-fitting models, quantizations, and run paths before you waste
-          hours downloading the wrong checkpoint.
+          LLMFit inspects CPU, RAM, GPU, VRAM, and local runtimes, then ranks which
+          open models can actually run on a given machine. It turns vague hardware
+          guesswork into an operational answer you can use in a terminal, API, or
+          internal workflow.
         </p>
         <div class="hero-actions">
-          <a class="button button-primary" href="https://github.com/miounet11/llmfit">Open the repo</a>
-          <a class="button button-secondary" href="#install">Install now</a>
+          <a class="button button-primary" href="/docs/">Read the docs</a>
+          <a class="button button-secondary" href="/self-host/">Plan deployment</a>
+          <a class="button button-secondary" href="https://github.com/miounet11/llmfit">View source</a>
         </div>
         <div class="terminal-chip">
           <span>$</span>
           <code>curl -fsSL https://raw.githubusercontent.com/miounet11/llmfit/main/install.sh | sh</code>
         </div>
-        <ul class="stat-grid">
-          <li>
-            <strong>Interactive TUI</strong>
-            <span>Sort, compare, filter, and plan hardware upgrades.</span>
-          </li>
-          <li>
-            <strong>Script-ready API</strong>
-            <span>Expose node recommendations as JSON or a REST service.</span>
-          </li>
-          <li>
-            <strong>Provider-aware</strong>
-            <span>Works across Ollama, MLX, GGUF, and Docker runtimes.</span>
-          </li>
-        </ul>
+        <div class="kpi-grid">
+          <article class="metric-card">
+            <strong>569</strong>
+            <span>catalog entries embedded in the current model database</span>
+          </article>
+          <article class="metric-card">
+            <strong>142</strong>
+            <span>provider names represented in the shipped catalog</span>
+          </article>
+          <article class="metric-card">
+            <strong>4</strong>
+            <span>product surfaces: TUI, CLI, REST API, and macOS desktop app</span>
+          </article>
+        </div>
       </div>
       <div class="hero-visual">
         <div class="screen-shell">
@@ -68,138 +82,195 @@
             <span></span>
             <span></span>
           </div>
-          <img src="assets/demo.gif" alt="LLMFit TUI demo">
+          <img src="/assets/demo.gif" alt="LLMFit terminal interface">
         </div>
       </div>
     </section>
 
-    <section class="logo-band reveal">
-      <p>Packaging direction inspired by the clarity of Ollama, the release quality of uv, and the self-hosted polish of Open WebUI.</p>
+    <section class="info-strip reveal">
+      <p>
+        LLMFit is based on the original MIT-licensed engine by Alex Jones and has
+        been packaged here as a more complete, deployment-ready open-source product.
+      </p>
     </section>
 
-    <section class="section reveal" id="features">
+    <section class="section reveal">
       <div class="section-heading">
-        <p class="eyebrow">Why it works</p>
-        <h2>Built for users who need answers, not benchmark theater.</h2>
+        <div>
+          <p class="eyebrow">What it does</p>
+          <h2>Turn local AI sizing into a repeatable process.</h2>
+        </div>
+        <p class="section-intro">
+          LLMFit is not another generic model list. It ties model choices to the
+          hardware and runtime conditions that decide whether a local deployment is
+          usable, slow, or impossible.
+        </p>
       </div>
       <div class="card-grid">
-        <article class="feature-card">
-          <h3>Rank what really fits</h3>
-          <p>Score models by quality, speed, fit, context, and runtime compatibility for the hardware you actually own.</p>
-        </article>
-        <article class="feature-card">
-          <h3>Compare before you download</h3>
-          <p>Use the TUI to compare multiple candidates side by side instead of blindly pulling 20GB checkpoints.</p>
-        </article>
-        <article class="feature-card">
-          <h3>Plan upgrades with intent</h3>
-          <p>Reverse the decision: choose a target model and ask how much RAM, VRAM, and CPU you need to run it well.</p>
-        </article>
-        <article class="feature-card">
-          <h3>Automate fleet decisions</h3>
-          <p>Serve recommendations over HTTP and feed them into cluster schedulers, setup scripts, or inventory dashboards.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section section-accent reveal" id="users">
-      <div class="section-heading">
-        <p class="eyebrow">Who it is for</p>
-        <h2>One tool, three strong audiences.</h2>
-      </div>
-      <div class="persona-grid">
-        <article class="persona">
-          <h3>Local AI builders</h3>
-          <p>Pick a model that fits your laptop or workstation before you lock yourself into a bad runtime choice.</p>
-        </article>
-        <article class="persona">
-          <h3>Platform teams</h3>
-          <p>Standardize which models belong on which nodes and expose that answer through JSON or an internal service.</p>
-        </article>
-        <article class="persona">
-          <h3>Consultants and operators</h3>
-          <p>Turn “what should I run on this box?” into a repeatable, professional recommendation process.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section reveal" id="workflow">
-      <div class="section-heading">
-        <p class="eyebrow">Workflow</p>
-        <h2>Use it in three moves.</h2>
-      </div>
-      <div class="workflow-grid">
-        <article class="workflow-step">
-          <span>01</span>
+        <article class="content-card">
           <h3>Inspect the machine</h3>
-          <p>LLMFit detects CPU, RAM, GPU name, VRAM, backend, and local providers automatically.</p>
+          <p>Detect system RAM, CPU topology, GPU type, VRAM, backend, and installed local providers before recommending anything.</p>
         </article>
-        <article class="workflow-step">
-          <span>02</span>
-          <h3>Filter by real use case</h3>
-          <p>Search for coding, agents, chat, RAG, or general-purpose tasks and narrow results to runnable options.</p>
+        <article class="content-card">
+          <h3>Rank what really fits</h3>
+          <p>Score models across fit, speed, context, and quality dimensions instead of pretending every machine can run every model family.</p>
         </article>
-        <article class="workflow-step">
-          <span>03</span>
-          <h3>Ship or plan</h3>
-          <p>Download the right model, export JSON, or switch to planning mode to spec the hardware you actually need.</p>
+        <article class="content-card">
+          <h3>Operationalize the answer</h3>
+          <p>Use the TUI interactively, script the CLI, or expose the same fit analysis through a node-local REST API.</p>
         </article>
-      </div>
-    </section>
-
-    <section class="section reveal" id="install">
-      <div class="section-heading">
-        <p class="eyebrow">Install</p>
-        <h2>Fast path for users. Clean path for operators.</h2>
-      </div>
-      <div class="install-grid">
-        <article class="install-card">
-          <h3>Binary install</h3>
-          <pre><code>curl -fsSL https://raw.githubusercontent.com/miounet11/llmfit/main/install.sh | sh</code></pre>
-        </article>
-        <article class="install-card">
-          <h3>Source build</h3>
-          <pre><code>git clone https://github.com/miounet11/llmfit.git
-cd llmfit
-cargo build --release</code></pre>
-        </article>
-        <article class="install-card">
-          <h3>Local stack</h3>
-          <pre><code>docker compose up --build</code></pre>
-          <p>Runs the recommendation API on `8787` and the site on `8080`.</p>
+        <article class="content-card">
+          <h3>Plan before you buy</h3>
+          <p>Use planning mode to estimate the RAM, VRAM, and CPU needed to hit a target model and throughput instead of purchasing hardware blindly.</p>
         </article>
       </div>
     </section>
 
-    <section class="section section-dark reveal" id="api">
+    <section class="section reveal">
       <div class="section-heading">
-        <p class="eyebrow">API mode</p>
-        <h2>Made for scripts, agents, and schedulers.</h2>
+        <div>
+          <p class="eyebrow">Who it serves</p>
+          <h2>Built for real local AI workflows.</h2>
+        </div>
+        <p class="section-intro">
+          The product direction here takes cues from tool-first, high-adoption open
+          source projects like Ollama, uv, and Open WebUI, but focuses specifically
+          on model-to-hardware fit.
+        </p>
       </div>
-      <div class="api-grid">
-        <pre><code>llmfit serve --host 0.0.0.0 --port 8787</code></pre>
-        <pre><code>curl http://127.0.0.1:8787/recommend?use_case=coding&amp;limit=3</code></pre>
-        <pre><code>llmfit recommend --json --use-case agents --limit 5</code></pre>
+      <div class="detail-grid">
+        <article class="content-card">
+          <h3>Local AI builders</h3>
+          <p>Validate whether a laptop or workstation can run a coding, reasoning, or multimodal workflow before pulling a model.</p>
+        </article>
+        <article class="content-card">
+          <h3>Platform teams</h3>
+          <p>Standardize which models belong on which nodes and expose that answer to internal dashboards, schedulers, or setup flows.</p>
+        </article>
+        <article class="content-card">
+          <h3>Consultants and operators</h3>
+          <p>Turn “what should we run on this hardware?” into a professional recommendation process backed by a repeatable tool.</p>
+        </article>
+        <article class="content-card">
+          <h3>Homelab and edge users</h3>
+          <p>Choose practical local models for constrained memory budgets and mixed environments instead of relying on benchmark marketing.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Interfaces</p>
+          <h2>Use the surface that matches the job.</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+        <article class="content-card">
+          <h3>TUI</h3>
+          <p>Filter, compare, and inspect recommendations live from the terminal, including plan mode for hardware estimation.</p>
+          <pre class="code-block"><code>llmfit</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>CLI</h3>
+          <p>Generate JSON or table output for scripts, setup automation, and repeatable operational checks.</p>
+          <pre class="code-block"><code>llmfit recommend --json --use-case coding --limit 5</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>REST API</h3>
+          <p>Run `llmfit serve` on a node and let schedulers, agents, or portals consume the same fit analysis over HTTP.</p>
+          <pre class="code-block"><code>llmfit serve --host 0.0.0.0 --port 8787</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>Desktop</h3>
+          <p>Use the macOS desktop wrapper when you want the same fit logic in a more graphical environment.</p>
+          <pre class="code-block"><code>cargo tauri build</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Site map</p>
+          <h2>Everything needed for a standalone professional property.</h2>
+        </div>
+        <p class="section-intro">
+          The site now covers product positioning, technical documentation, API
+          integration, self-hosting, and buyer-style comparison content.
+        </p>
+      </div>
+      <div class="link-grid">
+        <a class="link-card" href="/docs/">
+          <strong>Docs</strong>
+          <span>Product overview, fit logic, interfaces, and system model.</span>
+        </a>
+        <a class="link-card" href="/use-cases/">
+          <strong>Use Cases</strong>
+          <span>Professional workflows for builders, operators, and platform teams.</span>
+        </a>
+        <a class="link-card" href="/api/">
+          <strong>API</strong>
+          <span>Serve mode endpoints, query parameters, and integration examples.</span>
+        </a>
+        <a class="link-card" href="/self-host/">
+          <strong>Self-Host</strong>
+          <span>Binary, container, and static site deployment guidance.</span>
+        </a>
+        <a class="link-card" href="/compare/">
+          <strong>Compare</strong>
+          <span>Where LLMFit fits relative to model lists, benchmarks, and runtimes.</span>
+        </a>
+        <a class="link-card" href="/faq/">
+          <strong>FAQ</strong>
+          <span>Operational answers for teams evaluating local AI workflows.</span>
+        </a>
       </div>
     </section>
 
     <section class="section section-cta reveal">
       <div>
-        <p class="eyebrow">Open source, ready now</p>
-        <h2>Use the CLI today. Deploy the site when your domain is ready.</h2>
+        <p class="eyebrow">Open source, deployment ready</p>
+        <h2>Prepare the product now. Point the domain when DNS is ready.</h2>
+        <p class="section-intro">
+          The repository already contains the binary tooling, the marketing/docs
+          property, deployment notes, and server-side rollout path.
+        </p>
       </div>
       <div class="cta-actions">
-        <a class="button button-primary" href="https://github.com/miounet11/llmfit">View source</a>
-        <a class="button button-secondary" href="https://github.com/miounet11/llmfit/blob/main/docs/DEPLOYMENT.md">Deployment guide</a>
+        <a class="button button-primary" href="/self-host/">Deployment guide</a>
+        <a class="button button-secondary" href="https://github.com/miounet11/llmfit">Source repository</a>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <p>LLMFit is MIT licensed and based on the original work by Alex Jones.</p>
-    <p><span id="year"></span> miounet11/llmfit</p>
+    <div>
+      <strong>LLMFit</strong>
+      <p>Hardware-aware local AI model selection for serious open-source users.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/docs/">Docs</a>
+      <a href="/api/">API</a>
+      <a href="/self-host/">Self-Host</a>
+      <a href="/faq/">FAQ</a>
+    </div>
+    <p><span class="year"></span> miounet11/llmfit</p>
   </footer>
 
-  <script src="app.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "LLMFit",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Linux, macOS, Windows",
+    "license": "https://opensource.org/licenses/MIT",
+    "url": "https://www.igeminicli.cn/",
+    "codeRepository": "https://github.com/miounet11/llmfit",
+    "description": "Hardware-aware model selection for local AI builders and platform teams."
+  }
+  </script>
+  <script src="/app.js"></script>
 </body>
 </html>

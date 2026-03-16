@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLMFit API | Serve mode and integration patterns</title>
+  <meta name="description" content="Serve node-local model fit analysis over HTTP with LLMFit and integrate it into schedulers, agents, and internal portals.">
+  <link rel="canonical" href="https://www.igeminicli.cn/api/">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="api">
+  <div class="background-glow background-glow-a"></div>
+  <div class="background-glow background-glow-b"></div>
+
+  <header class="topbar">
+    <div class="topbar-shell">
+      <a class="brand" href="/">
+        <img src="/assets/icon.svg" alt="LLMFit logo">
+        <span>LLMFit</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="nav" id="site-nav">
+        <a data-page-link="home" href="/">Home</a>
+        <a data-page-link="docs" href="/docs/">Docs</a>
+        <a data-page-link="use-cases" href="/use-cases/">Use Cases</a>
+        <a data-page-link="api" href="/api/">API</a>
+        <a data-page-link="self-host" href="/self-host/">Self-Host</a>
+        <a data-page-link="faq" href="/faq/">FAQ</a>
+        <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero reveal">
+      <p class="eyebrow">REST API</p>
+      <h1>Expose node-local fit analysis over HTTP.</h1>
+      <p class="lede">
+        `llmfit serve` publishes the same hardware-aware fit analysis used by the
+        TUI and CLI. This is the right surface when you want schedulers, agents,
+        dashboards, or internal tools to consume recommendations programmatically.
+      </p>
+      <pre class="code-block hero-code"><code>llmfit serve --host 0.0.0.0 --port 8787</code></pre>
+    </section>
+
+    <section class="section reveal">
+      <div class="table-shell">
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Path</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>GET</td>
+              <td><code>/health</code></td>
+              <td>Liveness probe for node-local API health.</td>
+            </tr>
+            <tr>
+              <td>GET</td>
+              <td><code>/api/v1/system</code></td>
+              <td>Detected node identity and hardware profile.</td>
+            </tr>
+            <tr>
+              <td>GET</td>
+              <td><code>/api/v1/models</code></td>
+              <td>Filtered and sorted model-fit rows for the current node.</td>
+            </tr>
+            <tr>
+              <td>GET</td>
+              <td><code>/api/v1/models/top</code></td>
+              <td>Top runnable models with conservative top-k semantics.</td>
+            </tr>
+            <tr>
+              <td>GET</td>
+              <td><code>/api/v1/models/{name}</code></td>
+              <td>Path-constrained search for a model family.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Recommended query parameters</p>
+          <h2>Control how strict the recommendations should be.</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+        <article class="content-card">
+          <h3><code>limit</code> / <code>n</code></h3>
+          <p>Cap the number of rows returned. Use small values for dashboards and top-k schedulers.</p>
+        </article>
+        <article class="content-card">
+          <h3><code>min_fit</code></h3>
+          <p>Use `good` for production-style defaults and `marginal` when exploring stretch options.</p>
+        </article>
+        <article class="content-card">
+          <h3><code>use_case</code></h3>
+          <p>Target coding, chat, reasoning, embedding, or other workload-specific categories.</p>
+        </article>
+        <article class="content-card">
+          <h3><code>runtime</code></h3>
+          <p>Restrict results when your environment standardizes on a specific runtime such as MLX or llama.cpp.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Integration patterns</p>
+          <h2>How teams usually wire it in.</h2>
+        </div>
+      </div>
+      <div class="detail-grid">
+        <article class="content-card">
+          <h3>Scheduler polling</h3>
+          <ol class="step-list">
+            <li>Call <code>/health</code>.</li>
+            <li>Capture <code>/api/v1/system</code>.</li>
+            <li>Query <code>/api/v1/models/top?min_fit=good&amp;limit=5</code>.</li>
+            <li>Attach node metadata in your own control plane.</li>
+          </ol>
+        </article>
+        <article class="content-card">
+          <h3>Agent tool use</h3>
+          <p>Let an internal agent query the node-local API before selecting a model or provisioning a workload on a machine.</p>
+        </article>
+        <article class="content-card">
+          <h3>Internal portal</h3>
+          <p>Expose the top recommendations in a small operations UI so teams stop asking ad hoc fit questions in chat.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="code-grid">
+        <article class="content-card">
+          <h3>Quick start</h3>
+          <pre class="code-block"><code>curl http://127.0.0.1:8787/health
+curl http://127.0.0.1:8787/api/v1/system
+curl "http://127.0.0.1:8787/api/v1/models?limit=20&min_fit=marginal&sort=score"</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>Workload targeting</h3>
+          <pre class="code-block"><code>curl "http://127.0.0.1:8787/api/v1/models/top?limit=5&min_fit=good&use_case=coding"
+curl "http://127.0.0.1:8787/api/v1/models/Mistral?runtime=any"</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="callout">
+        <strong>Operational default</strong>
+        <p>For conservative production placement, prefer `min_fit=good`, `include_too_tight=false`, `sort=score`, and a small `limit` value.</p>
+      </div>
+    </section>
+
+    <section class="section section-cta reveal">
+      <div>
+        <p class="eyebrow">Need deployment details?</p>
+        <h2>Pair serve mode with your preferred runtime or hosting pattern.</h2>
+      </div>
+      <div class="cta-actions">
+        <a class="button button-primary" href="/self-host/">Self-hosting guide</a>
+        <a class="button button-secondary" href="/docs/">Read the docs</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <strong>LLMFit API</strong>
+      <p>Node-local fit analysis for schedulers, agents, and internal tooling.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/docs/">Docs</a>
+      <a href="/self-host/">Self-Host</a>
+      <a href="/faq/">FAQ</a>
+    </div>
+    <p><span class="year"></span> miounet11/llmfit</p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

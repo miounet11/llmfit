@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLMFit Docs | Product model, fit logic, and interfaces</title>
+  <meta name="description" content="Understand how LLMFit evaluates hardware fit, model quality, speed, runtime compatibility, and planning mode for local AI deployments.">
+  <link rel="canonical" href="https://www.igeminicli.cn/docs/">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="docs">
+  <div class="background-glow background-glow-a"></div>
+  <div class="background-glow background-glow-b"></div>
+
+  <header class="topbar">
+    <div class="topbar-shell">
+      <a class="brand" href="/">
+        <img src="/assets/icon.svg" alt="LLMFit logo">
+        <span>LLMFit</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="nav" id="site-nav">
+        <a data-page-link="home" href="/">Home</a>
+        <a data-page-link="docs" href="/docs/">Docs</a>
+        <a data-page-link="use-cases" href="/use-cases/">Use Cases</a>
+        <a data-page-link="api" href="/api/">API</a>
+        <a data-page-link="self-host" href="/self-host/">Self-Host</a>
+        <a data-page-link="faq" href="/faq/">FAQ</a>
+        <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero reveal">
+      <p class="eyebrow">Documentation</p>
+      <h1>How LLMFit thinks about local model fit.</h1>
+      <p class="lede">
+        LLMFit is a hardware-aware advisor. It does not replace inference runtimes
+        like Ollama or llama.cpp. It decides which models, quantizations, and run
+        paths make sense for a machine before you commit to a download or deployment.
+      </p>
+    </section>
+
+    <section class="section reveal">
+      <div class="kpi-grid">
+        <article class="metric-card">
+          <strong>569</strong>
+          <span>catalog entries embedded in the current shipped database</span>
+        </article>
+        <article class="metric-card">
+          <strong>142</strong>
+          <span>provider names represented in the catalog metadata</span>
+        </article>
+        <article class="metric-card">
+          <strong>2</strong>
+          <span>filterable capability flags currently exposed in the catalog: tool use and vision</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Core model</p>
+          <h2>What the engine evaluates.</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+        <article class="content-card">
+          <h3>Hardware shape</h3>
+          <p>Total RAM, available RAM, CPU cores, GPU count, VRAM, backend, unified memory, and provider installation state.</p>
+        </article>
+        <article class="content-card">
+          <h3>Model shape</h3>
+          <p>Parameter count, context length, release date, MoE behavior, quantization options, and provider availability.</p>
+        </article>
+        <article class="content-card">
+          <h3>Fit dimensions</h3>
+          <p>Fit, speed, context, and quality scores are combined into a recommendation ranking rather than relying on a single benchmark.</p>
+        </article>
+        <article class="content-card">
+          <h3>Run path</h3>
+          <p>GPU, CPU offload, CPU-only, and unified memory scenarios are treated differently because practical usability changes fast across them.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Fit levels</p>
+          <h2>Operational labels, not marketing labels.</h2>
+        </div>
+      </div>
+      <div class="detail-grid">
+        <article class="content-card">
+          <h3>Perfect</h3>
+          <p>The model fits comfortably and is positioned as a high-confidence local choice for the current hardware.</p>
+        </article>
+        <article class="content-card">
+          <h3>Good</h3>
+          <p>Runnable with sensible resource usage. Good is often the right production default for conservative placement.</p>
+        </article>
+        <article class="content-card">
+          <h3>Marginal</h3>
+          <p>Technically runnable, but with tighter memory pressure or a weaker expected throughput profile.</p>
+        </article>
+        <article class="content-card">
+          <h3>Too tight</h3>
+          <p>Included for analysis, but usually excluded from top scheduling endpoints because it should not be treated as a safe deployment target.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Interfaces</p>
+          <h2>One engine, multiple operational surfaces.</h2>
+        </div>
+      </div>
+      <div class="table-shell">
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Surface</th>
+              <th>Best for</th>
+              <th>Typical entrypoint</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>TUI</td>
+              <td>Interactive exploration, filtering, model comparison, plan mode</td>
+              <td><code>llmfit</code></td>
+            </tr>
+            <tr>
+              <td>CLI</td>
+              <td>Scripting, JSON export, repeatable audits, batch checks</td>
+              <td><code>llmfit recommend --json</code></td>
+            </tr>
+            <tr>
+              <td>REST API</td>
+              <td>Schedulers, agent integrations, internal platforms, node-local services</td>
+              <td><code>llmfit serve --host 0.0.0.0 --port 8787</code></td>
+            </tr>
+            <tr>
+              <td>Desktop</td>
+              <td>macOS users who want the same logic with a graphical wrapper</td>
+              <td><code>cargo tauri build</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Runtime coverage</p>
+          <h2>What LLMFit works with.</h2>
+        </div>
+      </div>
+      <div class="link-grid">
+        <div class="link-card">
+          <strong>Ollama</strong>
+          <span>Detection, installed-model awareness, and pull-oriented workflows.</span>
+        </div>
+        <div class="link-card">
+          <strong>llama.cpp / GGUF</strong>
+          <span>Quantization-aware fit analysis for common local CPU and GPU paths.</span>
+        </div>
+        <div class="link-card">
+          <strong>MLX</strong>
+          <span>Apple Silicon-friendly model handling and throughput estimation.</span>
+        </div>
+        <div class="link-card">
+          <strong>Docker Model Runner</strong>
+          <span>Container-friendly runtime coverage for teams standardizing local stacks.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Repository layout</p>
+          <h2>What ships in this codebase.</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+        <article class="content-card">
+          <h3><code>llmfit-core/</code></h3>
+          <p>Hardware detection, model catalogs, fit scoring, planning logic, and provider integration.</p>
+        </article>
+        <article class="content-card">
+          <h3><code>llmfit-tui/</code></h3>
+          <p>The terminal UI, classic CLI commands, and REST API entrypoints.</p>
+        </article>
+        <article class="content-card">
+          <h3><code>llmfit-desktop/</code></h3>
+          <p>The Tauri-based macOS desktop wrapper for users who want the same engine with a GUI shell.</p>
+        </article>
+        <article class="content-card">
+          <h3><code>site/</code></h3>
+          <p>The product site and docs property that can be served independently from the runtime tooling.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section-cta reveal">
+      <div>
+        <p class="eyebrow">Next step</p>
+        <h2>Choose the path that matches your evaluation stage.</h2>
+      </div>
+      <div class="cta-actions">
+        <a class="button button-primary" href="/api/">Study the API</a>
+        <a class="button button-secondary" href="/compare/">See how it compares</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <strong>LLMFit Docs</strong>
+      <p>Technical context for teams turning local AI recommendations into repeatable operations.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/api/">API</a>
+      <a href="/self-host/">Self-Host</a>
+      <a href="/faq/">FAQ</a>
+    </div>
+    <p><span class="year"></span> miounet11/llmfit</p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

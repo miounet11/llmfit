@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLMFit Compare | Where it fits in the local AI stack</title>
+  <meta name="description" content="Understand where LLMFit fits relative to model lists, benchmark charts, and runtime installers such as Ollama or llama.cpp.">
+  <link rel="canonical" href="https://www.igeminicli.cn/compare/">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="docs">
+  <div class="background-glow background-glow-a"></div>
+  <div class="background-glow background-glow-b"></div>
+
+  <header class="topbar">
+    <div class="topbar-shell">
+      <a class="brand" href="/">
+        <img src="/assets/icon.svg" alt="LLMFit logo">
+        <span>LLMFit</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="nav" id="site-nav">
+        <a data-page-link="home" href="/">Home</a>
+        <a data-page-link="docs" href="/docs/">Docs</a>
+        <a data-page-link="use-cases" href="/use-cases/">Use Cases</a>
+        <a data-page-link="api" href="/api/">API</a>
+        <a data-page-link="self-host" href="/self-host/">Self-Host</a>
+        <a data-page-link="faq" href="/faq/">FAQ</a>
+        <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero reveal">
+      <p class="eyebrow">Compare</p>
+      <h1>LLMFit fills a gap that raw model lists and benchmark charts do not.</h1>
+      <p class="lede">
+        Local AI users usually compare four different things without separating
+        their roles: model catalogs, benchmark charts, runtimes, and operational
+        fit analysis. LLMFit lives in the fourth category.
+      </p>
+    </section>
+
+    <section class="section reveal">
+      <div class="table-shell">
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>What it tells you</th>
+              <th>What it does not tell you</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Model catalog</td>
+              <td>What models exist and their high-level metadata</td>
+              <td>Whether they will run well on your specific machine</td>
+            </tr>
+            <tr>
+              <td>Benchmark leaderboard</td>
+              <td>How models score on curated tasks</td>
+              <td>Whether the model is a practical local choice for your hardware</td>
+            </tr>
+            <tr>
+              <td>Runtime installer</td>
+              <td>How to run or pull models in a given runtime</td>
+              <td>Which model family is the right fit to pull in the first place</td>
+            </tr>
+            <tr>
+              <td>LLMFit</td>
+              <td>Which models, quantizations, and run modes fit your hardware and operational goal</td>
+              <td>It does not replace the runtime that actually serves inference</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="card-grid">
+        <article class="content-card">
+          <h3>Use it with Ollama</h3>
+          <p>Ollama is excellent for pulling and running models. LLMFit helps decide which Ollama models are realistic for the machine.</p>
+        </article>
+        <article class="content-card">
+          <h3>Use it with llama.cpp</h3>
+          <p>llama.cpp gives you a powerful local runtime. LLMFit helps select quantizations and model sizes that make sense before you configure it.</p>
+        </article>
+        <article class="content-card">
+          <h3>Use it with MLX</h3>
+          <p>MLX is a strong Apple Silicon path. LLMFit helps decide which MLX-formatted models are viable for the memory and throughput target.</p>
+        </article>
+        <article class="content-card">
+          <h3>Use it with internal tooling</h3>
+          <p>Serve mode gives your platform an answer it can consume directly instead of hard-coding model rules in a dashboard or scheduler.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="callout">
+        <strong>What LLMFit is not</strong>
+        <p>It is not a training stack, not a benchmark publisher, and not an inference runtime. It is the missing fit-analysis layer between model choice and runtime execution.</p>
+      </div>
+    </section>
+
+    <section class="section section-cta reveal">
+      <div>
+        <p class="eyebrow">Decision support</p>
+        <h2>Use the right tool for each layer of the stack.</h2>
+      </div>
+      <div class="cta-actions">
+        <a class="button button-primary" href="/docs/">Read product docs</a>
+        <a class="button button-secondary" href="/use-cases/">See workflows</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <strong>LLMFit Compare</strong>
+      <p>Clarify where fit analysis belongs in a professional local AI stack.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/docs/">Docs</a>
+      <a href="/api/">API</a>
+      <a href="/faq/">FAQ</a>
+    </div>
+    <p><span class="year"></span> miounet11/llmfit</p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

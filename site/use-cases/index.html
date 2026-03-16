@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLMFit Use Cases | Builders, operators, and platform teams</title>
+  <meta name="description" content="See how LLMFit fits into laptop evaluation, team standardization, hardware planning, and internal local AI operations.">
+  <link rel="canonical" href="https://www.igeminicli.cn/use-cases/">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="use-cases">
+  <div class="background-glow background-glow-a"></div>
+  <div class="background-glow background-glow-b"></div>
+
+  <header class="topbar">
+    <div class="topbar-shell">
+      <a class="brand" href="/">
+        <img src="/assets/icon.svg" alt="LLMFit logo">
+        <span>LLMFit</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="nav" id="site-nav">
+        <a data-page-link="home" href="/">Home</a>
+        <a data-page-link="docs" href="/docs/">Docs</a>
+        <a data-page-link="use-cases" href="/use-cases/">Use Cases</a>
+        <a data-page-link="api" href="/api/">API</a>
+        <a data-page-link="self-host" href="/self-host/">Self-Host</a>
+        <a data-page-link="faq" href="/faq/">FAQ</a>
+        <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero reveal">
+      <p class="eyebrow">Use Cases</p>
+      <h1>Where LLMFit becomes operationally useful.</h1>
+      <p class="lede">
+        The best use case for LLMFit is any workflow where local AI decisions need
+        to be faster, less wasteful, and easier to defend. The tool is especially
+        effective when the same question repeats across many machines or projects.
+      </p>
+    </section>
+
+    <section class="section reveal">
+      <div class="detail-grid">
+        <article class="content-card">
+          <h3>1. Laptop or workstation evaluation</h3>
+          <p>Use the TUI to filter for coding, chat, reasoning, or multimodal tasks and compare which models fit the machine you already own.</p>
+          <pre class="code-block"><code>llmfit
+llmfit recommend --json --use-case coding --limit 5</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>2. Fleet standardization</h3>
+          <p>Run serve mode on each node and let a scheduler or inventory service query a normalized set of top runnable models.</p>
+          <pre class="code-block"><code>llmfit serve --host 0.0.0.0 --port 8787
+curl http://node:8787/api/v1/models/top?min_fit=good</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>3. Hardware planning</h3>
+          <p>Start with a target model and ask what hardware is required, rather than buying hardware first and discovering the model is impractical later.</p>
+          <pre class="code-block"><code>llmfit plan "Qwen/Qwen3-4B-MLX-4bit" --context 8192 --target-tps 25</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>4. Advisory or consulting work</h3>
+          <p>Use LLMFit to turn “what should we run on this hardware?” into a repeatable recommendation that can be reviewed with a client or internal team.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Audience detail</p>
+          <h2>Professional user profiles.</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+        <article class="content-card">
+          <h3>Solo builder</h3>
+          <p>Needs a practical answer fast: which model should run on a laptop or workstation without wasting storage and setup time.</p>
+          <ul class="checklist">
+            <li>Prefer the TUI and CLI</li>
+            <li>Filter by coding or general-purpose use cases</li>
+            <li>Compare a handful of realistic candidates</li>
+          </ul>
+        </article>
+        <article class="content-card">
+          <h3>Platform engineer</h3>
+          <p>Needs a consistent way to expose node-local model availability into a larger internal platform or scheduler.</p>
+          <ul class="checklist">
+            <li>Prefer `llmfit serve`</li>
+            <li>Poll `/api/v1/system` and `/api/v1/models/top`</li>
+            <li>Use `min_fit=good` as a conservative baseline</li>
+          </ul>
+        </article>
+        <article class="content-card">
+          <h3>Solution consultant</h3>
+          <p>Needs a defensible recommendation process for customer hardware rather than ad hoc personal preference.</p>
+          <ul class="checklist">
+            <li>Use plan mode to show upgrade paths</li>
+            <li>Capture JSON results for documentation</li>
+            <li>Explain tradeoffs in fit, speed, and context</li>
+          </ul>
+        </article>
+        <article class="content-card">
+          <h3>Homelab operator</h3>
+          <p>Needs to squeeze useful local AI behavior out of mixed CPUs, smaller GPUs, and edge hardware.</p>
+          <ul class="checklist">
+            <li>Prioritize runnability over leaderboard prestige</li>
+            <li>Use context limits and quantization awareness</li>
+            <li>Review marginal vs perfect fit behavior carefully</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Workflow examples</p>
+          <h2>Three repeatable operating patterns.</h2>
+        </div>
+      </div>
+      <div class="workflow-grid">
+        <article class="workflow-step">
+          <span>01</span>
+          <h3>Pre-download decision</h3>
+          <p>Use the TUI or CLI before pulling a model. This is the easiest way to prevent wasted downloads on underpowered machines.</p>
+        </article>
+        <article class="workflow-step">
+          <span>02</span>
+          <h3>Node-local recommendation service</h3>
+          <p>Run `llmfit serve` on each machine, then let a separate control plane aggregate and decide across many nodes.</p>
+        </article>
+        <article class="workflow-step">
+          <span>03</span>
+          <h3>Upgrade planning</h3>
+          <p>Use plan mode when you already know the target model family and want to size the hardware path needed to get there.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section-cta reveal">
+      <div>
+        <p class="eyebrow">Next step</p>
+        <h2>Operationalize the fit analysis.</h2>
+      </div>
+      <div class="cta-actions">
+        <a class="button button-primary" href="/api/">Explore the API</a>
+        <a class="button button-secondary" href="/self-host/">Deployment options</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <strong>LLMFit Use Cases</strong>
+      <p>Local AI model selection patterns for real machines and real operational constraints.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/docs/">Docs</a>
+      <a href="/api/">API</a>
+      <a href="/faq/">FAQ</a>
+    </div>
+    <p><span class="year"></span> miounet11/llmfit</p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

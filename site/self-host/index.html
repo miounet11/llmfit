@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLMFit Self-Host | Deployment patterns for binaries, APIs, and the site</title>
+  <meta name="description" content="Run LLMFit as a local binary, a node-local API, a compose stack, or a static site served through your existing reverse proxy.">
+  <link rel="canonical" href="https://www.igeminicli.cn/self-host/">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="self-host">
+  <div class="background-glow background-glow-a"></div>
+  <div class="background-glow background-glow-b"></div>
+
+  <header class="topbar">
+    <div class="topbar-shell">
+      <a class="brand" href="/">
+        <img src="/assets/icon.svg" alt="LLMFit logo">
+        <span>LLMFit</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="nav" id="site-nav">
+        <a data-page-link="home" href="/">Home</a>
+        <a data-page-link="docs" href="/docs/">Docs</a>
+        <a data-page-link="use-cases" href="/use-cases/">Use Cases</a>
+        <a data-page-link="api" href="/api/">API</a>
+        <a data-page-link="self-host" href="/self-host/">Self-Host</a>
+        <a data-page-link="faq" href="/faq/">FAQ</a>
+        <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero reveal">
+      <p class="eyebrow">Self-Host</p>
+      <h1>Deploy the runtime tooling and the professional site separately.</h1>
+      <p class="lede">
+        LLMFit is easiest to operate when you treat it as two artifacts: the
+        runtime tooling (`llmfit`, `llmfit serve`) and the static product/docs
+        site. They can live together, but they do not have to.
+      </p>
+    </section>
+
+    <section class="section reveal">
+      <div class="card-grid">
+        <article class="content-card">
+          <h3>Binary install</h3>
+          <p>The fastest path for individual users or operators testing on one machine.</p>
+          <pre class="code-block"><code>curl -fsSL https://raw.githubusercontent.com/miounet11/llmfit/main/install.sh | sh</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>Source build</h3>
+          <p>Best when you want full control, local modification, or integration into a Rust-oriented workflow.</p>
+          <pre class="code-block"><code>git clone https://github.com/miounet11/llmfit.git
+cd llmfit
+cargo build --release</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>Node-local API service</h3>
+          <p>Run `llmfit serve` on a host and let upstream systems poll it rather than embedding the fit logic elsewhere.</p>
+          <pre class="code-block"><code>llmfit serve --host 0.0.0.0 --port 8787</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>Full local stack</h3>
+          <p>Use the shipped Compose file when you want the API and the static site available together during development.</p>
+          <pre class="code-block"><code>docker compose up --build</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Production pattern</p>
+          <h2>Use an isolated site deployment path.</h2>
+        </div>
+        <p class="section-intro">
+          The safest rollout pattern is to keep the site isolated from existing
+          application services until you have verified the new domain mapping,
+          certificate coverage, and health checks.
+        </p>
+      </div>
+      <div class="detail-grid">
+        <article class="content-card">
+          <h3>Static root pattern</h3>
+          <p>Place the `site/` output in a dedicated Nginx or Caddy document root and let your reverse proxy serve it directly.</p>
+        </article>
+        <article class="content-card">
+          <h3>Container pattern</h3>
+          <p>Run a separate static container on an unused internal port, then reverse proxy only after validating the site in isolation.</p>
+        </article>
+        <article class="content-card">
+          <h3>Certificate pattern</h3>
+          <p>Issue TLS certificates for every host you plan to expose, including both apex and `www` variants when applicable.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="code-grid">
+        <article class="content-card">
+          <h3>Repo-managed remote rollout</h3>
+          <pre class="code-block"><code>scripts/deploy-site.sh user@host /opt/llmfit</code></pre>
+          <p>This helper clones or updates the repository on the target host and starts the shipped site deployment definition.</p>
+        </article>
+        <article class="content-card">
+          <h3>Containerized site rollout</h3>
+          <pre class="code-block"><code>docker compose -f deploy/site.compose.yml up -d</code></pre>
+          <p>The shipped site compose file uses an isolated port so you can test before updating the live reverse proxy.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Production checklist</p>
+          <h2>Minimal discipline before a domain cutover.</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+        <article class="content-card">
+          <h3>Back up the previous site</h3>
+          <ul class="checklist">
+            <li>Preserve the current docroot</li>
+            <li>Back up the active virtual host config</li>
+            <li>Record certificate paths and current server names</li>
+          </ul>
+        </article>
+        <article class="content-card">
+          <h3>Validate the proxy stack</h3>
+          <ul class="checklist">
+            <li>Run `nginx -t` before reloading</li>
+            <li>Confirm the active nginx binary and config path</li>
+            <li>Check for duplicate site definitions</li>
+          </ul>
+        </article>
+        <article class="content-card">
+          <h3>Verify direct host routing</h3>
+          <ul class="checklist">
+            <li>Use `curl --resolve` before DNS flips</li>
+            <li>Check `robots.txt` and sitemap availability</li>
+            <li>Confirm redirects for both apex and `www` hosts</li>
+          </ul>
+        </article>
+        <article class="content-card">
+          <h3>Watch post-cutover logs</h3>
+          <ul class="checklist">
+            <li>Tail access and error logs immediately after DNS changes</li>
+            <li>Check TLS coverage for every public hostname</li>
+            <li>Keep rollback artifacts available</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section-cta reveal">
+      <div>
+        <p class="eyebrow">Operational next step</p>
+        <h2>Pair deployment guidance with API integration.</h2>
+      </div>
+      <div class="cta-actions">
+        <a class="button button-primary" href="/api/">API integration</a>
+        <a class="button button-secondary" href="/faq/">Read the FAQ</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <strong>LLMFit Self-Host</strong>
+      <p>Practical deployment guidance for a binary tool, node-local API, and static site property.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/docs/">Docs</a>
+      <a href="/api/">API</a>
+      <a href="/faq/">FAQ</a>
+    </div>
+    <p><span class="year"></span> miounet11/llmfit</p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
