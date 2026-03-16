@@ -33,6 +33,9 @@ STATIC_ROUTES = [
     ("/compare/", "/zh/compare/"),
     ("/faq/", "/zh/faq/"),
     ("/insights/", "/zh/insights/"),
+    ("/insights/hardware/", "/zh/insights/hardware/"),
+    ("/insights/families/", "/zh/insights/families/"),
+    ("/insights/runtimes/", "/zh/insights/runtimes/"),
 ]
 
 USE_CASES = [
@@ -159,6 +162,42 @@ RUNTIME_TOPICS = [
     },
 ]
 
+KIND_META = {
+    "hardware": {
+        "slug": "hardware",
+        "label_en": "Hardware fit",
+        "label_zh": "硬件适配",
+        "title_en": "Hardware fit guides for realistic local AI deployments",
+        "title_zh": "面向真实本地 AI 部署的硬件适配指南",
+        "description_en": "Pages focused on RAM, VRAM, and machine-class planning before you commit to a local model download.",
+        "description_zh": "围绕内存、显存和机器级规划展开的页面，帮助用户在下载本地模型前先做现实判断。",
+        "intro_en": "Use these pages to narrow local AI decisions by machine budget, not by hype. The goal is to identify what is likely to fit before runtime friction shows up in production work.",
+        "intro_zh": "这些页面用于按机器预算而不是按热度缩小本地 AI 决策范围。重点是在运行时问题真正影响生产工作前，先判断什么更可能适配。",
+    },
+    "family": {
+        "slug": "families",
+        "label_en": "Model families",
+        "label_zh": "模型家族",
+        "title_en": "Model family deployment guides for local AI teams",
+        "title_zh": "面向本地 AI 团队的模型家族部署指南",
+        "description_en": "Family-level pages that turn broad interest in Llama, Qwen, DeepSeek, and similar lines into concrete fit decisions.",
+        "description_zh": "把用户对 Llama、Qwen、DeepSeek 等家族的广泛兴趣，转化为具体适配决策的专题页面。",
+        "intro_en": "Search traffic often starts with a family name. These guides convert that demand into practical decisions about memory, context, runtime support, and deployment scope.",
+        "intro_zh": "搜索流量通常从家族名开始。这些指南会把这种需求转化为关于内存、上下文、运行时支持和部署范围的实际判断。",
+    },
+    "runtime": {
+        "slug": "runtimes",
+        "label_en": "Runtime planning",
+        "label_zh": "运行时规划",
+        "title_en": "Runtime planning pages for Ollama, MLX, and llama.cpp workflows",
+        "title_zh": "面向 Ollama、MLX 和 llama.cpp 工作流的运行时规划页面",
+        "description_en": "Runtime-specific content that explains where operational convenience ends and hardware fit decisions still matter.",
+        "description_zh": "围绕运行时的内容，说明操作便利性在哪一步结束，以及为什么硬件适配判断依然重要。",
+        "intro_en": "Runtime tools reduce operational friction, but they do not rescue an unrealistic placement decision. Use these pages to choose a runtime path that matches the machine and workload.",
+        "intro_zh": "运行时工具可以降低操作门槛，但它们无法挽救不现实的放置决策。用这些页面选择更匹配机器和工作负载的运行时路径。",
+    },
+}
+
 EN_PAGE_LABELS = {
     "home": "Home",
     "docs": "Docs",
@@ -212,6 +251,72 @@ def human_number(num: float | int | None) -> str:
     if num >= 1_000:
         return f"{num / 1_000:.1f}K"
     return str(int(num))
+
+
+def home_path(locale: str) -> str:
+    return "/" if locale == "en" else "/zh/"
+
+
+def article_path(article: dict[str, Any], locale: str) -> str:
+    prefix = "/insights/" if locale == "en" else "/zh/insights/"
+    return f"{prefix}{article['slug']}/"
+
+
+def kind_index_path(kind: str, locale: str) -> str:
+    prefix = "/insights/" if locale == "en" else "/zh/insights/"
+    return f"{prefix}{KIND_META[kind]['slug']}/"
+
+
+def feed_path(locale: str) -> str:
+    return "/feed.xml" if locale == "en" else "/zh/feed.xml"
+
+
+def kind_label(kind: str, locale: str) -> str:
+    key = "label_en" if locale == "en" else "label_zh"
+    return str(KIND_META[kind][key])
+
+
+def topic_tokens(article: dict[str, Any]) -> set[str]:
+    topic_id = str(article.get("topic_id", ""))
+    tokens = {token for token in re.split(r"[^a-z0-9]+", topic_id.lower()) if token}
+    return tokens - {"hardware", "family", "runtime", "local", "guide", "deployment"}
+
+
+def select_related_articles(article: dict[str, Any], articles: list[dict[str, Any]], limit: int = 3) -> list[dict[str, Any]]:
+    def score(candidate: dict[str, Any]) -> tuple[int, str, str]:
+        if candidate["slug"] == article["slug"]:
+            return (-1, "", "")
+        relatedness = 0
+        if candidate.get("kind") == article.get("kind"):
+            relatedness += 6
+        shared_tokens = topic_tokens(article) & topic_tokens(candidate)
+        relatedness += len(shared_tokens) * 3
+        if candidate.get("label_en") == article.get("label_en"):
+            relatedness += 2
+        if candidate.get("published_on") == article.get("published_on"):
+            relatedness += 1
+        return (relatedness, str(candidate.get("published_on", "")), candidate["slug"])
+
+    ranked = sorted(articles, key=score, reverse=True)
+    selected: list[dict[str, Any]] = []
+
+    for candidate in ranked:
+        if candidate["slug"] == article["slug"]:
+            continue
+        if score(candidate)[0] <= 0:
+            continue
+        selected.append(candidate)
+        if len(selected) >= limit:
+            return selected
+
+    for candidate in ranked:
+        if candidate["slug"] == article["slug"] or candidate in selected:
+            continue
+        selected.append(candidate)
+        if len(selected) >= limit:
+            break
+
+    return selected
 
 
 def quantile(values: list[float], fraction: float) -> float:
@@ -700,6 +805,47 @@ def example_card(entry: dict[str, Any], locale: str) -> str:
     """
 
 
+def article_link_card(article: dict[str, Any], locale: str) -> str:
+    is_en = locale == "en"
+    title_text = article["title_en"] if is_en else article["title_zh"]
+    description_text = article["description_en"] if is_en else article["description_zh"]
+    article_date = article["published_on"]
+    label = article["label_en"] if is_en else article["label_zh"]
+    return f"""
+        <a class="link-card insight-card" href="{article_path(article, locale)}">
+          <div class="card-meta">
+            <span class="section-pill">{html.escape(kind_label(article['kind'], locale))}</span>
+            <em>{html.escape(article_date)}</em>
+          </div>
+          <strong>{html.escape(title_text)}</strong>
+          <span>{html.escape(description_text)}</span>
+          <p class="card-caption">{html.escape(label)}</p>
+        </a>
+    """
+
+
+def kind_card(kind: str, locale: str, articles: list[dict[str, Any]]) -> str:
+    is_en = locale == "en"
+    meta = KIND_META[kind]
+    key_title = "title_en" if is_en else "title_zh"
+    key_description = "description_en" if is_en else "description_zh"
+    matching = [article for article in articles if article.get("kind") == kind]
+    count_label = f"{len(matching)} pages" if is_en else f"{len(matching)} 个页面"
+    latest = matching[0]["published_on"] if matching else ("Not published yet" if is_en else "暂未发布")
+    latest_label = "Latest update" if is_en else "最近更新"
+    return f"""
+        <a class="link-card category-card" href="{kind_index_path(kind, locale)}">
+          <div class="card-meta">
+            <span class="section-pill">{html.escape(kind_label(kind, locale))}</span>
+            <em>{html.escape(count_label)}</em>
+          </div>
+          <strong>{html.escape(str(meta[key_title]))}</strong>
+          <span>{html.escape(str(meta[key_description]))}</span>
+          <p class="card-caption">{latest_label}: {html.escape(latest)}</p>
+        </a>
+    """
+
+
 def build_article_data(topic: Topic, catalog: list[dict[str, Any]], llm_client: LLMClient | None) -> dict[str, Any]:
     if topic.kind == "hardware":
         profile = topic.metadata["profile"]
@@ -918,7 +1064,7 @@ def build_article_data(topic: Topic, catalog: list[dict[str, Any]], llm_client: 
 def topbar(locale: str, page_key: str, english_url: str, chinese_url: str) -> str:
     labels = EN_PAGE_LABELS if locale == "en" else ZH_PAGE_LABELS
     prefix = "" if locale == "en" else "/zh"
-    brand_href = "/" if locale == "en" else "/zh/"
+    brand_href = home_path(locale)
     return f"""
   <header class="topbar">
     <div class="topbar-shell">
@@ -928,7 +1074,7 @@ def topbar(locale: str, page_key: str, english_url: str, chinese_url: str) -> st
       </a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">{labels['menu']}</button>
       <nav class="nav" id="site-nav">
-        <a data-page-link="home" href="{prefix or '/'}">{labels['home']}</a>
+        <a data-page-link="home" href="{brand_href}">{labels['home']}</a>
         <a data-page-link="docs" href="{prefix}/docs/">{labels['docs']}</a>
         <a data-page-link="use-cases" href="{prefix}/use-cases/">{labels['use_cases']}</a>
         <a data-page-link="api" href="{prefix}/api/">{labels['api']}</a>
@@ -950,7 +1096,7 @@ def render_article(
     article: dict[str, Any],
     locale: str,
     site_url: str,
-    published_on: str,
+    articles: list[dict[str, Any]],
 ) -> str:
     is_en = locale == "en"
     lang = "en" if is_en else "zh-CN"
@@ -963,16 +1109,22 @@ def render_article(
     faq = article["faq_en"] if is_en else article["faq_zh"]
     takeaway = article["takeaway_en"] if is_en else article["takeaway_zh"]
     label = article["label_en"] if is_en else article["label_zh"]
-    path = f"/insights/{article['slug']}/" if is_en else f"/zh/insights/{article['slug']}/"
-    english_url = f"/insights/{article['slug']}/"
-    chinese_url = f"/zh/insights/{article['slug']}/"
+    published_on = article["published_on"]
+    path = article_path(article, locale)
+    english_url = article_path(article, "en")
+    chinese_url = article_path(article, "zh")
     alternate_url = f"{site_url}{chinese_url if is_en else english_url}"
     canonical_url = f"{site_url}{path}"
+    rss_url = f"{site_url}{feed_path(locale)}"
+    kind_path = kind_index_path(article["kind"], locale)
+    kind_title = kind_label(article["kind"], locale)
     heading_why = "Why this page is worth reading" if is_en else "为什么这篇页面值得看"
     heading_examples = "Representative catalog examples" if is_en else "代表性目录示例"
     heading_verify = "How to verify this on your own machine" if is_en else "如何在自己的机器上验证"
     heading_takeaway = "Operational takeaway" if is_en else "运营建议"
     heading_faq = "Frequently asked questions" if is_en else "常见问题"
+    heading_related = "Related pages" if is_en else "相关页面"
+    related_title = "Continue from this topic cluster" if is_en else "从这个主题集群继续深入"
     heading_back = "Back to insights" if is_en else "返回洞察中心"
     breadcrumb_home = "Insights" if is_en else "洞察"
     notes = (
@@ -1007,6 +1159,26 @@ def render_article(
     )
     published_label = "Published" if is_en else "发布日期"
     focus_label = "Focus" if is_en else "聚焦主题"
+    related_cards = [article_link_card(item, locale) for item in select_related_articles(article, articles)]
+    browse_copy = (
+        f"See every {kind_title.lower()} page in the insight library."
+        if is_en
+        else f"查看洞察库中全部“{kind_title}”页面。"
+    )
+    related_cards.append(
+        f"""
+        <a class="link-card category-card" href="{kind_path}">
+          <div class="card-meta">
+            <span class="section-pill">{html.escape(kind_title)}</span>
+            <em>{html.escape('Browse cluster' if is_en else '浏览主题集群')}</em>
+          </div>
+          <strong>{html.escape('Open the category hub' if is_en else '打开分类中心')}</strong>
+          <span>{html.escape(browse_copy)}</span>
+          <p class="card-caption">{html.escape(kind_path)}</p>
+        </a>
+        """
+    )
+    related_markup = "\n".join(related_cards)
 
     schema = {
         "@context": "https://schema.org",
@@ -1033,6 +1205,7 @@ def render_article(
   <link rel="alternate" hreflang="en" href="{site_url}{english_url}">
   <link rel="alternate" hreflang="zh-CN" href="{site_url}{chinese_url}">
   <link rel="alternate" hreflang="x-default" href="{site_url}{english_url}">
+  <link rel="alternate" type="application/rss+xml" title="LLMFit Insights RSS" href="{rss_url}">
   <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
 </head>
@@ -1118,6 +1291,18 @@ def render_article(
 {faq_markup}
     </section>
 
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">{heading_related}</p>
+          <h2>{html.escape(related_title)}</h2>
+        </div>
+      </div>
+      <div class="link-grid insights-grid">
+{related_markup}
+      </div>
+    </section>
+
     <section class="section section-cta reveal">
       <div>
         <p class="eyebrow">{breadcrumb_home}</p>
@@ -1164,22 +1349,9 @@ def render_index(locale: str, articles: list[dict[str, Any]], site_url: str) -> 
     path = "/insights/" if is_en else "/zh/insights/"
     english_url = "/insights/"
     chinese_url = "/zh/insights/"
-    site_cards = []
-    for article in articles:
-        title_text = article["title_en"] if is_en else article["title_zh"]
-        description_text = article["description_en"] if is_en else article["description_zh"]
-        article_path = f"/insights/{article['slug']}/" if is_en else f"/zh/insights/{article['slug']}/"
-        article_date = article["published_on"]
-        site_cards.append(
-            f"""
-        <a class="link-card insight-card" href="{article_path}">
-          <strong>{html.escape(title_text)}</strong>
-          <span>{html.escape(description_text)}</span>
-          <em>{html.escape(article_date)}</em>
-        </a>
-            """
-        )
-    cards_markup = "\n".join(site_cards) if site_cards else ""
+    rss_url = f"{site_url}{feed_path(locale)}"
+    category_cards = "\n".join(kind_card(kind, locale, articles) for kind in KIND_META)
+    cards_markup = "\n".join(article_link_card(article, locale) for article in articles) if articles else ""
     return f"""<!doctype html>
 <html lang="{'en' if is_en else 'zh-CN'}">
 <head>
@@ -1191,6 +1363,7 @@ def render_index(locale: str, articles: list[dict[str, Any]], site_url: str) -> 
   <link rel="alternate" hreflang="en" href="{site_url}{english_url}">
   <link rel="alternate" hreflang="zh-CN" href="{site_url}{chinese_url}">
   <link rel="alternate" hreflang="x-default" href="{site_url}{english_url}">
+  <link rel="alternate" type="application/rss+xml" title="LLMFit Insights RSS" href="{rss_url}">
   <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
 </head>
@@ -1205,6 +1378,18 @@ def render_index(locale: str, articles: list[dict[str, Any]], site_url: str) -> 
       <p class="lede">{html.escape(description)}</p>
       <div class="callout">
         <p>{'These pages are generated from a curated topic pool tied to LLMFit themes: hardware fit, runtime choice, deployment planning, and model-family search intent.' if is_en else '这些页面基于受控主题池生成，主题严格围绕 LLMFit 的核心方向：硬件适配、运行时选择、部署规划和模型家族搜索意图。'}</p>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">{'Topic clusters' if is_en else '主题集群'}</p>
+          <h2>{'Browse the content library by decision type.' if is_en else '按决策类型浏览内容库。'}</h2>
+        </div>
+      </div>
+      <div class="link-grid insights-grid">
+{category_cards}
       </div>
     </section>
 
@@ -1228,6 +1413,7 @@ def render_index(locale: str, articles: list[dict[str, Any]], site_url: str) -> 
       <div class="cta-actions">
         <a class="button button-primary" href="{'/docs/' if is_en else '/zh/docs/'}">{'Read the docs' if is_en else '阅读文档'}</a>
         <a class="button button-secondary" href="{'/use-cases/' if is_en else '/zh/use-cases/'}">{'See use cases' if is_en else '查看应用场景'}</a>
+        <a class="button button-secondary" href="{feed_path(locale)}">{'Subscribe via RSS' if is_en else '通过 RSS 订阅'}</a>
       </div>
     </section>
   </main>
@@ -1246,6 +1432,137 @@ def render_index(locale: str, articles: list[dict[str, Any]], site_url: str) -> 
     <p><span class="year"></span> miounet11/llmfit</p>
   </footer>
 
+  <script src="/app.js"></script>
+</body>
+</html>
+"""
+
+
+def render_kind_index(kind: str, locale: str, articles: list[dict[str, Any]], site_url: str) -> str:
+    is_en = locale == "en"
+    lang = "en" if is_en else "zh-CN"
+    meta = KIND_META[kind]
+    key_title = "title_en" if is_en else "title_zh"
+    key_description = "description_en" if is_en else "description_zh"
+    key_intro = "intro_en" if is_en else "intro_zh"
+    filtered = [article for article in articles if article.get("kind") == kind]
+    peer_cards = "\n".join(kind_card(peer_kind, locale, articles) for peer_kind in KIND_META if peer_kind != kind)
+    cards_markup = "\n".join(article_link_card(article, locale) for article in filtered)
+    canonical_path = kind_index_path(kind, locale)
+    english_url = kind_index_path(kind, "en")
+    chinese_url = kind_index_path(kind, "zh")
+    rss_url = f"{site_url}{feed_path(locale)}"
+    focus_values = {article["label_en"] if is_en else article["label_zh"] for article in filtered}
+    latest_value = filtered[0]["published_on"] if filtered else ("Not published yet" if is_en else "暂未发布")
+    published_label = "Latest publication" if is_en else "最近发布日期"
+    count_label = "Published pages" if is_en else "已发布页面"
+    focus_label = "Distinct focus areas" if is_en else "覆盖细分主题"
+    section_heading = "Pages in this cluster" if is_en else "该分类下的页面"
+    section_title = "Structured pages you can browse or feed into product onboarding." if is_en else "可浏览、也可导入产品转化路径的结构化页面。"
+    adjacent_heading = "Adjacent clusters" if is_en else "相邻主题集群"
+    adjacent_title = "Use nearby categories to expand the decision path." if is_en else "用相邻分类扩展用户的决策路径。"
+    cta_title = "Move from content into evaluation." if is_en else "从内容浏览进入产品评估。"
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "headline": meta[key_title],
+        "description": meta[key_description],
+        "inLanguage": lang,
+        "isPartOf": f"{site_url}{'/insights/' if is_en else '/zh/insights/'}",
+        "mainEntityOfPage": f"{site_url}{canonical_path}",
+    }
+
+    return f"""<!doctype html>
+<html lang="{lang}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{html.escape(str(meta[key_title]))} | LLMFit</title>
+  <meta name="description" content="{html.escape(str(meta[key_description]))}">
+  <link rel="canonical" href="{site_url}{canonical_path}">
+  <link rel="alternate" hreflang="en" href="{site_url}{english_url}">
+  <link rel="alternate" hreflang="zh-CN" href="{site_url}{chinese_url}">
+  <link rel="alternate" hreflang="x-default" href="{site_url}{english_url}">
+  <link rel="alternate" type="application/rss+xml" title="LLMFit Insights RSS" href="{rss_url}">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="insights">
+  <div class="background-glow background-glow-a"></div>
+  <div class="background-glow background-glow-b"></div>
+{topbar(locale, "insights", english_url, chinese_url)}
+  <main>
+    <section class="page-hero reveal">
+      <p class="eyebrow">{html.escape(kind_label(kind, locale))}</p>
+      <h1>{html.escape(str(meta[key_title]))}</h1>
+      <p class="lede">{html.escape(str(meta[key_description]))}</p>
+      <div class="callout">
+        <p>{html.escape(str(meta[key_intro]))}</p>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="kpi-grid">
+        <article class="metric-card"><strong>{len(filtered)}</strong><span>{count_label}</span></article>
+        <article class="metric-card"><strong>{html.escape(latest_value)}</strong><span>{published_label}</span></article>
+        <article class="metric-card"><strong>{len(focus_values)}</strong><span>{focus_label}</span></article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">{html.escape(kind_label(kind, locale))}</p>
+          <h2>{html.escape(section_title)}</h2>
+        </div>
+      </div>
+      <div class="link-grid insights-grid">
+{cards_markup}
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">{adjacent_heading}</p>
+          <h2>{adjacent_title}</h2>
+        </div>
+      </div>
+      <div class="link-grid insights-grid">
+{peer_cards}
+      </div>
+    </section>
+
+    <section class="section section-cta reveal">
+      <div>
+        <p class="eyebrow">{section_heading}</p>
+        <h2>{cta_title}</h2>
+      </div>
+      <div class="cta-actions">
+        <a class="button button-primary" href="{'/docs/' if is_en else '/zh/docs/'}">{'Read the docs' if is_en else '阅读文档'}</a>
+        <a class="button button-secondary" href="{'/insights/' if is_en else '/zh/insights/'}">{'All insights' if is_en else '全部洞察'}</a>
+        <a class="button button-secondary" href="{feed_path(locale)}">{'RSS feed' if is_en else 'RSS 订阅'}</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <strong>LLMFit {html.escape(kind_label(kind, locale))}</strong>
+      <p>{'Structured category pages for local AI operators, builders, and infrastructure teams.' if is_en else '为本地 AI 运营者、开发者和基础设施团队准备的结构化分类页面。'}</p>
+    </div>
+    <div class="footer-links">
+      <a href="{'/insights/' if is_en else '/zh/insights/'}">{'Insights' if is_en else '洞察'}</a>
+      <a href="{canonical_path}">{html.escape(kind_label(kind, locale))}</a>
+      <a href="{'/docs/' if is_en else '/zh/docs/'}">{'Docs' if is_en else '文档'}</a>
+      <a href="{'/faq/' if is_en else '/zh/faq/'}">{'FAQ' if is_en else '常见问题'}</a>
+    </div>
+    <p><span class="year"></span> miounet11/llmfit</p>
+  </footer>
+
+  <script type="application/ld+json">
+{json.dumps(schema, ensure_ascii=False, indent=2)}
+  </script>
   <script src="/app.js"></script>
 </body>
 </html>
@@ -1394,26 +1711,33 @@ def main() -> int:
 
     articles = copy.deepcopy(manifest.get("articles", []))
     published_date = args.date
+    drafted_articles: list[dict[str, Any]] = []
 
     for topic in selected:
         article = build_article_data(topic, catalog, llm_client)
         article["published_on"] = published_date
-        write_text(site_root / "insights" / article["slug"] / "index.html", render_article(article, "en", args.site_url.rstrip("/"), published_date))
-        write_text(site_root / "zh" / "insights" / article["slug"] / "index.html", render_article(article, "zh", args.site_url.rstrip("/"), published_date))
-        articles.append(article)
+        drafted_articles.append(article)
         print(f"drafted {article['slug']} via {article['draft_mode']}")
 
+    articles.extend(drafted_articles)
     articles = sorted(articles, key=lambda item: (item["published_on"], item["slug"]), reverse=True)
     manifest["articles"] = articles
     state_file.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
 
+    for article in articles:
+        write_text(site_root / "insights" / article["slug"] / "index.html", render_article(article, "en", args.site_url.rstrip("/"), articles))
+        write_text(site_root / "zh" / "insights" / article["slug"] / "index.html", render_article(article, "zh", args.site_url.rstrip("/"), articles))
+
     write_text(site_root / "insights" / "index.html", render_index("en", articles, args.site_url.rstrip("/")))
     write_text(site_root / "zh" / "insights" / "index.html", render_index("zh", articles, args.site_url.rstrip("/")))
+    for kind in KIND_META:
+        write_text(site_root / "insights" / KIND_META[kind]["slug"] / "index.html", render_kind_index(kind, "en", articles, args.site_url.rstrip("/")))
+        write_text(site_root / "zh" / "insights" / KIND_META[kind]["slug"] / "index.html", render_kind_index(kind, "zh", articles, args.site_url.rstrip("/")))
     write_text(site_root / "feed.xml", render_feed("en", articles, args.site_url.rstrip("/")))
     write_text(site_root / "zh" / "feed.xml", render_feed("zh", articles, args.site_url.rstrip("/")))
     write_text(site_root / "sitemap.xml", render_sitemap(args.site_url.rstrip("/"), articles))
 
-    print(f"published {len(selected)} new topics")
+    print(f"published {len(drafted_articles)} new topics")
     for topic in selected:
         print(f"- {topic.slug}")
     return 0

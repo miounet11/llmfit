@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LLMFit Insights | Daily local AI fit content for builders and platform teams</title>
-  <meta name="description" content="A growing library of original pages about local AI model fit, hardware sizing, runtime choices, and deployment planning.">
-  <link rel="canonical" href="https://www.igeminicli.cn/insights/">
-  <link rel="alternate" hreflang="en" href="https://www.igeminicli.cn/insights/">
-  <link rel="alternate" hreflang="zh-CN" href="https://www.igeminicli.cn/zh/insights/">
-  <link rel="alternate" hreflang="x-default" href="https://www.igeminicli.cn/insights/">
+  <title>Hardware fit guides for realistic local AI deployments | LLMFit</title>
+  <meta name="description" content="Pages focused on RAM, VRAM, and machine-class planning before you commit to a local model download.">
+  <link rel="canonical" href="https://www.igeminicli.cn/insights/hardware/">
+  <link rel="alternate" hreflang="en" href="https://www.igeminicli.cn/insights/hardware/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.igeminicli.cn/zh/insights/hardware/">
+  <link rel="alternate" hreflang="x-default" href="https://www.igeminicli.cn/insights/hardware/">
   <link rel="alternate" type="application/rss+xml" title="LLMFit Insights RSS" href="https://www.igeminicli.cn/feed.xml">
   <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
@@ -33,8 +33,8 @@
         <a data-page-link="insights" href="/insights/">Insights</a>
         <a data-page-link="faq" href="/faq/">FAQ</a>
         <div class="language-switcher" aria-label="Language switcher">
-          <a data-lang-link="en" href="/insights/">EN</a>
-          <a data-lang-link="zh" href="/zh/insights/">中文</a>
+          <a data-lang-link="en" href="/insights/hardware/">EN</a>
+          <a data-lang-link="zh" href="/zh/insights/hardware/">中文</a>
         </div>
         <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
       </nav>
@@ -43,63 +43,27 @@
     
   <main>
     <section class="page-hero reveal">
-      <p class="eyebrow">Insights</p>
-      <h1>A programmatic content library for local AI deployment decisions.</h1>
-      <p class="lede">A growing library of original pages about local AI model fit, hardware sizing, runtime choices, and deployment planning.</p>
+      <p class="eyebrow">Hardware fit</p>
+      <h1>Hardware fit guides for realistic local AI deployments</h1>
+      <p class="lede">Pages focused on RAM, VRAM, and machine-class planning before you commit to a local model download.</p>
       <div class="callout">
-        <p>These pages are generated from a curated topic pool tied to LLMFit themes: hardware fit, runtime choice, deployment planning, and model-family search intent.</p>
+        <p>Use these pages to narrow local AI decisions by machine budget, not by hype. The goal is to identify what is likely to fit before runtime friction shows up in production work.</p>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="kpi-grid">
+        <article class="metric-card"><strong>6</strong><span>Published pages</span></article>
+        <article class="metric-card"><strong>2026-03-16</strong><span>Latest publication</span></article>
+        <article class="metric-card"><strong>3</strong><span>Distinct focus areas</span></article>
       </div>
     </section>
 
     <section class="section reveal">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">Topic clusters</p>
-          <h2>Browse the content library by decision type.</h2>
-        </div>
-      </div>
-      <div class="link-grid insights-grid">
-
-        <a class="link-card category-card" href="/insights/hardware/">
-          <div class="card-meta">
-            <span class="section-pill">Hardware fit</span>
-            <em>6 pages</em>
-          </div>
-          <strong>Hardware fit guides for realistic local AI deployments</strong>
-          <span>Pages focused on RAM, VRAM, and machine-class planning before you commit to a local model download.</span>
-          <p class="card-caption">Latest update: 2026-03-16</p>
-        </a>
-    
-
-        <a class="link-card category-card" href="/insights/families/">
-          <div class="card-meta">
-            <span class="section-pill">Model families</span>
-            <em>2 pages</em>
-          </div>
-          <strong>Model family deployment guides for local AI teams</strong>
-          <span>Family-level pages that turn broad interest in Llama, Qwen, DeepSeek, and similar lines into concrete fit decisions.</span>
-          <p class="card-caption">Latest update: 2026-03-16</p>
-        </a>
-    
-
-        <a class="link-card category-card" href="/insights/runtimes/">
-          <div class="card-meta">
-            <span class="section-pill">Runtime planning</span>
-            <em>2 pages</em>
-          </div>
-          <strong>Runtime planning pages for Ollama, MLX, and llama.cpp workflows</strong>
-          <span>Runtime-specific content that explains where operational convenience ends and hardware fit decisions still matter.</span>
-          <p class="card-caption">Latest update: 2026-03-16</p>
-        </a>
-    
-      </div>
-    </section>
-
-    <section class="section reveal">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Latest pages</p>
-          <h2>Original pages published from the site engine.</h2>
+          <p class="eyebrow">Hardware fit</p>
+          <h2>Structured pages you can browse or feed into product onboarding.</h2>
         </div>
       </div>
       <div class="link-grid insights-grid">
@@ -123,50 +87,6 @@
           <strong>Best local AI reasoning models for 32GB RAM and 16GB VRAM</strong>
           <span>Use bundled LLMFit catalog data to shortlist realistic reasoning models for a 32GB RAM desktop with 16GB VRAM without downloading models that are too large.</span>
           <p class="card-caption">32GB RAM / 16GB VRAM</p>
-        </a>
-    
-
-        <a class="link-card insight-card" href="/insights/ollama-model-selection-for-laptops/">
-          <div class="card-meta">
-            <span class="section-pill">Runtime planning</span>
-            <em>2026-03-16</em>
-          </div>
-          <strong>Ollama model selection for laptops: how to stay realistic about RAM and VRAM</strong>
-          <span>A practical guide to choosing Ollama-compatible local models without overcommitting weak laptop hardware.</span>
-          <p class="card-caption">Ollama model selection for laptops: how to stay realistic about RAM and VRAM</p>
-        </a>
-    
-
-        <a class="link-card insight-card" href="/insights/mlx-for-apple-silicon-local-ai-planning/">
-          <div class="card-meta">
-            <span class="section-pill">Runtime planning</span>
-            <em>2026-03-16</em>
-          </div>
-          <strong>MLX for Apple Silicon: planning local AI around unified memory instead of GPU myths</strong>
-          <span>Use unified-memory-aware planning to choose better MLX model paths on Apple Silicon.</span>
-          <p class="card-caption">MLX for Apple Silicon: planning local AI around unified memory instead of GPU myths</p>
-        </a>
-    
-
-        <a class="link-card insight-card" href="/insights/gemma-local-deployment-guide/">
-          <div class="card-meta">
-            <span class="section-pill">Model families</span>
-            <em>2026-03-16</em>
-          </div>
-          <strong>gemma local deployment guide: what hardware usually fits</strong>
-          <span>An original LLMFit guide to understanding how gemma models usually map to local hardware and deployment decisions.</span>
-          <p class="card-caption">gemma</p>
-        </a>
-    
-
-        <a class="link-card insight-card" href="/insights/deepseek-local-deployment-guide/">
-          <div class="card-meta">
-            <span class="section-pill">Model families</span>
-            <em>2026-03-16</em>
-          </div>
-          <strong>DeepSeek local deployment guide: what hardware usually fits</strong>
-          <span>An original LLMFit guide to understanding how DeepSeek models usually map to local hardware and deployment decisions.</span>
-          <p class="card-caption">DeepSeek</p>
         </a>
     
 
@@ -216,33 +136,77 @@
       </div>
     </section>
 
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Adjacent clusters</p>
+          <h2>Use nearby categories to expand the decision path.</h2>
+        </div>
+      </div>
+      <div class="link-grid insights-grid">
+
+        <a class="link-card category-card" href="/insights/families/">
+          <div class="card-meta">
+            <span class="section-pill">Model families</span>
+            <em>2 pages</em>
+          </div>
+          <strong>Model family deployment guides for local AI teams</strong>
+          <span>Family-level pages that turn broad interest in Llama, Qwen, DeepSeek, and similar lines into concrete fit decisions.</span>
+          <p class="card-caption">Latest update: 2026-03-16</p>
+        </a>
+    
+
+        <a class="link-card category-card" href="/insights/runtimes/">
+          <div class="card-meta">
+            <span class="section-pill">Runtime planning</span>
+            <em>2 pages</em>
+          </div>
+          <strong>Runtime planning pages for Ollama, MLX, and llama.cpp workflows</strong>
+          <span>Runtime-specific content that explains where operational convenience ends and hardware fit decisions still matter.</span>
+          <p class="card-caption">Latest update: 2026-03-16</p>
+        </a>
+    
+      </div>
+    </section>
+
     <section class="section section-cta reveal">
       <div>
-        <p class="eyebrow">Next step</p>
-        <h2>Use the library to capture search intent, then route serious users into docs and product workflows.</h2>
+        <p class="eyebrow">Pages in this cluster</p>
+        <h2>Move from content into evaluation.</h2>
       </div>
       <div class="cta-actions">
         <a class="button button-primary" href="/docs/">Read the docs</a>
-        <a class="button button-secondary" href="/use-cases/">See use cases</a>
-        <a class="button button-secondary" href="/feed.xml">Subscribe via RSS</a>
+        <a class="button button-secondary" href="/insights/">All insights</a>
+        <a class="button button-secondary" href="/feed.xml">RSS feed</a>
       </div>
     </section>
   </main>
 
   <footer class="footer">
     <div>
-      <strong>LLMFit Insights</strong>
-      <p>Original pages designed to win relevant traffic without drifting outside the product theme.</p>
+      <strong>LLMFit Hardware fit</strong>
+      <p>Structured category pages for local AI operators, builders, and infrastructure teams.</p>
     </div>
     <div class="footer-links">
       <a href="/insights/">Insights</a>
+      <a href="/insights/hardware/">Hardware fit</a>
       <a href="/docs/">Docs</a>
-      <a href="/api/">API</a>
       <a href="/faq/">FAQ</a>
     </div>
     <p><span class="year"></span> miounet11/llmfit</p>
   </footer>
 
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "headline": "Hardware fit guides for realistic local AI deployments",
+  "description": "Pages focused on RAM, VRAM, and machine-class planning before you commit to a local model download.",
+  "inLanguage": "en",
+  "isPartOf": "https://www.igeminicli.cn/insights/",
+  "mainEntityOfPage": "https://www.igeminicli.cn/insights/hardware/"
+}
+  </script>
   <script src="/app.js"></script>
 </body>
 </html>

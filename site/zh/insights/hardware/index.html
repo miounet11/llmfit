@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LLMFit 洞察 | 每日更新的本地 AI 适配内容中心</title>
-  <meta name="description" content="围绕本地 AI 模型适配、硬件规划、运行时选择和部署判断持续更新的原创内容库。">
-  <link rel="canonical" href="https://www.igeminicli.cn/zh/insights/">
-  <link rel="alternate" hreflang="en" href="https://www.igeminicli.cn/insights/">
-  <link rel="alternate" hreflang="zh-CN" href="https://www.igeminicli.cn/zh/insights/">
-  <link rel="alternate" hreflang="x-default" href="https://www.igeminicli.cn/insights/">
+  <title>面向真实本地 AI 部署的硬件适配指南 | LLMFit</title>
+  <meta name="description" content="围绕内存、显存和机器级规划展开的页面，帮助用户在下载本地模型前先做现实判断。">
+  <link rel="canonical" href="https://www.igeminicli.cn/zh/insights/hardware/">
+  <link rel="alternate" hreflang="en" href="https://www.igeminicli.cn/insights/hardware/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.igeminicli.cn/zh/insights/hardware/">
+  <link rel="alternate" hreflang="x-default" href="https://www.igeminicli.cn/insights/hardware/">
   <link rel="alternate" type="application/rss+xml" title="LLMFit Insights RSS" href="https://www.igeminicli.cn/zh/feed.xml">
   <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
@@ -33,8 +33,8 @@
         <a data-page-link="insights" href="/zh/insights/">洞察</a>
         <a data-page-link="faq" href="/zh/faq/">常见问题</a>
         <div class="language-switcher" aria-label="Language switcher">
-          <a data-lang-link="en" href="/insights/">EN</a>
-          <a data-lang-link="zh" href="/zh/insights/">中文</a>
+          <a data-lang-link="en" href="/insights/hardware/">EN</a>
+          <a data-lang-link="zh" href="/zh/insights/hardware/">中文</a>
         </div>
         <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
       </nav>
@@ -43,63 +43,27 @@
     
   <main>
     <section class="page-hero reveal">
-      <p class="eyebrow">洞察</p>
-      <h1>围绕本地 AI 部署决策持续扩展的内容中心。</h1>
-      <p class="lede">围绕本地 AI 模型适配、硬件规划、运行时选择和部署判断持续更新的原创内容库。</p>
+      <p class="eyebrow">硬件适配</p>
+      <h1>面向真实本地 AI 部署的硬件适配指南</h1>
+      <p class="lede">围绕内存、显存和机器级规划展开的页面，帮助用户在下载本地模型前先做现实判断。</p>
       <div class="callout">
-        <p>这些页面基于受控主题池生成，主题严格围绕 LLMFit 的核心方向：硬件适配、运行时选择、部署规划和模型家族搜索意图。</p>
+        <p>这些页面用于按机器预算而不是按热度缩小本地 AI 决策范围。重点是在运行时问题真正影响生产工作前，先判断什么更可能适配。</p>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="kpi-grid">
+        <article class="metric-card"><strong>6</strong><span>已发布页面</span></article>
+        <article class="metric-card"><strong>2026-03-16</strong><span>最近发布日期</span></article>
+        <article class="metric-card"><strong>3</strong><span>覆盖细分主题</span></article>
       </div>
     </section>
 
     <section class="section reveal">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">主题集群</p>
-          <h2>按决策类型浏览内容库。</h2>
-        </div>
-      </div>
-      <div class="link-grid insights-grid">
-
-        <a class="link-card category-card" href="/zh/insights/hardware/">
-          <div class="card-meta">
-            <span class="section-pill">硬件适配</span>
-            <em>6 个页面</em>
-          </div>
-          <strong>面向真实本地 AI 部署的硬件适配指南</strong>
-          <span>围绕内存、显存和机器级规划展开的页面，帮助用户在下载本地模型前先做现实判断。</span>
-          <p class="card-caption">最近更新: 2026-03-16</p>
-        </a>
-    
-
-        <a class="link-card category-card" href="/zh/insights/families/">
-          <div class="card-meta">
-            <span class="section-pill">模型家族</span>
-            <em>2 个页面</em>
-          </div>
-          <strong>面向本地 AI 团队的模型家族部署指南</strong>
-          <span>把用户对 Llama、Qwen、DeepSeek 等家族的广泛兴趣，转化为具体适配决策的专题页面。</span>
-          <p class="card-caption">最近更新: 2026-03-16</p>
-        </a>
-    
-
-        <a class="link-card category-card" href="/zh/insights/runtimes/">
-          <div class="card-meta">
-            <span class="section-pill">运行时规划</span>
-            <em>2 个页面</em>
-          </div>
-          <strong>面向 Ollama、MLX 和 llama.cpp 工作流的运行时规划页面</strong>
-          <span>围绕运行时的内容，说明操作便利性在哪一步结束，以及为什么硬件适配判断依然重要。</span>
-          <p class="card-caption">最近更新: 2026-03-16</p>
-        </a>
-    
-      </div>
-    </section>
-
-    <section class="section reveal">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">最新页面</p>
-          <h2>由站点内容引擎发布的原创页面。</h2>
+          <p class="eyebrow">硬件适配</p>
+          <h2>可浏览、也可导入产品转化路径的结构化页面。</h2>
         </div>
       </div>
       <div class="link-grid insights-grid">
@@ -123,50 +87,6 @@
           <strong>32GB 内存 + 16GB 显存 适合跑哪些本地 推理模型？</strong>
           <span>基于 LLMFit 内置目录数据，为 32GB 内存 + 16GB 显存桌面机 筛选更现实的 推理模型，避免先下载再发现模型过重。</span>
           <p class="card-caption">32GB 内存 / 16GB 显存</p>
-        </a>
-    
-
-        <a class="link-card insight-card" href="/zh/insights/ollama-model-selection-for-laptops/">
-          <div class="card-meta">
-            <span class="section-pill">运行时规划</span>
-            <em>2026-03-16</em>
-          </div>
-          <strong>面向笔记本的 Ollama 选型指南：如何更现实地看待内存和显存</strong>
-          <span>帮助用户在笔记本上为 Ollama 选择更现实的本地模型，而不是盲目追大参数量。</span>
-          <p class="card-caption">面向笔记本的 Ollama 选型指南：如何更现实地看待内存和显存</p>
-        </a>
-    
-
-        <a class="link-card insight-card" href="/zh/insights/mlx-for-apple-silicon-local-ai-planning/">
-          <div class="card-meta">
-            <span class="section-pill">运行时规划</span>
-            <em>2026-03-16</em>
-          </div>
-          <strong>MLX 与 Apple Silicon：围绕统一内存规划本地 AI，而不是迷信显卡参数</strong>
-          <span>帮助 Apple Silicon 用户围绕统一内存做 MLX 选型与部署规划。</span>
-          <p class="card-caption">MLX 与 Apple Silicon：围绕统一内存规划本地 AI，而不是迷信显卡参数</p>
-        </a>
-    
-
-        <a class="link-card insight-card" href="/zh/insights/gemma-local-deployment-guide/">
-          <div class="card-meta">
-            <span class="section-pill">模型家族</span>
-            <em>2026-03-16</em>
-          </div>
-          <strong>gemma 本地部署指南：通常需要怎样的硬件</strong>
-          <span>帮助用户理解 gemma 系列模型通常如何映射到本地硬件与部署决策。</span>
-          <p class="card-caption">gemma</p>
-        </a>
-    
-
-        <a class="link-card insight-card" href="/zh/insights/deepseek-local-deployment-guide/">
-          <div class="card-meta">
-            <span class="section-pill">模型家族</span>
-            <em>2026-03-16</em>
-          </div>
-          <strong>DeepSeek 本地部署指南：通常需要怎样的硬件</strong>
-          <span>帮助用户理解 DeepSeek 系列模型通常如何映射到本地硬件与部署决策。</span>
-          <p class="card-caption">DeepSeek</p>
         </a>
     
 
@@ -216,33 +136,77 @@
       </div>
     </section>
 
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">相邻主题集群</p>
+          <h2>用相邻分类扩展用户的决策路径。</h2>
+        </div>
+      </div>
+      <div class="link-grid insights-grid">
+
+        <a class="link-card category-card" href="/zh/insights/families/">
+          <div class="card-meta">
+            <span class="section-pill">模型家族</span>
+            <em>2 个页面</em>
+          </div>
+          <strong>面向本地 AI 团队的模型家族部署指南</strong>
+          <span>把用户对 Llama、Qwen、DeepSeek 等家族的广泛兴趣，转化为具体适配决策的专题页面。</span>
+          <p class="card-caption">最近更新: 2026-03-16</p>
+        </a>
+    
+
+        <a class="link-card category-card" href="/zh/insights/runtimes/">
+          <div class="card-meta">
+            <span class="section-pill">运行时规划</span>
+            <em>2 个页面</em>
+          </div>
+          <strong>面向 Ollama、MLX 和 llama.cpp 工作流的运行时规划页面</strong>
+          <span>围绕运行时的内容，说明操作便利性在哪一步结束，以及为什么硬件适配判断依然重要。</span>
+          <p class="card-caption">最近更新: 2026-03-16</p>
+        </a>
+    
+      </div>
+    </section>
+
     <section class="section section-cta reveal">
       <div>
-        <p class="eyebrow">下一步</p>
-        <h2>先用内容承接搜索意图，再把真正有需求的用户导向文档和产品工作流。</h2>
+        <p class="eyebrow">该分类下的页面</p>
+        <h2>从内容浏览进入产品评估。</h2>
       </div>
       <div class="cta-actions">
         <a class="button button-primary" href="/zh/docs/">阅读文档</a>
-        <a class="button button-secondary" href="/zh/use-cases/">查看应用场景</a>
-        <a class="button button-secondary" href="/zh/feed.xml">通过 RSS 订阅</a>
+        <a class="button button-secondary" href="/zh/insights/">全部洞察</a>
+        <a class="button button-secondary" href="/zh/feed.xml">RSS 订阅</a>
       </div>
     </section>
   </main>
 
   <footer class="footer">
     <div>
-      <strong>LLMFit 洞察</strong>
-      <p>在不偏离产品主题的前提下，为站点获取更相关搜索流量的原创内容。</p>
+      <strong>LLMFit 硬件适配</strong>
+      <p>为本地 AI 运营者、开发者和基础设施团队准备的结构化分类页面。</p>
     </div>
     <div class="footer-links">
       <a href="/zh/insights/">洞察</a>
+      <a href="/zh/insights/hardware/">硬件适配</a>
       <a href="/zh/docs/">文档</a>
-      <a href="/zh/api/">API</a>
       <a href="/zh/faq/">常见问题</a>
     </div>
     <p><span class="year"></span> miounet11/llmfit</p>
   </footer>
 
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "headline": "面向真实本地 AI 部署的硬件适配指南",
+  "description": "围绕内存、显存和机器级规划展开的页面，帮助用户在下载本地模型前先做现实判断。",
+  "inLanguage": "zh-CN",
+  "isPartOf": "https://www.igeminicli.cn/zh/insights/",
+  "mainEntityOfPage": "https://www.igeminicli.cn/zh/insights/hardware/"
+}
+  </script>
   <script src="/app.js"></script>
 </body>
 </html>

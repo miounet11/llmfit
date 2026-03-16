@@ -14,10 +14,34 @@
     </item>
             
     <item>
+      <title>Best local AI reasoning models for 32GB RAM and 16GB VRAM</title>
+      <link>https://www.igeminicli.cn/insights/reasoning-models-for-32gb-ram-and-16gb-vram/</link>
+      <guid>https://www.igeminicli.cn/insights/reasoning-models-for-32gb-ram-and-16gb-vram/</guid>
+      <description>Use bundled LLMFit catalog data to shortlist realistic reasoning models for a 32GB RAM desktop with 16GB VRAM without downloading models that are too large.</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
+    </item>
+            
+    <item>
       <title>Ollama model selection for laptops: how to stay realistic about RAM and VRAM</title>
       <link>https://www.igeminicli.cn/insights/ollama-model-selection-for-laptops/</link>
       <guid>https://www.igeminicli.cn/insights/ollama-model-selection-for-laptops/</guid>
       <description>A practical guide to choosing Ollama-compatible local models without overcommitting weak laptop hardware.</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
+    </item>
+            
+    <item>
+      <title>MLX for Apple Silicon: planning local AI around unified memory instead of GPU myths</title>
+      <link>https://www.igeminicli.cn/insights/mlx-for-apple-silicon-local-ai-planning/</link>
+      <guid>https://www.igeminicli.cn/insights/mlx-for-apple-silicon-local-ai-planning/</guid>
+      <description>Use unified-memory-aware planning to choose better MLX model paths on Apple Silicon.</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
+    </item>
+            
+    <item>
+      <title>gemma local deployment guide: what hardware usually fits</title>
+      <link>https://www.igeminicli.cn/insights/gemma-local-deployment-guide/</link>
+      <guid>https://www.igeminicli.cn/insights/gemma-local-deployment-guide/</guid>
+      <description>An original LLMFit guide to understanding how gemma models usually map to local hardware and deployment decisions.</description>
       <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
     </item>
             
@@ -42,6 +66,22 @@
       <link>https://www.igeminicli.cn/insights/coding-models-for-32gb-ram-and-16gb-vram/</link>
       <guid>https://www.igeminicli.cn/insights/coding-models-for-32gb-ram-and-16gb-vram/</guid>
       <description>Use bundled LLMFit catalog data to shortlist realistic coding models for a 32GB RAM desktop with 16GB VRAM without downloading models that are too large.</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
+    </item>
+            
+    <item>
+      <title>Best local AI coding models for 32GB RAM and 12GB VRAM</title>
+      <link>https://www.igeminicli.cn/insights/coding-models-for-32gb-ram-and-12gb-vram/</link>
+      <guid>https://www.igeminicli.cn/insights/coding-models-for-32gb-ram-and-12gb-vram/</guid>
+      <description>Use bundled LLMFit catalog data to shortlist realistic coding models for a 32GB RAM desktop with 12GB VRAM without downloading models that are too large.</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
+    </item>
+            
+    <item>
+      <title>Best local AI chat models for 64GB RAM and 24GB VRAM</title>
+      <link>https://www.igeminicli.cn/insights/chat-models-for-64gb-ram-and-24gb-vram/</link>
+      <guid>https://www.igeminicli.cn/insights/chat-models-for-64gb-ram-and-24gb-vram/</guid>
+      <description>Use bundled LLMFit catalog data to shortlist realistic chat models for a 64GB RAM local AI workstation with 24GB VRAM without downloading models that are too large.</description>
       <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
     </item>
             

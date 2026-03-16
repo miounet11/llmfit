@@ -578,16 +578,40 @@ main {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+
+.card-meta em {
+  font-style: normal;
+  color: var(--accent-strong);
+  font-size: 0.86rem;
+}
+
+.section-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.9rem;
+  padding: 0.24rem 0.72rem;
+  border-radius: 999px;
+  background: rgba(14, 143, 132, 0.12);
+  color: var(--accent-strong);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .insight-card {
   min-height: 100%;
 }
 
 .insight-card em {
   display: inline-block;
-  margin-top: 0.7rem;
-  font-style: normal;
-  color: var(--accent-strong);
-  font-size: 0.88rem;
 }
 
 .article-list-card {
@@ -596,6 +620,17 @@ main {
 
 .article-list {
   margin-top: 0;
+}
+
+.category-card,
+.insight-card {
+  min-height: 100%;
+}
+
+.card-caption {
+  margin-top: 0.9rem;
+  color: var(--muted);
+  line-height: 1.6;
 }
 
 .section-cta {

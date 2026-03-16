@@ -14,10 +14,34 @@
     </item>
             
     <item>
+      <title>32GB 内存 + 16GB 显存 适合跑哪些本地 推理模型？</title>
+      <link>https://www.igeminicli.cn/zh/insights/reasoning-models-for-32gb-ram-and-16gb-vram/</link>
+      <guid>https://www.igeminicli.cn/zh/insights/reasoning-models-for-32gb-ram-and-16gb-vram/</guid>
+      <description>基于 LLMFit 内置目录数据，为 32GB 内存 + 16GB 显存桌面机 筛选更现实的 推理模型，避免先下载再发现模型过重。</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
+    </item>
+            
+    <item>
       <title>面向笔记本的 Ollama 选型指南：如何更现实地看待内存和显存</title>
       <link>https://www.igeminicli.cn/zh/insights/ollama-model-selection-for-laptops/</link>
       <guid>https://www.igeminicli.cn/zh/insights/ollama-model-selection-for-laptops/</guid>
       <description>帮助用户在笔记本上为 Ollama 选择更现实的本地模型，而不是盲目追大参数量。</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
+    </item>
+            
+    <item>
+      <title>MLX 与 Apple Silicon：围绕统一内存规划本地 AI，而不是迷信显卡参数</title>
+      <link>https://www.igeminicli.cn/zh/insights/mlx-for-apple-silicon-local-ai-planning/</link>
+      <guid>https://www.igeminicli.cn/zh/insights/mlx-for-apple-silicon-local-ai-planning/</guid>
+      <description>帮助 Apple Silicon 用户围绕统一内存做 MLX 选型与部署规划。</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
+    </item>
+            
+    <item>
+      <title>gemma 本地部署指南：通常需要怎样的硬件</title>
+      <link>https://www.igeminicli.cn/zh/insights/gemma-local-deployment-guide/</link>
+      <guid>https://www.igeminicli.cn/zh/insights/gemma-local-deployment-guide/</guid>
+      <description>帮助用户理解 gemma 系列模型通常如何映射到本地硬件与部署决策。</description>
       <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
     </item>
             
@@ -42,6 +66,22 @@
       <link>https://www.igeminicli.cn/zh/insights/coding-models-for-32gb-ram-and-16gb-vram/</link>
       <guid>https://www.igeminicli.cn/zh/insights/coding-models-for-32gb-ram-and-16gb-vram/</guid>
       <description>基于 LLMFit 内置目录数据，为 32GB 内存 + 16GB 显存桌面机 筛选更现实的 编程模型，避免先下载再发现模型过重。</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
+    </item>
+            
+    <item>
+      <title>32GB 内存 + 12GB 显存 适合跑哪些本地 编程模型？</title>
+      <link>https://www.igeminicli.cn/zh/insights/coding-models-for-32gb-ram-and-12gb-vram/</link>
+      <guid>https://www.igeminicli.cn/zh/insights/coding-models-for-32gb-ram-and-12gb-vram/</guid>
+      <description>基于 LLMFit 内置目录数据，为 32GB 内存 + 12GB 显存桌面机 筛选更现实的 编程模型，避免先下载再发现模型过重。</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
+    </item>
+            
+    <item>
+      <title>64GB 内存 + 24GB 显存 适合跑哪些本地 对话模型？</title>
+      <link>https://www.igeminicli.cn/zh/insights/chat-models-for-64gb-ram-and-24gb-vram/</link>
+      <guid>https://www.igeminicli.cn/zh/insights/chat-models-for-64gb-ram-and-24gb-vram/</guid>
+      <description>基于 LLMFit 内置目录数据，为 64GB 内存 + 24GB 显存本地 AI 工作站 筛选更现实的 对话模型，避免先下载再发现模型过重。</description>
       <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
     </item>
             
