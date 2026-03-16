@@ -1,0 +1,6 @@
+LLMFit in this repository is based on the original MIT-licensed project
+`AlexsJones/llmfit`.
+
+This fork keeps the upstream Rust engine and packages it as a more user-ready
+open-source product with updated repository metadata, release automation,
+community files, deployment assets, and a dedicated marketing/docs site.
