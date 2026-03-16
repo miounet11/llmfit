@@ -565,6 +565,39 @@ main {
   line-height: 1.7;
 }
 
+.article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 1.15rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.insights-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.insight-card {
+  min-height: 100%;
+}
+
+.insight-card em {
+  display: inline-block;
+  margin-top: 0.7rem;
+  font-style: normal;
+  color: var(--accent-strong);
+  font-size: 0.88rem;
+}
+
+.article-list-card {
+  margin-top: 1rem;
+}
+
+.article-list {
+  margin-top: 0;
+}
+
 .section-cta {
   margin-top: 4.8rem;
   display: flex;

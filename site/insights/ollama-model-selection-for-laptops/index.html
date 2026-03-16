@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ollama model selection for laptops: how to stay realistic about RAM and VRAM | LLMFit</title>
+  <meta name="description" content="A practical guide to choosing Ollama-compatible local models without overcommitting weak laptop hardware.">
+  <link rel="canonical" href="https://www.igeminicli.cn/insights/ollama-model-selection-for-laptops/">
+  <link rel="alternate" hreflang="en" href="https://www.igeminicli.cn/insights/ollama-model-selection-for-laptops/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.igeminicli.cn/zh/insights/ollama-model-selection-for-laptops/">
+  <link rel="alternate" hreflang="x-default" href="https://www.igeminicli.cn/insights/ollama-model-selection-for-laptops/">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="insights">
+  <div class="background-glow background-glow-a"></div>
+  <div class="background-glow background-glow-b"></div>
+
+  <header class="topbar">
+    <div class="topbar-shell">
+      <a class="brand" href="/">
+        <img src="/assets/icon.svg" alt="LLMFit logo">
+        <span>LLMFit</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="nav" id="site-nav">
+        <a data-page-link="home" href="/">Home</a>
+        <a data-page-link="docs" href="/docs/">Docs</a>
+        <a data-page-link="use-cases" href="/use-cases/">Use Cases</a>
+        <a data-page-link="api" href="/api/">API</a>
+        <a data-page-link="self-host" href="/self-host/">Self-Host</a>
+        <a data-page-link="insights" href="/insights/">Insights</a>
+        <a data-page-link="faq" href="/faq/">FAQ</a>
+        <div class="language-switcher" aria-label="Language switcher">
+          <a data-lang-link="en" href="/insights/ollama-model-selection-for-laptops/">EN</a>
+          <a data-lang-link="zh" href="/zh/insights/ollama-model-selection-for-laptops/">中文</a>
+        </div>
+        <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
+      </nav>
+    </div>
+  </header>
+    
+  <main>
+    <section class="page-hero reveal">
+      <p class="eyebrow">Insights</p>
+      <h1>Ollama model selection for laptops: how to stay realistic about RAM and VRAM</h1>
+      <p class="lede">Ollama makes pulling a model easy. The hard part is deciding which model is worth pulling onto a laptop in the first place.</p>
+      <div class="article-meta">
+        <span>Published: 2026-03-16</span>
+        <span>Focus: Ollama model selection for laptops: how to stay realistic about RAM and VRAM</span>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="kpi-grid">
+          <article class="metric-card"><strong>18</strong><span>high-download catalog entries reviewed for this guide</span></article>
+          <article class="metric-card"><strong>5.1GB</strong><span>median recommended RAM across the reference slice</span></article>
+          <article class="metric-card"><strong>32768</strong><span>median context length across the reference slice</span></article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Why this page is worth reading</p>
+          <h2>Ollama model selection for laptops: how to stay realistic about RAM and VRAM</h2>
+        </div>
+      </div>
+      <div class="callout">
+        <p>This article is generated from a curated topic pool and the bundled LLMFit model catalog. It is intended as fit-aware editorial guidance, not as a guaranteed benchmark.</p>
+      </div>
+      <div class="content-card article-list-card">
+        <ul class="checklist article-list">
+            <li>Clarifies where runtime convenience ends and hardware fit analysis begins</li>
+            <li>Helps avoid overcommitting local hardware before a workflow is proven</li>
+            <li>Pairs product messaging with operational checks you can run today</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Representative catalog examples</p>
+          <h2>Ollama model selection for laptops: how to stay realistic about RAM and VRAM</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+
+        <article class="content-card">
+          <h3>Qwen/Qwen2.5-7B-Instruct</h3>
+          <p>Instruction following, chat</p>
+          <ul class="checklist">
+            <li>Recommended RAM: 7.1GB</li>
+            <li>Min VRAM: 3.9GB</li>
+            <li>Context: 32768</li>
+            <li>Downloads: 20.7M</li>
+          </ul>
+        </article>
+    
+
+        <article class="content-card">
+          <h3>Qwen/Qwen3-0.6B</h3>
+          <p>General purpose text generation</p>
+          <ul class="checklist">
+            <li>Recommended RAM: 2.0GB</li>
+            <li>Min VRAM: 0.5GB</li>
+            <li>Context: 40960</li>
+            <li>Downloads: 11.3M</li>
+          </ul>
+        </article>
+    
+
+        <article class="content-card">
+          <h3>openai/gpt-oss-20b</h3>
+          <p>General purpose text generation</p>
+          <ul class="checklist">
+            <li>Recommended RAM: 20.0GB</li>
+            <li>Min VRAM: 11.0GB</li>
+            <li>Context: 131072</li>
+            <li>Downloads: 7.0M</li>
+          </ul>
+        </article>
+    
+
+        <article class="content-card">
+          <h3>dphn/dolphin-2.9.1-yi-1.5-34b</h3>
+          <p>General purpose text generation</p>
+          <ul class="checklist">
+            <li>Recommended RAM: 32.0GB</li>
+            <li>Min VRAM: 17.6GB</li>
+            <li>Context: 8192</li>
+            <li>Downloads: 4.7M</li>
+          </ul>
+        </article>
+    
+
+        <article class="content-card">
+          <h3>Qwen/Qwen2-1.5B-Instruct</h3>
+          <p>Instruction following, chat</p>
+          <ul class="checklist">
+            <li>Recommended RAM: 2.0GB</li>
+            <li>Min VRAM: 0.8GB</li>
+            <li>Context: 32768</li>
+            <li>Downloads: 3.5M</li>
+          </ul>
+        </article>
+    
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">How to verify this on your own machine</p>
+          <h2>LLMFit</h2>
+        </div>
+      </div>
+      <div class="code-grid">
+        <article class="content-card">
+          <h3>CLI</h3>
+          <pre class="code-block"><code>llmfit system
+llmfit recommend --json --limit 5</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>Operational takeaway</h3>
+          <p>Convenience layers matter, but they work best when the placement decision is already realistic. Use LLMFit as the decision layer before the runtime or container workflow begins.</p>
+        </article>
+      </div>
+      <div class="detail-grid">
+
+        <article class="content-card">
+          <h3>Where convenience ends and planning begins</h3>
+          <p>Runtime tools make local AI easier to operate, but they do not answer whether the chosen model leaves enough headroom for the real workflow.</p>
+        </article>
+        
+
+        <article class="content-card">
+          <h3>Why this still belongs on a professional site</h3>
+          <p>Teams repeatedly search for approachable explanations of runtimes, formats, and deployment paths. A useful site should answer that intent with fit-aware guidance instead of generic hype.</p>
+        </article>
+        
+
+        <article class="content-card">
+          <h3>How to use LLMFit in the loop</h3>
+          <p>Use the runtime for execution, and use LLMFit before that point to decide which machine, model family, and memory budget are realistic.</p>
+        </article>
+        
+      </div>
+    </section>
+
+    <section class="section reveal faq-list">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Frequently asked questions</p>
+          <h2>Ollama model selection for laptops: how to stay realistic about RAM and VRAM</h2>
+        </div>
+      </div>
+
+      <details open>
+        <summary>Is this page the final deployment answer?</summary>
+        <p>No. It is a planning shortcut built from the bundled LLMFit catalog. You should still validate the exact node with the CLI or REST API.</p>
+      </details>
+        
+
+      <details>
+        <summary>Why focus on fit instead of a benchmark chart?</summary>
+        <p>Because this topic still has 18 candidate catalog entries after hardware filtering. Real deployments fail on memory and runtime limits before leaderboard differences matter.</p>
+      </details>
+        
+
+      <details>
+        <summary>What should I verify next?</summary>
+        <p>Check detected hardware, shortlist a few candidates, and confirm context requirements. The median context in this slice is about 32768.</p>
+      </details>
+        
+    </section>
+
+    <section class="section section-cta reveal">
+      <div>
+        <p class="eyebrow">Insights</p>
+        <h2>Back to insights</h2>
+      </div>
+      <div class="cta-actions">
+        <a class="button button-primary" href="/insights/">Back to insights</a>
+        <a class="button button-secondary" href="/docs/">Read the docs</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <strong>LLMFit Insights</strong>
+      <p>Original, fit-aware content for teams evaluating local AI deployments.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/insights/">Insights</a>
+      <a href="/docs/">Docs</a>
+      <a href="/api/">API</a>
+      <a href="/faq/">FAQ</a>
+    </div>
+    <p><span class="year"></span> miounet11/llmfit</p>
+  </footer>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Ollama model selection for laptops: how to stay realistic about RAM and VRAM",
+  "description": "A practical guide to choosing Ollama-compatible local models without overcommitting weak laptop hardware.",
+  "datePublished": "2026-03-16",
+  "dateModified": "2026-03-16",
+  "author": {
+    "@type": "Organization",
+    "name": "LLMFit"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "LLMFit"
+  },
+  "mainEntityOfPage": "https://www.igeminicli.cn/insights/ollama-model-selection-for-laptops/",
+  "about": "Ollama model selection for laptops: how to stay realistic about RAM and VRAM",
+  "inLanguage": "en"
+}
+  </script>
+  <script src="/app.js"></script>
+</body>
+</html>

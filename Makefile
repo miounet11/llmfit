@@ -1,7 +1,7 @@
 # Makefile for llmfit
 # Convenience commands for building, testing, previewing the site, and running the local stack.
 
-.PHONY: help build release clean run test update-models update-docker-models update-catalogs check fmt clippy install site-preview stack-up stack-down
+.PHONY: help build release clean run test update-models update-docker-models update-catalogs check fmt clippy install site-preview generate-content publish-content stack-up stack-down
 
 # Default target
 help:
@@ -13,6 +13,8 @@ help:
 	@echo "  make run            - Run in TUI mode (debug)"
 	@echo "  make test           - Run all unit tests"
 	@echo "  make site-preview   - Preview the static marketing/docs site at http://127.0.0.1:4173"
+	@echo "  make generate-content - Publish 4 new programmatic SEO pages into site/"
+	@echo "  make publish-content  - Build generated pages into a staging dir and optionally rsync to \$LLMFIT_CONTENT_DOCROOT"
 	@echo "  make stack-up       - Run the local API + web site stack with Docker Compose"
 	@echo "  make stack-down     - Stop the local API + web site stack"
 	@echo "  make update-models  - Fetch latest model data from HuggingFace"
@@ -81,6 +83,14 @@ install:
 # Preview the static site locally
 site-preview:
 	python3 -m http.server 4173 --directory site
+
+# Generate 4 new content pages inside site/
+generate-content:
+	python3 scripts/generate_site_content.py --count $${COUNT:-4}
+
+# Build generated pages in a staging dir and optionally publish them
+publish-content:
+	bash scripts/publish_site_content.sh
 
 # Run the local stack
 stack-up:

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>LLMFit Insights</title>
+    <link>https://www.igeminicli.cn/insights/</link>
+    <description>Original fit-aware local AI content from LLMFit.</description>
+
+    <item>
+      <title>Best local AI reasoning models for 64GB RAM and 24GB VRAM</title>
+      <link>https://www.igeminicli.cn/insights/reasoning-models-for-64gb-ram-and-24gb-vram/</link>
+      <guid>https://www.igeminicli.cn/insights/reasoning-models-for-64gb-ram-and-24gb-vram/</guid>
+      <description>Use bundled LLMFit catalog data to shortlist realistic reasoning models for a 64GB RAM local AI workstation with 24GB VRAM without downloading models that are too large.</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
+    </item>
+            
+    <item>
+      <title>Ollama model selection for laptops: how to stay realistic about RAM and VRAM</title>
+      <link>https://www.igeminicli.cn/insights/ollama-model-selection-for-laptops/</link>
+      <guid>https://www.igeminicli.cn/insights/ollama-model-selection-for-laptops/</guid>
+      <description>A practical guide to choosing Ollama-compatible local models without overcommitting weak laptop hardware.</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
+    </item>
+            
+    <item>
+      <title>DeepSeek local deployment guide: what hardware usually fits</title>
+      <link>https://www.igeminicli.cn/insights/deepseek-local-deployment-guide/</link>
+      <guid>https://www.igeminicli.cn/insights/deepseek-local-deployment-guide/</guid>
+      <description>An original LLMFit guide to understanding how DeepSeek models usually map to local hardware and deployment decisions.</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
+    </item>
+            
+    <item>
+      <title>Best local AI coding models for 64GB RAM and 24GB VRAM</title>
+      <link>https://www.igeminicli.cn/insights/coding-models-for-64gb-ram-and-24gb-vram/</link>
+      <guid>https://www.igeminicli.cn/insights/coding-models-for-64gb-ram-and-24gb-vram/</guid>
+      <description>Use bundled LLMFit catalog data to shortlist realistic coding models for a 64GB RAM local AI workstation with 24GB VRAM without downloading models that are too large.</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
+    </item>
+            
+    <item>
+      <title>Best local AI coding models for 32GB RAM and 16GB VRAM</title>
+      <link>https://www.igeminicli.cn/insights/coding-models-for-32gb-ram-and-16gb-vram/</link>
+      <guid>https://www.igeminicli.cn/insights/coding-models-for-32gb-ram-and-16gb-vram/</guid>
+      <description>Use bundled LLMFit catalog data to shortlist realistic coding models for a 32GB RAM desktop with 16GB VRAM without downloading models that are too large.</description>
+      <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
+    </item>
+            
+  </channel>
+</rss>

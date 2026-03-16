@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>64GB 内存 + 24GB 显存 适合跑哪些本地 推理模型？ | LLMFit</title>
+  <meta name="description" content="基于 LLMFit 内置目录数据，为 64GB 内存 + 24GB 显存本地 AI 工作站 筛选更现实的 推理模型，避免先下载再发现模型过重。">
+  <link rel="canonical" href="https://www.igeminicli.cn/zh/insights/reasoning-models-for-64gb-ram-and-24gb-vram/">
+  <link rel="alternate" hreflang="en" href="https://www.igeminicli.cn/insights/reasoning-models-for-64gb-ram-and-24gb-vram/">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.igeminicli.cn/zh/insights/reasoning-models-for-64gb-ram-and-24gb-vram/">
+  <link rel="alternate" hreflang="x-default" href="https://www.igeminicli.cn/insights/reasoning-models-for-64gb-ram-and-24gb-vram/">
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="insights">
+  <div class="background-glow background-glow-a"></div>
+  <div class="background-glow background-glow-b"></div>
+
+  <header class="topbar">
+    <div class="topbar-shell">
+      <a class="brand" href="/zh/">
+        <img src="/assets/icon.svg" alt="LLMFit logo">
+        <span>LLMFit</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">菜单</button>
+      <nav class="nav" id="site-nav">
+        <a data-page-link="home" href="/zh">首页</a>
+        <a data-page-link="docs" href="/zh/docs/">文档</a>
+        <a data-page-link="use-cases" href="/zh/use-cases/">应用场景</a>
+        <a data-page-link="api" href="/zh/api/">API</a>
+        <a data-page-link="self-host" href="/zh/self-host/">自托管</a>
+        <a data-page-link="insights" href="/zh/insights/">洞察</a>
+        <a data-page-link="faq" href="/zh/faq/">常见问题</a>
+        <div class="language-switcher" aria-label="Language switcher">
+          <a data-lang-link="en" href="/insights/reasoning-models-for-64gb-ram-and-24gb-vram/">EN</a>
+          <a data-lang-link="zh" href="/zh/insights/reasoning-models-for-64gb-ram-and-24gb-vram/">中文</a>
+        </div>
+        <a class="nav-cta" href="https://github.com/miounet11/llmfit">GitHub</a>
+      </nav>
+    </div>
+  </header>
+    
+  <main>
+    <section class="page-hero reveal">
+      <p class="eyebrow">洞察</p>
+      <h1>64GB 内存 + 24GB 显存 适合跑哪些本地 推理模型？</h1>
+      <p class="lede">64GB 内存 + 24GB 显存本地 AI 工作站 用户最常见的浪费，往往不是推理本身，而是先下载一个看起来很强的模型，然后才发现它并不适合当前机器上的 推理 场景。这篇页面就是用 LLMFit 的内置目录，提前把这种错误过滤掉。</p>
+      <div class="article-meta">
+        <span>发布日期: 2026-03-16</span>
+        <span>聚焦主题: 64GB 内存 / 24GB 显存</span>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="kpi-grid">
+          <article class="metric-card"><strong>27</strong><span>内存过滤后仍可用的目录条目数</span></article>
+          <article class="metric-card"><strong>4.4GB</strong><span>当前切片的建议内存中位数</span></article>
+          <article class="metric-card"><strong>128000</strong><span>当前候选集合的上下文中位数</span></article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">为什么这篇页面值得看</p>
+          <h2>64GB 内存 + 24GB 显存 适合跑哪些本地 推理模型？</h2>
+        </div>
+      </div>
+      <div class="callout">
+        <p>这篇内容基于受控主题池和 LLMFit 内置模型目录生成，目标是提供带适配判断的编辑型内容，而不是承诺型 Benchmark 结论。</p>
+      </div>
+      <div class="content-card article-list-card">
+        <ul class="checklist article-list">
+            <li>先把结果限制在 64GB 内存 和约 24GB 显存可承受的范围内</li>
+            <li>重点讨论 推理模型，而不是泛化的模型宣传</li>
+            <li>把选型问题先收敛成可执行的起点，再交给 CLI 或 API 验证</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">代表性目录示例</p>
+          <h2>64GB 内存 / 24GB 显存</h2>
+        </div>
+      </div>
+      <div class="card-grid">
+
+        <article class="content-card">
+          <h3>Qwen/Qwen2.5-Math-1.5B</h3>
+          <p>General purpose text generation</p>
+          <ul class="checklist">
+            <li>建议内存: 2.0GB</li>
+            <li>最低显存: 0.8GB</li>
+            <li>上下文: 4096</li>
+            <li>下载量: 1.1M</li>
+          </ul>
+        </article>
+    
+
+        <article class="content-card">
+          <h3>deepseek-ai/DeepSeek-R1-Distill-Qwen-32B</h3>
+          <p>Advanced reasoning, chain-of-thought</p>
+          <ul class="checklist">
+            <li>建议内存: 30.5GB</li>
+            <li>最低显存: 16.8GB</li>
+            <li>上下文: 131072</li>
+            <li>下载量: 873.2K</li>
+          </ul>
+        </article>
+    
+
+        <article class="content-card">
+          <h3>KiteFishAI/Minnow-Math-1.5B</h3>
+          <p>General purpose text generation</p>
+          <ul class="checklist">
+            <li>建议内存: 2.0GB</li>
+            <li>最低显存: 0.8GB</li>
+            <li>上下文: 4096</li>
+            <li>下载量: 147.6K</li>
+          </ul>
+        </article>
+    
+
+        <article class="content-card">
+          <h3>lmstudio-community/Phi-4-mini-reasoning-MLX-4bit</h3>
+          <p>Advanced reasoning, chain-of-thought</p>
+          <ul class="checklist">
+            <li>建议内存: 2.0GB</li>
+            <li>最低显存: 0.5GB</li>
+            <li>上下文: 131072</li>
+            <li>下载量: 43.4K</li>
+          </ul>
+        </article>
+    
+
+        <article class="content-card">
+          <h3>LGAI-EXAONE/EXAONE-4.0-32B</h3>
+          <p>Hybrid reasoning, multilingual</p>
+          <ul class="checklist">
+            <li>建议内存: 29.8GB</li>
+            <li>最低显存: 16.4GB</li>
+            <li>上下文: 131072</li>
+            <li>下载量: 0</li>
+          </ul>
+        </article>
+    
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">如何在自己的机器上验证</p>
+          <h2>LLMFit</h2>
+        </div>
+      </div>
+      <div class="code-grid">
+        <article class="content-card">
+          <h3>CLI</h3>
+          <pre class="code-block"><code>llmfit recommend --json --use-case reasoning --limit 5</code></pre>
+        </article>
+        <article class="content-card">
+          <h3>运营建议</h3>
+          <p>真正有用的问题不是模型能不能勉强启动，而是它在 推理 工作流里是否还能留下足够余量。这类页面应该被当作第一轮 shortlist，然后再用 `llmfit recommend` 对真实节点做最终确认。</p>
+        </article>
+      </div>
+      <div class="detail-grid">
+
+        <article class="content-card">
+          <h3>这类硬件通常意味着什么</h3>
+          <p>64GB 内存 + 24GB 显存本地 AI 工作站 并不等于只能做演示。只要模型家族、上下文预算和运行时选得保守，它依然可以支撑有实际价值的本地工作流。在面向 推理模型 的目录切片中，经过内存过滤后仍有 27 个可用条目。</p>
+        </article>
+        
+
+        <article class="content-card">
+          <h3>应该如何理解适配度</h3>
+          <p>这一批候选的建议内存中位数约为 4.4GB，上四分位约为 8.4GB。这提醒我们，“勉强能跑”和“适合日常使用”并不是同一个阈值。</p>
+        </article>
+        
+
+        <article class="content-card">
+          <h3>用 LLMFit 还要再确认什么</h3>
+          <p>先在真实机器上跑本地推荐流程，确认运行时和检测结果，再从少量现实候选中做最后决定，不要一开始就下载重量级模型。</p>
+        </article>
+        
+      </div>
+    </section>
+
+    <section class="section reveal faq-list">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">常见问题</p>
+          <h2>64GB 内存 + 24GB 显存 适合跑哪些本地 推理模型？</h2>
+        </div>
+      </div>
+
+      <details open>
+        <summary>这篇页面能直接替代最终部署结论吗？</summary>
+        <p>不能。它只是基于 LLMFit 内置目录做出的规划起点，最终仍应通过 CLI 或 REST API 在真实节点上验证。</p>
+      </details>
+        
+
+      <details>
+        <summary>为什么不直接看 Benchmark 榜单？</summary>
+        <p>因为在完成硬件过滤后，这个主题下仍然有 27 个候选条目。现实部署往往先败给内存和运行时限制，而不是榜单差异。</p>
+      </details>
+        
+
+      <details>
+        <summary>接下来应该验证什么？</summary>
+        <p>先确认真实硬件检测结果，再筛选少量候选，并核对上下文需求。 这一批候选的上下文中位数大约是 128000。</p>
+      </details>
+        
+    </section>
+
+    <section class="section section-cta reveal">
+      <div>
+        <p class="eyebrow">洞察</p>
+        <h2>返回洞察中心</h2>
+      </div>
+      <div class="cta-actions">
+        <a class="button button-primary" href="/zh/insights/">返回洞察中心</a>
+        <a class="button button-secondary" href="/zh/docs/">阅读文档</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <strong>LLMFit 洞察</strong>
+      <p>为评估本地 AI 部署的团队提供原创且带适配判断的内容。</p>
+    </div>
+    <div class="footer-links">
+      <a href="/zh/insights/">洞察</a>
+      <a href="/zh/docs/">文档</a>
+      <a href="/zh/api/">API</a>
+      <a href="/zh/faq/">常见问题</a>
+    </div>
+    <p><span class="year"></span> miounet11/llmfit</p>
+  </footer>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "64GB 内存 + 24GB 显存 适合跑哪些本地 推理模型？",
+  "description": "基于 LLMFit 内置目录数据，为 64GB 内存 + 24GB 显存本地 AI 工作站 筛选更现实的 推理模型，避免先下载再发现模型过重。",
+  "datePublished": "2026-03-16",
+  "dateModified": "2026-03-16",
+  "author": {
+    "@type": "Organization",
+    "name": "LLMFit"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "LLMFit"
+  },
+  "mainEntityOfPage": "https://www.igeminicli.cn/zh/insights/reasoning-models-for-64gb-ram-and-24gb-vram/",
+  "about": "64GB 内存 / 24GB 显存",
+  "inLanguage": "zh-CN"
+}
+  </script>
+  <script src="/app.js"></script>
+</body>
+</html>

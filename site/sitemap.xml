@@ -53,20 +53,80 @@
   <url>
     <loc>https://www.igeminicli.cn/compare/</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.igeminicli.cn/zh/compare/</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.igeminicli.cn/faq/</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.igeminicli.cn/zh/faq/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.igeminicli.cn/insights/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.igeminicli.cn/zh/insights/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.igeminicli.cn/insights/reasoning-models-for-64gb-ram-and-24gb-vram/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.igeminicli.cn/zh/insights/reasoning-models-for-64gb-ram-and-24gb-vram/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.igeminicli.cn/insights/ollama-model-selection-for-laptops/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.igeminicli.cn/zh/insights/ollama-model-selection-for-laptops/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.igeminicli.cn/insights/deepseek-local-deployment-guide/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.igeminicli.cn/zh/insights/deepseek-local-deployment-guide/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.igeminicli.cn/insights/coding-models-for-64gb-ram-and-24gb-vram/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.igeminicli.cn/zh/insights/coding-models-for-64gb-ram-and-24gb-vram/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.igeminicli.cn/insights/coding-models-for-32gb-ram-and-16gb-vram/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.igeminicli.cn/zh/insights/coding-models-for-32gb-ram-and-16gb-vram/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

@@ -41,6 +41,42 @@ You can also drive the same rollout from your local machine:
 scripts/deploy-site.sh root@your-server /opt/llmfit
 ```
 
+## Daily content publishing
+
+The repository now includes a safe programmatic-content pipeline:
+
+- `scripts/generate_site_content.py`: selects unpublished topics and renders bilingual pages
+- `scripts/publish_site_content.sh`: builds a staging site tree and optionally rsyncs it to a live docroot
+- `scripts/refresh_and_publish_site.sh`: updates the repo clone, then runs the publish step
+
+Recommended production pattern:
+
+1. Keep a clean repo clone on the server, for example `/opt/llmfit-publisher/repo`.
+2. Store the publish manifest outside the repo, for example `/opt/llmfit-publisher/state/content-manifest.json`.
+3. Build generated output into a separate staging directory.
+4. Rsync the staging site into the live static docroot only after generation succeeds.
+
+Example environment:
+
+```sh
+export LLMFIT_CONTENT_BUILD_ROOT=/opt/llmfit-publisher/build
+export LLMFIT_CONTENT_STATE_FILE=/opt/llmfit-publisher/state/content-manifest.json
+export LLMFIT_CONTENT_DOCROOT=/www/wwwroot/www.igeminicli.cn_static
+export LLMFIT_CONTENT_DAILY_COUNT=4
+export LLMFIT_CONTENT_LLM_ENDPOINT=https://example.com/v1/chat/completions
+export LLMFIT_CONTENT_LLM_API_KEY=replace-me
+export LLMFIT_CONTENT_LLM_MODEL=auto
+```
+
+Example cron entry:
+
+```cron
+17 3 * * * cd /opt/llmfit-publisher/repo && /bin/bash scripts/refresh_and_publish_site.sh >> /var/log/llmfit-content.log 2>&1
+```
+
+This keeps the git worktree clean because generation happens in an external build
+directory, not inside tracked site files.
+
 ## Reverse proxy example
 
 ```nginx

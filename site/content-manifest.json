@@ -1,0 +1,1281 @@
+{
+  "version": 1,
+  "articles": [
+    {
+      "slug": "reasoning-models-for-64gb-ram-and-24gb-vram",
+      "kind": "hardware",
+      "topic_id": "hardware-64g-24v-reasoning",
+      "title_en": "Best local AI reasoning models for 64GB RAM and 24GB VRAM",
+      "title_zh": "64GB 内存 + 24GB 显存 适合跑哪些本地 推理模型？",
+      "description_en": "Use bundled LLMFit catalog data to shortlist realistic reasoning models for a 64GB RAM local AI workstation with 24GB VRAM without downloading models that are too large.",
+      "description_zh": "基于 LLMFit 内置目录数据，为 64GB 内存 + 24GB 显存本地 AI 工作站 筛选更现实的 推理模型，避免先下载再发现模型过重。",
+      "lede_en": "64GB RAM local AI workstation with 24GB VRAM users usually waste time in the same place: they download a model that looks attractive on paper and only then discover the memory, context, or runtime trade-off is wrong for reasoning work. This page uses the bundled LLMFit catalog as a planning layer before that mistake happens.",
+      "lede_zh": "64GB 内存 + 24GB 显存本地 AI 工作站 用户最常见的浪费，往往不是推理本身，而是先下载一个看起来很强的模型，然后才发现它并不适合当前机器上的 推理 场景。这篇页面就是用 LLMFit 的内置目录，提前把这种错误过滤掉。",
+      "why_en": [
+        "Shortlists models that usually stay inside a 64GB RAM budget with roughly 24GB VRAM available",
+        "Biases the discussion toward reasoning models instead of generic model hype",
+        "Turns hardware fit into an operational starting point you can validate with the CLI or API"
+      ],
+      "why_zh": [
+        "先把结果限制在 64GB 内存 和约 24GB 显存可承受的范围内",
+        "重点讨论 推理模型，而不是泛化的模型宣传",
+        "把选型问题先收敛成可执行的起点，再交给 CLI 或 API 验证"
+      ],
+      "takeaway_en": "The useful question is not whether a model can start at all, but whether it leaves enough headroom for reasoning to feel stable in a real workflow. Treat this page as a first shortlist, then verify the exact node with `llmfit recommend`.",
+      "takeaway_zh": "真正有用的问题不是模型能不能勉强启动，而是它在 推理 工作流里是否还能留下足够余量。这类页面应该被当作第一轮 shortlist，然后再用 `llmfit recommend` 对真实节点做最终确认。",
+      "faq_en": [
+        {
+          "q": "Is this page the final deployment answer?",
+          "a": "No. It is a planning shortcut built from the bundled LLMFit catalog. You should still validate the exact node with the CLI or REST API."
+        },
+        {
+          "q": "Why focus on fit instead of a benchmark chart?",
+          "a": "Because this topic still has 27 candidate catalog entries after hardware filtering. Real deployments fail on memory and runtime limits before leaderboard differences matter."
+        },
+        {
+          "q": "What should I verify next?",
+          "a": "Check detected hardware, shortlist a few candidates, and confirm context requirements. The median context in this slice is about 128000."
+        }
+      ],
+      "faq_zh": [
+        {
+          "q": "这篇页面能直接替代最终部署结论吗？",
+          "a": "不能。它只是基于 LLMFit 内置目录做出的规划起点，最终仍应通过 CLI 或 REST API 在真实节点上验证。"
+        },
+        {
+          "q": "为什么不直接看 Benchmark 榜单？",
+          "a": "因为在完成硬件过滤后，这个主题下仍然有 27 个候选条目。现实部署往往先败给内存和运行时限制，而不是榜单差异。"
+        },
+        {
+          "q": "接下来应该验证什么？",
+          "a": "先确认真实硬件检测结果，再筛选少量候选，并核对上下文需求。 这一批候选的上下文中位数大约是 128000。"
+        }
+      ],
+      "sections_en": [
+        {
+          "heading": "What this hardware profile usually means",
+          "body": "A 64GB RAM local AI workstation with 24GB VRAM can support a serious local workflow when the model family, context budget, and runtime are chosen conservatively. In the bundled catalog slice for reasoning models, this topic still leaves 27 viable entries after applying memory filters."
+        },
+        {
+          "heading": "How to think about fit",
+          "body": "The median recommended RAM in this slice is 4.4GB, and the upper quartile is about 8.4GB. That is a useful reminder that 'technically runs' and 'comfortable daily use' are different thresholds."
+        },
+        {
+          "heading": "What to verify with LLMFit",
+          "body": "Run the machine-local recommendation flow, confirm the detected runtime, and compare a small number of realistic models before you download anything heavyweight."
+        }
+      ],
+      "sections_zh": [
+        {
+          "heading": "这类硬件通常意味着什么",
+          "body": "64GB 内存 + 24GB 显存本地 AI 工作站 并不等于只能做演示。只要模型家族、上下文预算和运行时选得保守，它依然可以支撑有实际价值的本地工作流。在面向 推理模型 的目录切片中，经过内存过滤后仍有 27 个可用条目。"
+        },
+        {
+          "heading": "应该如何理解适配度",
+          "body": "这一批候选的建议内存中位数约为 4.4GB，上四分位约为 8.4GB。这提醒我们，“勉强能跑”和“适合日常使用”并不是同一个阈值。"
+        },
+        {
+          "heading": "用 LLMFit 还要再确认什么",
+          "body": "先在真实机器上跑本地推荐流程，确认运行时和检测结果，再从少量现实候选中做最后决定，不要一开始就下载重量级模型。"
+        }
+      ],
+      "metrics_en": [
+        {
+          "value": "27",
+          "label": "catalog entries still viable after fit filtering"
+        },
+        {
+          "value": "4.4GB",
+          "label": "median recommended RAM in this slice"
+        },
+        {
+          "value": "128000",
+          "label": "median context length across the filtered set"
+        }
+      ],
+      "metrics_zh": [
+        {
+          "value": "27",
+          "label": "内存过滤后仍可用的目录条目数"
+        },
+        {
+          "value": "4.4GB",
+          "label": "当前切片的建议内存中位数"
+        },
+        {
+          "value": "128000",
+          "label": "当前候选集合的上下文中位数"
+        }
+      ],
+      "examples": [
+        {
+          "name": "Qwen/Qwen2.5-Math-1.5B",
+          "provider": "Alibaba",
+          "parameter_count": "1.5B",
+          "parameters_raw": 1543714304,
+          "min_ram_gb": 1.0,
+          "recommended_ram_gb": 2.0,
+          "min_vram_gb": 0.8,
+          "quantization": "Q4_K_M",
+          "context_length": 4096,
+          "use_case": "General purpose text generation",
+          "capabilities": [
+            "tool_use"
+          ],
+          "pipeline_tag": "text-generation",
+          "architecture": "qwen2",
+          "hf_downloads": 1064952,
+          "hf_likes": 102,
+          "release_date": "2024-09-16",
+          "_discovered": true
+        },
+        {
+          "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+          "provider": "DeepSeek",
+          "parameter_count": "32.8B",
+          "parameters_raw": 32763876352,
+          "min_ram_gb": 18.3,
+          "recommended_ram_gb": 30.5,
+          "min_vram_gb": 16.8,
+          "quantization": "Q4_K_M",
+          "context_length": 131072,
+          "use_case": "Advanced reasoning, chain-of-thought",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "qwen2",
+          "hf_downloads": 873156,
+          "hf_likes": 1525,
+          "release_date": "2025-01-20",
+          "gguf_sources": [
+            {
+              "repo": "unsloth/DeepSeek-R1-Distill-Qwen-32B-GGUF",
+              "provider": "unsloth"
+            },
+            {
+              "repo": "bartowski/DeepSeek-R1-Distill-Qwen-32B-GGUF",
+              "provider": "bartowski"
+            }
+          ]
+        },
+        {
+          "name": "KiteFishAI/Minnow-Math-1.5B",
+          "provider": "kitefishai",
+          "parameter_count": "1.6B",
+          "parameters_raw": 1633781760,
+          "min_ram_gb": 1.0,
+          "recommended_ram_gb": 2.0,
+          "min_vram_gb": 0.8,
+          "quantization": "Q4_K_M",
+          "context_length": 4096,
+          "use_case": "General purpose text generation",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "llama",
+          "hf_downloads": 147620,
+          "hf_likes": 1,
+          "release_date": "2026-02-12",
+          "_discovered": true
+        },
+        {
+          "name": "lmstudio-community/Phi-4-mini-reasoning-MLX-4bit",
+          "provider": "lmstudio-community",
+          "parameter_count": "600M",
+          "parameters_raw": 599546880,
+          "min_ram_gb": 1.0,
+          "recommended_ram_gb": 2.0,
+          "min_vram_gb": 0.5,
+          "quantization": "Q4_K_M",
+          "context_length": 131072,
+          "use_case": "Advanced reasoning, chain-of-thought",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "phi3",
+          "hf_downloads": 43404,
+          "hf_likes": 3,
+          "release_date": "2025-05-01",
+          "_discovered": true
+        },
+        {
+          "name": "LGAI-EXAONE/EXAONE-4.0-32B",
+          "provider": "LG AI",
+          "parameter_count": "32B",
+          "parameters_raw": 32000000000,
+          "min_ram_gb": 17.9,
+          "recommended_ram_gb": 29.8,
+          "min_vram_gb": 16.4,
+          "quantization": "Q4_K_M",
+          "context_length": 131072,
+          "use_case": "Hybrid reasoning, multilingual",
+          "pipeline_tag": "text-generation",
+          "architecture": "exaone",
+          "hf_downloads": 0,
+          "hf_likes": 0,
+          "release_date": "2025-07-15",
+          "gguf_sources": [
+            {
+              "repo": "mradermacher/EXAONE-4.0-32B-GGUF",
+              "provider": "mradermacher"
+            }
+          ]
+        }
+      ],
+      "command": "llmfit recommend --json --use-case reasoning --limit 5",
+      "label_en": "64GB RAM / 24GB VRAM",
+      "label_zh": "64GB 内存 / 24GB 显存",
+      "stats": {
+        "count": 27,
+        "median_recommended_ram": 4.4,
+        "upper_recommended_ram": 8.4,
+        "median_vram": 2.4,
+        "median_context": 128000.0,
+        "top_architectures": [
+          [
+            "qwen2",
+            7
+          ],
+          [
+            "lfm2",
+            5
+          ],
+          [
+            "qwen3",
+            3
+          ]
+        ]
+      },
+      "draft_mode": "fallback",
+      "published_on": "2026-03-16"
+    },
+    {
+      "slug": "ollama-model-selection-for-laptops",
+      "kind": "runtime",
+      "topic_id": "runtime-ollama-laptops",
+      "title_en": "Ollama model selection for laptops: how to stay realistic about RAM and VRAM",
+      "title_zh": "面向笔记本的 Ollama 选型指南：如何更现实地看待内存和显存",
+      "description_en": "A practical guide to choosing Ollama-compatible local models without overcommitting weak laptop hardware.",
+      "description_zh": "帮助用户在笔记本上为 Ollama 选择更现实的本地模型，而不是盲目追大参数量。",
+      "lede_en": "Ollama makes pulling a model easy. The hard part is deciding which model is worth pulling onto a laptop in the first place.",
+      "lede_zh": "Ollama 让拉模型变得很简单，真正困难的是先判断笔记本到底适合拉哪一类模型。",
+      "why_en": [
+        "Clarifies where runtime convenience ends and hardware fit analysis begins",
+        "Helps avoid overcommitting local hardware before a workflow is proven",
+        "Pairs product messaging with operational checks you can run today"
+      ],
+      "why_zh": [
+        "说明运行时便利性和硬件适配分析之间的边界",
+        "帮助用户在工作流验证前避免对本地硬件过度承诺",
+        "把产品表达和今天就能执行的运营检查结合起来"
+      ],
+      "takeaway_en": "Convenience layers matter, but they work best when the placement decision is already realistic. Use LLMFit as the decision layer before the runtime or container workflow begins.",
+      "takeaway_zh": "运行时层当然重要，但前提是前面的放置决策已经足够现实。更稳妥的做法，是先用 LLMFit 做决策层，再进入运行时或容器层。",
+      "faq_en": [
+        {
+          "q": "Is this page the final deployment answer?",
+          "a": "No. It is a planning shortcut built from the bundled LLMFit catalog. You should still validate the exact node with the CLI or REST API."
+        },
+        {
+          "q": "Why focus on fit instead of a benchmark chart?",
+          "a": "Because this topic still has 18 candidate catalog entries after hardware filtering. Real deployments fail on memory and runtime limits before leaderboard differences matter."
+        },
+        {
+          "q": "What should I verify next?",
+          "a": "Check detected hardware, shortlist a few candidates, and confirm context requirements. The median context in this slice is about 32768."
+        }
+      ],
+      "faq_zh": [
+        {
+          "q": "这篇页面能直接替代最终部署结论吗？",
+          "a": "不能。它只是基于 LLMFit 内置目录做出的规划起点，最终仍应通过 CLI 或 REST API 在真实节点上验证。"
+        },
+        {
+          "q": "为什么不直接看 Benchmark 榜单？",
+          "a": "因为在完成硬件过滤后，这个主题下仍然有 18 个候选条目。现实部署往往先败给内存和运行时限制，而不是榜单差异。"
+        },
+        {
+          "q": "接下来应该验证什么？",
+          "a": "先确认真实硬件检测结果，再筛选少量候选，并核对上下文需求。 这一批候选的上下文中位数大约是 32768。"
+        }
+      ],
+      "sections_en": [
+        {
+          "heading": "Where convenience ends and planning begins",
+          "body": "Runtime tools make local AI easier to operate, but they do not answer whether the chosen model leaves enough headroom for the real workflow."
+        },
+        {
+          "heading": "Why this still belongs on a professional site",
+          "body": "Teams repeatedly search for approachable explanations of runtimes, formats, and deployment paths. A useful site should answer that intent with fit-aware guidance instead of generic hype."
+        },
+        {
+          "heading": "How to use LLMFit in the loop",
+          "body": "Use the runtime for execution, and use LLMFit before that point to decide which machine, model family, and memory budget are realistic."
+        }
+      ],
+      "sections_zh": [
+        {
+          "heading": "便利性止于哪里，规划从哪里开始",
+          "body": "运行时工具确实能让本地 AI 更易用，但它们并不会直接回答：这个模型是否还能给真实工作流留下足够余量。"
+        },
+        {
+          "heading": "为什么这类内容应该出现在专业站点里",
+          "body": "团队会反复搜索运行时、模型格式和部署路径。如果站点真的想承接这类流量，就应该提供带适配判断的解释，而不是泛化宣传。"
+        },
+        {
+          "heading": "如何把 LLMFit 放进流程里",
+          "body": "运行时负责执行，LLMFit 负责在执行之前先判断哪台机器、哪个模型家族和哪种内存预算更现实。"
+        }
+      ],
+      "metrics_en": [
+        {
+          "value": "18",
+          "label": "high-download catalog entries reviewed for this guide"
+        },
+        {
+          "value": "5.1GB",
+          "label": "median recommended RAM across the reference slice"
+        },
+        {
+          "value": "32768",
+          "label": "median context length across the reference slice"
+        }
+      ],
+      "metrics_zh": [
+        {
+          "value": "18",
+          "label": "本指南参考的高下载目录条目数"
+        },
+        {
+          "value": "5.1GB",
+          "label": "参考切片的建议内存中位数"
+        },
+        {
+          "value": "32768",
+          "label": "参考切片的上下文中位数"
+        }
+      ],
+      "examples": [
+        {
+          "name": "Qwen/Qwen2.5-7B-Instruct",
+          "provider": "Alibaba",
+          "parameter_count": "7.6B",
+          "parameters_raw": 7615616512,
+          "min_ram_gb": 4.3,
+          "recommended_ram_gb": 7.1,
+          "min_vram_gb": 3.9,
+          "quantization": "Q4_K_M",
+          "context_length": 32768,
+          "use_case": "Instruction following, chat",
+          "capabilities": [
+            "tool_use"
+          ],
+          "pipeline_tag": "text-generation",
+          "architecture": "qwen2",
+          "hf_downloads": 20736120,
+          "hf_likes": 1108,
+          "release_date": "2024-09-16",
+          "gguf_sources": [
+            {
+              "repo": "bartowski/Qwen2.5-7B-Instruct-GGUF",
+              "provider": "bartowski"
+            }
+          ]
+        },
+        {
+          "name": "Qwen/Qwen3-0.6B",
+          "provider": "Alibaba",
+          "parameter_count": "752M",
+          "parameters_raw": 751632384,
+          "min_ram_gb": 1.0,
+          "recommended_ram_gb": 2.0,
+          "min_vram_gb": 0.5,
+          "quantization": "Q4_K_M",
+          "context_length": 40960,
+          "use_case": "General purpose text generation",
+          "capabilities": [
+            "tool_use"
+          ],
+          "pipeline_tag": "text-generation",
+          "architecture": "qwen3",
+          "hf_downloads": 11310453,
+          "hf_likes": 1120,
+          "release_date": "2025-04-27",
+          "gguf_sources": [
+            {
+              "repo": "unsloth/Qwen3-0.6B-GGUF",
+              "provider": "unsloth"
+            }
+          ]
+        },
+        {
+          "name": "openai/gpt-oss-20b",
+          "provider": "openai",
+          "parameter_count": "21.5B",
+          "parameters_raw": 21511953984,
+          "min_ram_gb": 12.0,
+          "recommended_ram_gb": 20.0,
+          "min_vram_gb": 11.0,
+          "quantization": "Q4_K_M",
+          "context_length": 131072,
+          "use_case": "General purpose text generation",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "gpt_oss",
+          "hf_downloads": 7049150,
+          "hf_likes": 4421,
+          "release_date": "2025-08-04",
+          "is_moe": true,
+          "num_experts": 32,
+          "active_experts": 4,
+          "active_parameters": 3630142231,
+          "_discovered": true,
+          "gguf_sources": [
+            {
+              "repo": "unsloth/gpt-oss-20b-GGUF",
+              "provider": "unsloth"
+            }
+          ]
+        },
+        {
+          "name": "dphn/dolphin-2.9.1-yi-1.5-34b",
+          "provider": "dphn",
+          "parameter_count": "34.4B",
+          "parameters_raw": 34388917248,
+          "min_ram_gb": 19.2,
+          "recommended_ram_gb": 32.0,
+          "min_vram_gb": 17.6,
+          "quantization": "Q4_K_M",
+          "context_length": 8192,
+          "use_case": "General purpose text generation",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "llama",
+          "hf_downloads": 4650971,
+          "hf_likes": 56,
+          "release_date": "2024-05-18",
+          "_discovered": true,
+          "gguf_sources": [
+            {
+              "repo": "bartowski/dolphin-2.9.1-yi-1.5-34b-GGUF",
+              "provider": "bartowski"
+            }
+          ]
+        },
+        {
+          "name": "Qwen/Qwen2-1.5B-Instruct",
+          "provider": "Alibaba",
+          "parameter_count": "1.5B",
+          "parameters_raw": 1543714304,
+          "min_ram_gb": 1.0,
+          "recommended_ram_gb": 2.0,
+          "min_vram_gb": 0.8,
+          "quantization": "Q4_K_M",
+          "context_length": 32768,
+          "use_case": "Instruction following, chat",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "qwen2",
+          "hf_downloads": 3508972,
+          "hf_likes": 161,
+          "release_date": "2024-06-03",
+          "_discovered": true
+        }
+      ],
+      "command": "llmfit system\nllmfit recommend --json --limit 5",
+      "label_en": "Ollama model selection for laptops: how to stay realistic about RAM and VRAM",
+      "label_zh": "面向笔记本的 Ollama 选型指南：如何更现实地看待内存和显存",
+      "stats": {
+        "count": 18,
+        "median_recommended_ram": 5.1,
+        "upper_recommended_ram": 7.7,
+        "median_vram": 2.8,
+        "median_context": 32768.0,
+        "top_architectures": [
+          [
+            "qwen2",
+            7
+          ],
+          [
+            "llama",
+            4
+          ],
+          [
+            "gpt_oss",
+            2
+          ]
+        ]
+      },
+      "draft_mode": "fallback",
+      "published_on": "2026-03-16"
+    },
+    {
+      "slug": "deepseek-local-deployment-guide",
+      "kind": "family",
+      "topic_id": "family-deepseek",
+      "title_en": "DeepSeek local deployment guide: what hardware usually fits",
+      "title_zh": "DeepSeek 本地部署指南：通常需要怎样的硬件",
+      "description_en": "An original LLMFit guide to understanding how DeepSeek models usually map to local hardware and deployment decisions.",
+      "description_zh": "帮助用户理解 DeepSeek 系列模型通常如何映射到本地硬件与部署决策。",
+      "lede_en": "DeepSeek is not one model, one memory footprint, or one deployment story. Family-level search intent is useful, but only if it leads to a better hardware decision instead of a vague brand preference.",
+      "lede_zh": "DeepSeek 不是单一模型，也不是单一内存占用，更不是单一路线。围绕家族名搜索是有价值的，但前提是它最终能导向更准确的硬件决策，而不是停留在品牌偏好。",
+      "why_en": [
+        "Shows how DeepSeek spans small, medium, and heavier local deployment paths",
+        "Connects family-level interest to RAM, VRAM, and context constraints",
+        "Keeps the discussion grounded in shipped catalog data rather than headline-level hype"
+      ],
+      "why_zh": [
+        "解释 DeepSeek 在轻量、中型和更重本地部署路线上的跨度",
+        "把家族级兴趣点和内存、显存、上下文限制真正连接起来",
+        "让讨论回到已收录目录数据，而不是停留在标题党式的热度上"
+      ],
+      "takeaway_en": "The safest way to approach DeepSeek locally is to think in fit ranges, not one magic model name. Use the family to narrow intent, then let the actual machine decide the final candidate.",
+      "takeaway_zh": "本地使用 DeepSeek 更稳妥的方式，是先理解它的适配区间，而不是寻找一个所谓万能型号。先用家族名缩小方向，再让真实机器决定最终候选。",
+      "faq_en": [
+        {
+          "q": "Is this page the final deployment answer?",
+          "a": "No. It is a planning shortcut built from the bundled LLMFit catalog. You should still validate the exact node with the CLI or REST API."
+        },
+        {
+          "q": "Why focus on fit instead of a benchmark chart?",
+          "a": "Because this topic still has 29 candidate catalog entries after hardware filtering. Real deployments fail on memory and runtime limits before leaderboard differences matter."
+        },
+        {
+          "q": "What should I verify next?",
+          "a": "Check detected hardware, shortlist a few candidates, and confirm context requirements. The median context in this slice is about 163840."
+        }
+      ],
+      "faq_zh": [
+        {
+          "q": "这篇页面能直接替代最终部署结论吗？",
+          "a": "不能。它只是基于 LLMFit 内置目录做出的规划起点，最终仍应通过 CLI 或 REST API 在真实节点上验证。"
+        },
+        {
+          "q": "为什么不直接看 Benchmark 榜单？",
+          "a": "因为在完成硬件过滤后，这个主题下仍然有 29 个候选条目。现实部署往往先败给内存和运行时限制，而不是榜单差异。"
+        },
+        {
+          "q": "接下来应该验证什么？",
+          "a": "先确认真实硬件检测结果，再筛选少量候选，并核对上下文需求。 这一批候选的上下文中位数大约是 163840。"
+        }
+      ],
+      "sections_en": [
+        {
+          "heading": "Why DeepSeek search traffic needs a fit layer",
+          "body": "Search interest in DeepSeek usually starts with a family name, but deployment success depends on memory, quantization, context length, and runtime support. This page reframes the family as a placement question."
+        },
+        {
+          "heading": "What the bundled catalog suggests",
+          "body": "In the current bundled catalog, this family has 29 matched entries with a median recommended RAM of 219.6GB. The dominant architecture labels in this slice are deepseek_v3, deepseek_v2, qwen2."
+        },
+        {
+          "heading": "How to use the family intelligently",
+          "body": "Start with the family to set intent, then narrow by hardware fit, context goals, and runtime compatibility before you choose a specific build."
+        }
+      ],
+      "sections_zh": [
+        {
+          "heading": "为什么围绕 DeepSeek 的搜索需要适配层",
+          "body": "用户搜索 DeepSeek 时，通常先记住的是家族名，但真正决定部署成败的是内存、量化、上下文长度和运行时支持。这篇页面的作用，就是把家族兴趣重新落到可执行的部署判断上。"
+        },
+        {
+          "heading": "内置目录能说明什么",
+          "body": "在当前内置目录中，这个家族共匹配到 29 个条目，建议内存中位数约为 219.6GB。更常见的架构标签包括 deepseek_v3, deepseek_v2, qwen2。"
+        },
+        {
+          "heading": "更聪明地使用家族名",
+          "body": "先用家族名收敛方向，再根据硬件适配、上下文目标和运行时兼容性缩小到具体构建版本。"
+        }
+      ],
+      "metrics_en": [
+        {
+          "value": "29",
+          "label": "catalog matches for this family"
+        },
+        {
+          "value": "219.6GB",
+          "label": "median recommended RAM across family entries"
+        },
+        {
+          "value": "163840",
+          "label": "median context length across the family slice"
+        }
+      ],
+      "metrics_zh": [
+        {
+          "value": "29",
+          "label": "该家族在目录中的匹配条目数"
+        },
+        {
+          "value": "219.6GB",
+          "label": "家族条目的建议内存中位数"
+        },
+        {
+          "value": "163840",
+          "label": "家族条目的上下文中位数"
+        }
+      ],
+      "examples": [
+        {
+          "name": "deepseek-ai/DeepSeek-R1-0528",
+          "provider": "DeepSeek",
+          "parameter_count": "684.5B",
+          "parameters_raw": 684531386000,
+          "min_ram_gb": 382.5,
+          "recommended_ram_gb": 637.5,
+          "min_vram_gb": 350.6,
+          "quantization": "Q4_K_M",
+          "context_length": 163840,
+          "use_case": "Advanced reasoning, chain-of-thought",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "deepseek_v3",
+          "hf_downloads": 1050237,
+          "hf_likes": 2403,
+          "release_date": "2025-05-28",
+          "is_moe": true,
+          "num_experts": 256,
+          "active_experts": 8,
+          "active_parameters": 54548594820,
+          "_discovered": true
+        },
+        {
+          "name": "deepseek-ai/DeepSeek-R1",
+          "provider": "DeepSeek",
+          "parameter_count": "684.5B",
+          "parameters_raw": 684531386000,
+          "min_ram_gb": 382.5,
+          "recommended_ram_gb": 637.5,
+          "min_vram_gb": 350.6,
+          "quantization": "Q4_K_M",
+          "context_length": 163840,
+          "use_case": "Advanced reasoning, chain-of-thought",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "deepseek_v3",
+          "hf_downloads": 1026085,
+          "hf_likes": 13108,
+          "release_date": "2025-01-20",
+          "is_moe": true,
+          "num_experts": 256,
+          "active_experts": 8,
+          "active_parameters": 37000000000,
+          "gguf_sources": [
+            {
+              "repo": "unsloth/DeepSeek-R1-GGUF",
+              "provider": "unsloth"
+            },
+            {
+              "repo": "bartowski/DeepSeek-R1-GGUF",
+              "provider": "bartowski"
+            }
+          ]
+        },
+        {
+          "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+          "provider": "DeepSeek",
+          "parameter_count": "32.8B",
+          "parameters_raw": 32763876352,
+          "min_ram_gb": 18.3,
+          "recommended_ram_gb": 30.5,
+          "min_vram_gb": 16.8,
+          "quantization": "Q4_K_M",
+          "context_length": 131072,
+          "use_case": "Advanced reasoning, chain-of-thought",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "qwen2",
+          "hf_downloads": 873156,
+          "hf_likes": 1525,
+          "release_date": "2025-01-20",
+          "gguf_sources": [
+            {
+              "repo": "unsloth/DeepSeek-R1-Distill-Qwen-32B-GGUF",
+              "provider": "unsloth"
+            },
+            {
+              "repo": "bartowski/DeepSeek-R1-Distill-Qwen-32B-GGUF",
+              "provider": "bartowski"
+            }
+          ]
+        },
+        {
+          "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+          "provider": "DeepSeek",
+          "parameter_count": "14.8B",
+          "parameters_raw": 14770033664,
+          "min_ram_gb": 8.3,
+          "recommended_ram_gb": 13.8,
+          "min_vram_gb": 7.6,
+          "quantization": "Q4_K_M",
+          "context_length": 131072,
+          "use_case": "Advanced reasoning, chain-of-thought",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "qwen2",
+          "hf_downloads": 761474,
+          "hf_likes": 608,
+          "release_date": "2025-01-20",
+          "_discovered": true,
+          "gguf_sources": [
+            {
+              "repo": "unsloth/DeepSeek-R1-Distill-Qwen-14B-GGUF",
+              "provider": "unsloth"
+            },
+            {
+              "repo": "bartowski/DeepSeek-R1-Distill-Qwen-14B-GGUF",
+              "provider": "bartowski"
+            }
+          ]
+        },
+        {
+          "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+          "provider": "DeepSeek",
+          "parameter_count": "7.6B",
+          "parameters_raw": 7615616512,
+          "min_ram_gb": 4.3,
+          "recommended_ram_gb": 7.1,
+          "min_vram_gb": 3.9,
+          "quantization": "Q4_K_M",
+          "context_length": 131072,
+          "use_case": "Advanced reasoning, chain-of-thought",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "qwen2",
+          "hf_downloads": 743941,
+          "hf_likes": 797,
+          "release_date": "2025-01-20",
+          "gguf_sources": [
+            {
+              "repo": "unsloth/DeepSeek-R1-Distill-Qwen-7B-GGUF",
+              "provider": "unsloth"
+            },
+            {
+              "repo": "bartowski/DeepSeek-R1-Distill-Qwen-7B-GGUF",
+              "provider": "bartowski"
+            }
+          ]
+        }
+      ],
+      "command": "llmfit recommend --json --search \"DeepSeek\" --limit 5",
+      "label_en": "DeepSeek",
+      "label_zh": "DeepSeek",
+      "stats": {
+        "count": 29,
+        "median_recommended_ram": 219.6,
+        "upper_recommended_ram": 369.5,
+        "median_vram": 120.8,
+        "median_context": 163840.0,
+        "top_architectures": [
+          [
+            "deepseek_v3",
+            9
+          ],
+          [
+            "deepseek_v2",
+            7
+          ],
+          [
+            "qwen2",
+            3
+          ]
+        ]
+      },
+      "draft_mode": "fallback",
+      "published_on": "2026-03-16"
+    },
+    {
+      "slug": "coding-models-for-64gb-ram-and-24gb-vram",
+      "kind": "hardware",
+      "topic_id": "hardware-64g-24v-coding",
+      "title_en": "Best local AI coding models for 64GB RAM and 24GB VRAM",
+      "title_zh": "64GB 内存 + 24GB 显存 适合跑哪些本地 编程模型？",
+      "description_en": "Use bundled LLMFit catalog data to shortlist realistic coding models for a 64GB RAM local AI workstation with 24GB VRAM without downloading models that are too large.",
+      "description_zh": "基于 LLMFit 内置目录数据，为 64GB 内存 + 24GB 显存本地 AI 工作站 筛选更现实的 编程模型，避免先下载再发现模型过重。",
+      "lede_en": "64GB RAM local AI workstation with 24GB VRAM users usually waste time in the same place: they download a model that looks attractive on paper and only then discover the memory, context, or runtime trade-off is wrong for coding work. This page uses the bundled LLMFit catalog as a planning layer before that mistake happens.",
+      "lede_zh": "64GB 内存 + 24GB 显存本地 AI 工作站 用户最常见的浪费，往往不是推理本身，而是先下载一个看起来很强的模型，然后才发现它并不适合当前机器上的 编程 场景。这篇页面就是用 LLMFit 的内置目录，提前把这种错误过滤掉。",
+      "why_en": [
+        "Shortlists models that usually stay inside a 64GB RAM budget with roughly 24GB VRAM available",
+        "Biases the discussion toward coding models instead of generic model hype",
+        "Turns hardware fit into an operational starting point you can validate with the CLI or API"
+      ],
+      "why_zh": [
+        "先把结果限制在 64GB 内存 和约 24GB 显存可承受的范围内",
+        "重点讨论 编程模型，而不是泛化的模型宣传",
+        "把选型问题先收敛成可执行的起点，再交给 CLI 或 API 验证"
+      ],
+      "takeaway_en": "The useful question is not whether a model can start at all, but whether it leaves enough headroom for coding to feel stable in a real workflow. Treat this page as a first shortlist, then verify the exact node with `llmfit recommend`.",
+      "takeaway_zh": "真正有用的问题不是模型能不能勉强启动，而是它在 编程 工作流里是否还能留下足够余量。这类页面应该被当作第一轮 shortlist，然后再用 `llmfit recommend` 对真实节点做最终确认。",
+      "faq_en": [
+        {
+          "q": "Is this page the final deployment answer?",
+          "a": "No. It is a planning shortcut built from the bundled LLMFit catalog. You should still validate the exact node with the CLI or REST API."
+        },
+        {
+          "q": "Why focus on fit instead of a benchmark chart?",
+          "a": "Because this topic still has 52 candidate catalog entries after hardware filtering. Real deployments fail on memory and runtime limits before leaderboard differences matter."
+        },
+        {
+          "q": "What should I verify next?",
+          "a": "Check detected hardware, shortlist a few candidates, and confirm context requirements. The median context in this slice is about 32768."
+        }
+      ],
+      "faq_zh": [
+        {
+          "q": "这篇页面能直接替代最终部署结论吗？",
+          "a": "不能。它只是基于 LLMFit 内置目录做出的规划起点，最终仍应通过 CLI 或 REST API 在真实节点上验证。"
+        },
+        {
+          "q": "为什么不直接看 Benchmark 榜单？",
+          "a": "因为在完成硬件过滤后，这个主题下仍然有 52 个候选条目。现实部署往往先败给内存和运行时限制，而不是榜单差异。"
+        },
+        {
+          "q": "接下来应该验证什么？",
+          "a": "先确认真实硬件检测结果，再筛选少量候选，并核对上下文需求。 这一批候选的上下文中位数大约是 32768。"
+        }
+      ],
+      "sections_en": [
+        {
+          "heading": "What this hardware profile usually means",
+          "body": "A 64GB RAM local AI workstation with 24GB VRAM can support a serious local workflow when the model family, context budget, and runtime are chosen conservatively. In the bundled catalog slice for coding models, this topic still leaves 52 viable entries after applying memory filters."
+        },
+        {
+          "heading": "How to think about fit",
+          "body": "The median recommended RAM in this slice is 7.1GB, and the upper quartile is about 14.6GB. That is a useful reminder that 'technically runs' and 'comfortable daily use' are different thresholds."
+        },
+        {
+          "heading": "What to verify with LLMFit",
+          "body": "Run the machine-local recommendation flow, confirm the detected runtime, and compare a small number of realistic models before you download anything heavyweight."
+        }
+      ],
+      "sections_zh": [
+        {
+          "heading": "这类硬件通常意味着什么",
+          "body": "64GB 内存 + 24GB 显存本地 AI 工作站 并不等于只能做演示。只要模型家族、上下文预算和运行时选得保守，它依然可以支撑有实际价值的本地工作流。在面向 编程模型 的目录切片中，经过内存过滤后仍有 52 个可用条目。"
+        },
+        {
+          "heading": "应该如何理解适配度",
+          "body": "这一批候选的建议内存中位数约为 7.1GB，上四分位约为 14.6GB。这提醒我们，“勉强能跑”和“适合日常使用”并不是同一个阈值。"
+        },
+        {
+          "heading": "用 LLMFit 还要再确认什么",
+          "body": "先在真实机器上跑本地推荐流程，确认运行时和检测结果，再从少量现实候选中做最后决定，不要一开始就下载重量级模型。"
+        }
+      ],
+      "metrics_en": [
+        {
+          "value": "52",
+          "label": "catalog entries still viable after fit filtering"
+        },
+        {
+          "value": "7.1GB",
+          "label": "median recommended RAM in this slice"
+        },
+        {
+          "value": "32768",
+          "label": "median context length across the filtered set"
+        }
+      ],
+      "metrics_zh": [
+        {
+          "value": "52",
+          "label": "内存过滤后仍可用的目录条目数"
+        },
+        {
+          "value": "7.1GB",
+          "label": "当前切片的建议内存中位数"
+        },
+        {
+          "value": "32768",
+          "label": "当前候选集合的上下文中位数"
+        }
+      ],
+      "examples": [
+        {
+          "name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+          "provider": "Alibaba",
+          "parameter_count": "1.5B",
+          "parameters_raw": 1543714304,
+          "min_ram_gb": 1.0,
+          "recommended_ram_gb": 2.0,
+          "min_vram_gb": 0.8,
+          "quantization": "Q4_K_M",
+          "context_length": 32768,
+          "use_case": "Code generation and completion",
+          "capabilities": [
+            "tool_use"
+          ],
+          "pipeline_tag": "text-generation",
+          "architecture": "qwen2",
+          "hf_downloads": 1789513,
+          "hf_likes": 107,
+          "release_date": "2024-09-18",
+          "gguf_sources": [
+            {
+              "repo": "unsloth/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+              "provider": "unsloth"
+            },
+            {
+              "repo": "bartowski/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+              "provider": "bartowski"
+            }
+          ]
+        },
+        {
+          "name": "bullpoint/Qwen3-Coder-Next-AWQ-4bit",
+          "provider": "bullpoint",
+          "parameter_count": "14.4B",
+          "parameters_raw": 14444722944,
+          "min_ram_gb": 8.1,
+          "recommended_ram_gb": 13.5,
+          "min_vram_gb": 7.4,
+          "quantization": "AWQ-4bit",
+          "context_length": 262144,
+          "use_case": "Code generation and completion",
+          "capabilities": [
+            "tool_use"
+          ],
+          "pipeline_tag": "text-generation",
+          "architecture": "qwen3_next",
+          "hf_downloads": 1226868,
+          "hf_likes": 14,
+          "release_date": "2026-02-03",
+          "is_moe": true,
+          "num_experts": 512,
+          "active_experts": 10,
+          "active_parameters": 990253467,
+          "_discovered": true,
+          "format": "awq"
+        },
+        {
+          "name": "XLabs-AI/xflux_text_encoders",
+          "provider": "xlabs-ai",
+          "parameter_count": "4.8B",
+          "parameters_raw": 4762310656,
+          "min_ram_gb": 2.7,
+          "recommended_ram_gb": 4.4,
+          "min_vram_gb": 2.4,
+          "quantization": "Q4_K_M",
+          "context_length": 4096,
+          "use_case": "Code generation and completion",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "t5",
+          "hf_downloads": 162123,
+          "hf_likes": 21,
+          "release_date": "2024-08-11",
+          "_discovered": true
+        },
+        {
+          "name": "bigcode/starcoder2-3b",
+          "provider": "BigCode",
+          "parameter_count": "3.0B",
+          "parameters_raw": 3030371328,
+          "min_ram_gb": 1.7,
+          "recommended_ram_gb": 2.8,
+          "min_vram_gb": 1.6,
+          "quantization": "Q4_K_M",
+          "context_length": 16384,
+          "use_case": "Code generation and completion",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "starcoder2",
+          "hf_downloads": 97310,
+          "hf_likes": 216,
+          "release_date": "2023-11-29",
+          "_discovered": true
+        },
+        {
+          "name": "deepseek-ai/deepseek-coder-6.7b-instruct",
+          "provider": "DeepSeek",
+          "parameter_count": "6.7B",
+          "parameters_raw": 6740512768,
+          "min_ram_gb": 3.8,
+          "recommended_ram_gb": 6.3,
+          "min_vram_gb": 3.5,
+          "quantization": "Q4_K_M",
+          "context_length": 16384,
+          "use_case": "Code generation and completion",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "llama",
+          "hf_downloads": 97176,
+          "hf_likes": 478,
+          "release_date": "2023-10-29",
+          "_discovered": true
+        }
+      ],
+      "command": "llmfit recommend --json --use-case coding --limit 5",
+      "label_en": "64GB RAM / 24GB VRAM",
+      "label_zh": "64GB 内存 / 24GB 显存",
+      "stats": {
+        "count": 52,
+        "median_recommended_ram": 7.1,
+        "upper_recommended_ram": 14.6,
+        "median_vram": 3.9,
+        "median_context": 32768.0,
+        "top_architectures": [
+          [
+            "qwen2",
+            21
+          ],
+          [
+            "qwen3_moe",
+            9
+          ],
+          [
+            "llama",
+            8
+          ]
+        ]
+      },
+      "draft_mode": "fallback",
+      "published_on": "2026-03-16"
+    },
+    {
+      "slug": "coding-models-for-32gb-ram-and-16gb-vram",
+      "kind": "hardware",
+      "topic_id": "hardware-32g-16v-coding",
+      "title_en": "Best local AI coding models for 32GB RAM and 16GB VRAM",
+      "title_zh": "32GB 内存 + 16GB 显存 适合跑哪些本地 编程模型？",
+      "description_en": "Use bundled LLMFit catalog data to shortlist realistic coding models for a 32GB RAM desktop with 16GB VRAM without downloading models that are too large.",
+      "description_zh": "基于 LLMFit 内置目录数据，为 32GB 内存 + 16GB 显存桌面机 筛选更现实的 编程模型，避免先下载再发现模型过重。",
+      "lede_en": "32GB RAM desktop with 16GB VRAM users usually waste time in the same place: they download a model that looks attractive on paper and only then discover the memory, context, or runtime trade-off is wrong for coding work. This page uses the bundled LLMFit catalog as a planning layer before that mistake happens.",
+      "lede_zh": "32GB 内存 + 16GB 显存桌面机 用户最常见的浪费，往往不是推理本身，而是先下载一个看起来很强的模型，然后才发现它并不适合当前机器上的 编程 场景。这篇页面就是用 LLMFit 的内置目录，提前把这种错误过滤掉。",
+      "why_en": [
+        "Shortlists models that usually stay inside a 32GB RAM budget with roughly 16GB VRAM available",
+        "Biases the discussion toward coding models instead of generic model hype",
+        "Turns hardware fit into an operational starting point you can validate with the CLI or API"
+      ],
+      "why_zh": [
+        "先把结果限制在 32GB 内存 和约 16GB 显存可承受的范围内",
+        "重点讨论 编程模型，而不是泛化的模型宣传",
+        "把选型问题先收敛成可执行的起点，再交给 CLI 或 API 验证"
+      ],
+      "takeaway_en": "The useful question is not whether a model can start at all, but whether it leaves enough headroom for coding to feel stable in a real workflow. Treat this page as a first shortlist, then verify the exact node with `llmfit recommend`.",
+      "takeaway_zh": "真正有用的问题不是模型能不能勉强启动，而是它在 编程 工作流里是否还能留下足够余量。这类页面应该被当作第一轮 shortlist，然后再用 `llmfit recommend` 对真实节点做最终确认。",
+      "faq_en": [
+        {
+          "q": "Is this page the final deployment answer?",
+          "a": "No. It is a planning shortcut built from the bundled LLMFit catalog. You should still validate the exact node with the CLI or REST API."
+        },
+        {
+          "q": "Why focus on fit instead of a benchmark chart?",
+          "a": "Because this topic still has 48 candidate catalog entries after hardware filtering. Real deployments fail on memory and runtime limits before leaderboard differences matter."
+        },
+        {
+          "q": "What should I verify next?",
+          "a": "Check detected hardware, shortlist a few candidates, and confirm context requirements. The median context in this slice is about 32768."
+        }
+      ],
+      "faq_zh": [
+        {
+          "q": "这篇页面能直接替代最终部署结论吗？",
+          "a": "不能。它只是基于 LLMFit 内置目录做出的规划起点，最终仍应通过 CLI 或 REST API 在真实节点上验证。"
+        },
+        {
+          "q": "为什么不直接看 Benchmark 榜单？",
+          "a": "因为在完成硬件过滤后，这个主题下仍然有 48 个候选条目。现实部署往往先败给内存和运行时限制，而不是榜单差异。"
+        },
+        {
+          "q": "接下来应该验证什么？",
+          "a": "先确认真实硬件检测结果，再筛选少量候选，并核对上下文需求。 这一批候选的上下文中位数大约是 32768。"
+        }
+      ],
+      "sections_en": [
+        {
+          "heading": "What this hardware profile usually means",
+          "body": "A 32GB RAM desktop with 16GB VRAM can support a serious local workflow when the model family, context budget, and runtime are chosen conservatively. In the bundled catalog slice for coding models, this topic still leaves 48 viable entries after applying memory filters."
+        },
+        {
+          "heading": "How to think about fit",
+          "body": "The median recommended RAM in this slice is 7.0GB, and the upper quartile is about 13.8GB. That is a useful reminder that 'technically runs' and 'comfortable daily use' are different thresholds."
+        },
+        {
+          "heading": "What to verify with LLMFit",
+          "body": "Run the machine-local recommendation flow, confirm the detected runtime, and compare a small number of realistic models before you download anything heavyweight."
+        }
+      ],
+      "sections_zh": [
+        {
+          "heading": "这类硬件通常意味着什么",
+          "body": "32GB 内存 + 16GB 显存桌面机 并不等于只能做演示。只要模型家族、上下文预算和运行时选得保守，它依然可以支撑有实际价值的本地工作流。在面向 编程模型 的目录切片中，经过内存过滤后仍有 48 个可用条目。"
+        },
+        {
+          "heading": "应该如何理解适配度",
+          "body": "这一批候选的建议内存中位数约为 7.0GB，上四分位约为 13.8GB。这提醒我们，“勉强能跑”和“适合日常使用”并不是同一个阈值。"
+        },
+        {
+          "heading": "用 LLMFit 还要再确认什么",
+          "body": "先在真实机器上跑本地推荐流程，确认运行时和检测结果，再从少量现实候选中做最后决定，不要一开始就下载重量级模型。"
+        }
+      ],
+      "metrics_en": [
+        {
+          "value": "48",
+          "label": "catalog entries still viable after fit filtering"
+        },
+        {
+          "value": "7.0GB",
+          "label": "median recommended RAM in this slice"
+        },
+        {
+          "value": "32768",
+          "label": "median context length across the filtered set"
+        }
+      ],
+      "metrics_zh": [
+        {
+          "value": "48",
+          "label": "内存过滤后仍可用的目录条目数"
+        },
+        {
+          "value": "7.0GB",
+          "label": "当前切片的建议内存中位数"
+        },
+        {
+          "value": "32768",
+          "label": "当前候选集合的上下文中位数"
+        }
+      ],
+      "examples": [
+        {
+          "name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+          "provider": "Alibaba",
+          "parameter_count": "1.5B",
+          "parameters_raw": 1543714304,
+          "min_ram_gb": 1.0,
+          "recommended_ram_gb": 2.0,
+          "min_vram_gb": 0.8,
+          "quantization": "Q4_K_M",
+          "context_length": 32768,
+          "use_case": "Code generation and completion",
+          "capabilities": [
+            "tool_use"
+          ],
+          "pipeline_tag": "text-generation",
+          "architecture": "qwen2",
+          "hf_downloads": 1789513,
+          "hf_likes": 107,
+          "release_date": "2024-09-18",
+          "gguf_sources": [
+            {
+              "repo": "unsloth/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+              "provider": "unsloth"
+            },
+            {
+              "repo": "bartowski/Qwen2.5-Coder-1.5B-Instruct-GGUF",
+              "provider": "bartowski"
+            }
+          ]
+        },
+        {
+          "name": "bullpoint/Qwen3-Coder-Next-AWQ-4bit",
+          "provider": "bullpoint",
+          "parameter_count": "14.4B",
+          "parameters_raw": 14444722944,
+          "min_ram_gb": 8.1,
+          "recommended_ram_gb": 13.5,
+          "min_vram_gb": 7.4,
+          "quantization": "AWQ-4bit",
+          "context_length": 262144,
+          "use_case": "Code generation and completion",
+          "capabilities": [
+            "tool_use"
+          ],
+          "pipeline_tag": "text-generation",
+          "architecture": "qwen3_next",
+          "hf_downloads": 1226868,
+          "hf_likes": 14,
+          "release_date": "2026-02-03",
+          "is_moe": true,
+          "num_experts": 512,
+          "active_experts": 10,
+          "active_parameters": 990253467,
+          "_discovered": true,
+          "format": "awq"
+        },
+        {
+          "name": "XLabs-AI/xflux_text_encoders",
+          "provider": "xlabs-ai",
+          "parameter_count": "4.8B",
+          "parameters_raw": 4762310656,
+          "min_ram_gb": 2.7,
+          "recommended_ram_gb": 4.4,
+          "min_vram_gb": 2.4,
+          "quantization": "Q4_K_M",
+          "context_length": 4096,
+          "use_case": "Code generation and completion",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "t5",
+          "hf_downloads": 162123,
+          "hf_likes": 21,
+          "release_date": "2024-08-11",
+          "_discovered": true
+        },
+        {
+          "name": "bigcode/starcoder2-3b",
+          "provider": "BigCode",
+          "parameter_count": "3.0B",
+          "parameters_raw": 3030371328,
+          "min_ram_gb": 1.7,
+          "recommended_ram_gb": 2.8,
+          "min_vram_gb": 1.6,
+          "quantization": "Q4_K_M",
+          "context_length": 16384,
+          "use_case": "Code generation and completion",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "starcoder2",
+          "hf_downloads": 97310,
+          "hf_likes": 216,
+          "release_date": "2023-11-29",
+          "_discovered": true
+        },
+        {
+          "name": "deepseek-ai/deepseek-coder-6.7b-instruct",
+          "provider": "DeepSeek",
+          "parameter_count": "6.7B",
+          "parameters_raw": 6740512768,
+          "min_ram_gb": 3.8,
+          "recommended_ram_gb": 6.3,
+          "min_vram_gb": 3.5,
+          "quantization": "Q4_K_M",
+          "context_length": 16384,
+          "use_case": "Code generation and completion",
+          "capabilities": [],
+          "pipeline_tag": "text-generation",
+          "architecture": "llama",
+          "hf_downloads": 97176,
+          "hf_likes": 478,
+          "release_date": "2023-10-29",
+          "_discovered": true
+        }
+      ],
+      "command": "llmfit recommend --json --use-case coding --limit 5",
+      "label_en": "32GB RAM / 16GB VRAM",
+      "label_zh": "32GB 内存 / 16GB 显存",
+      "stats": {
+        "count": 48,
+        "median_recommended_ram": 7.0,
+        "upper_recommended_ram": 13.8,
+        "median_vram": 3.8499999999999996,
+        "median_context": 32768.0,
+        "top_architectures": [
+          [
+            "qwen2",
+            18
+          ],
+          [
+            "qwen3_moe",
+            9
+          ],
+          [
+            "llama",
+            7
+          ]
+        ]
+      },
+      "draft_mode": "fallback",
+      "published_on": "2026-03-16"
+    }
+  ]
+}

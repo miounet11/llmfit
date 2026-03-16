@@ -135,9 +135,32 @@ The repository includes a dedicated static product site under `site/` and a safe
 deployment recipe that keeps the site isolated from existing services by default.
 
 - Local preview: `make site-preview`
+- Generate 4 new safe programmatic-content pages: `make generate-content`
+- Build/publish generated content with an external manifest/docroot: `make publish-content`
 - Local stack: `make stack-up`
 - Remote deployment helper: `scripts/deploy-site.sh user@host /opt/llmfit`
 - Production deployment guide: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+
+## Programmatic content engine
+
+The site now supports a bilingual content engine for search-oriented pages that
+stay inside the product theme:
+
+- Topic pool: local AI model fit, hardware sizing, runtime choice, and deployment planning
+- Output: English + Simplified Chinese pages under `/insights/` and `/zh/insights/`
+- Guardrails: no scraping, no copied docs, no medical/legal/financial content, no fake benchmark claims
+- Source data: the bundled Hugging Face model catalog already embedded in this repo
+- Drafting mode: deterministic by default, with optional OpenAI-compatible LLM drafting through environment variables
+
+Useful env vars:
+
+```sh
+export LLMFIT_CONTENT_LLM_ENDPOINT="https://example.com/v1/chat/completions"
+export LLMFIT_CONTENT_LLM_API_KEY="..."
+export LLMFIT_CONTENT_LLM_MODEL="auto"
+export LLMFIT_CONTENT_DOCROOT="/www/wwwroot/www.igeminicli.cn_static"
+export LLMFIT_CONTENT_STATE_FILE="/opt/llmfit-publisher/state/content-manifest.json"
+```
 
 ## API and data references
 
