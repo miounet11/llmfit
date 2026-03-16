@@ -3,3 +3,4 @@ llmfit
 llmfit-desktop/gen/schemas/*
 data/gguf_sources_cache.json
 .DS_Store
+__pycache__/
