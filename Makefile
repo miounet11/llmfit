@@ -1,7 +1,7 @@
 # Makefile for llmfit
 # Convenience commands for building, testing, previewing the site, and running the local stack.
 
-.PHONY: help build release clean run test update-models update-docker-models update-catalogs check fmt clippy install site-preview generate-content publish-content stack-up stack-down
+.PHONY: help build release clean run test update-models update-docker-models update-catalogs check fmt clippy install site-preview generate-content publish-content check-content-llm publish-content-now refresh-publish-content stack-up stack-down
 
 # Default target
 help:
@@ -15,6 +15,9 @@ help:
 	@echo "  make site-preview   - Preview the static marketing/docs site at http://127.0.0.1:4173"
 	@echo "  make generate-content - Publish 4 new programmatic SEO pages into site/"
 	@echo "  make publish-content  - Build generated pages into a staging dir and optionally rsync to \$LLMFIT_CONTENT_DOCROOT"
+	@echo "  make check-content-llm - Smoke-test the OpenAI-compatible drafting endpoint"
+	@echo "  make publish-content-now - Run one publish cycle for DATE=\$(date +%F) without git refresh"
+	@echo "  make refresh-publish-content - Pull latest main, then run one publish cycle for DATE=\$(date +%F)"
 	@echo "  make stack-up       - Run the local API + web site stack with Docker Compose"
 	@echo "  make stack-down     - Stop the local API + web site stack"
 	@echo "  make update-models  - Fetch latest model data from HuggingFace"
@@ -91,6 +94,18 @@ generate-content:
 # Build generated pages in a staging dir and optionally publish them
 publish-content:
 	bash scripts/publish_site_content.sh
+
+# Smoke-test the OpenAI-compatible content endpoint
+check-content-llm:
+	python3 scripts/check_content_llm.py
+
+# Force a same-day publish run without refreshing git
+publish-content-now:
+	bash scripts/publish_site_content.sh $${DATE:-$$(date +%F)}
+
+# Pull latest code, then force a same-day publish run
+refresh-publish-content:
+	bash scripts/refresh_and_publish_site.sh $${DATE:-$$(date +%F)}
 
 # Run the local stack
 stack-up:

@@ -48,6 +48,7 @@ The repository now includes a safe programmatic-content pipeline:
 - `scripts/generate_site_content.py`: selects unpublished topics and renders bilingual pages
 - `scripts/publish_site_content.sh`: builds a staging site tree and optionally rsyncs it to a live docroot
 - `scripts/refresh_and_publish_site.sh`: updates the repo clone, then runs the publish step
+- `scripts/check_content_llm.py`: smoke-tests the OpenAI-compatible drafting endpoint
 
 Recommended production pattern:
 
@@ -63,9 +64,13 @@ export LLMFIT_CONTENT_BUILD_ROOT=/opt/llmfit-publisher/build
 export LLMFIT_CONTENT_STATE_FILE=/opt/llmfit-publisher/state/content-manifest.json
 export LLMFIT_CONTENT_DOCROOT=/www/wwwroot/www.igeminicli.cn_static
 export LLMFIT_CONTENT_DAILY_COUNT=4
-export LLMFIT_CONTENT_LLM_ENDPOINT=https://example.com/v1/chat/completions
+export LLMFIT_CONTENT_LLM_ENDPOINT=https://example.com/v1
 export LLMFIT_CONTENT_LLM_API_KEY=replace-me
 export LLMFIT_CONTENT_LLM_MODEL=auto
+export LLMFIT_CONTENT_LLM_TIMEOUT=60
+export LLMFIT_CONTENT_LLM_RETRIES=2
+export LLMFIT_CONTENT_LLM_RETRY_DELAY_SECONDS=3
+export LLMFIT_CONTENT_RUN_REPORT_FILE=/opt/llmfit-publisher/build/last-run.json
 ```
 
 Example cron entry:
@@ -76,6 +81,37 @@ Example cron entry:
 
 This keeps the git worktree clean because generation happens in an external build
 directory, not inside tracked site files.
+
+The publisher accepts either a base OpenAI-compatible endpoint such as
+`https://example.com/v1` or the full `.../chat/completions` path. It normalizes
+the endpoint automatically before sending requests.
+
+### Manual operations
+
+Smoke-test the drafting endpoint:
+
+```sh
+cd /opt/llmfit-publisher/repo
+set -a
+source /opt/llmfit-publisher/.content.env
+set +a
+python3 scripts/check_content_llm.py
+```
+
+Force one same-day publish run without waiting for cron:
+
+```sh
+cd /opt/llmfit-publisher/repo
+set -a
+source /opt/llmfit-publisher/.content.env
+set +a
+bash scripts/refresh_and_publish_site.sh 2026-03-17
+```
+
+After each run, check:
+
+- `/var/log/llmfit-content.log`
+- the JSON report at `$LLMFIT_CONTENT_RUN_REPORT_FILE`
 
 ## Reverse proxy example
 

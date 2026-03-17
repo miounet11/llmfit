@@ -10,8 +10,10 @@ import json
 import os
 import re
 import statistics
+import time
 import textwrap
 import urllib.error
+import urllib.parse
 import urllib.request
 from collections import Counter
 from dataclasses import dataclass
@@ -23,6 +25,9 @@ from xml.sax.saxutils import escape as xml_escape
 DEFAULT_SITE_URL = "https://www.igeminicli.cn"
 DEFAULT_STATE_FILE = "site/content-manifest.json"
 DEFAULT_COUNT = 4
+DEFAULT_LLM_TIMEOUT = 60
+DEFAULT_LLM_RETRIES = 2
+DEFAULT_LLM_RETRY_DELAY_SECONDS = 3.0
 
 STATIC_ROUTES = [
     ("/", "/zh/"),
@@ -234,6 +239,14 @@ class Topic:
     description_hint_zh: str
     priority: int
     metadata: dict[str, Any]
+
+
+@dataclass
+class DraftResult:
+    payload: dict[str, Any] | None
+    mode: str
+    attempts: int
+    error: str | None
 
 
 def slugify(value: str) -> str:
@@ -522,13 +535,138 @@ def pick_examples(entries: list[dict[str, Any]], count: int = 5) -> list[dict[st
     return selected
 
 
+def normalize_llm_endpoint(endpoint: str) -> str:
+    endpoint = endpoint.strip().rstrip("/")
+    if endpoint.endswith("/chat/completions"):
+        return endpoint
+    if endpoint.endswith("/v1"):
+        return f"{endpoint}/chat/completions"
+    parsed = urllib.parse.urlparse(endpoint)
+    if parsed.path.endswith("/v1"):
+        return f"{endpoint}/chat/completions"
+    return f"{endpoint}/v1/chat/completions"
+
+
+def message_content_to_text(content: Any) -> str:
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts: list[str] = []
+        for item in content:
+            if isinstance(item, str):
+                parts.append(item)
+            elif isinstance(item, dict):
+                text = item.get("text")
+                if isinstance(text, str):
+                    parts.append(text)
+        return "\n".join(part for part in parts if part.strip())
+    return ""
+
+
+def extract_json_object(text: str) -> dict[str, Any] | None:
+    decoder = json.JSONDecoder()
+    for index, char in enumerate(text):
+        if char != "{":
+            continue
+        try:
+            payload, _ = decoder.raw_decode(text[index:])
+        except json.JSONDecodeError:
+            continue
+        if isinstance(payload, dict):
+            return payload
+    return None
+
+
+def clean_llm_section(section: Any) -> dict[str, Any]:
+    if not isinstance(section, dict):
+        return {}
+
+    cleaned: dict[str, Any] = {}
+    lede = section.get("lede")
+    takeaway = section.get("takeaway")
+    why_items = section.get("why_it_matters")
+    faq_items = section.get("faq")
+
+    if isinstance(lede, str) and lede.strip():
+        cleaned["lede"] = lede.strip()
+    if isinstance(takeaway, str) and takeaway.strip():
+        cleaned["takeaway"] = takeaway.strip()
+    if isinstance(why_items, list):
+        why_clean = [str(item).strip() for item in why_items[:3] if str(item).strip()]
+        if why_clean:
+            cleaned["why_it_matters"] = why_clean
+    if isinstance(faq_items, list):
+        faq_clean = []
+        for item in faq_items[:3]:
+            if not isinstance(item, dict):
+                continue
+            question = str(item.get("q", "")).strip()
+            answer = str(item.get("a", "")).strip()
+            if question and answer:
+                faq_clean.append({"q": question, "a": answer})
+        if faq_clean:
+            cleaned["faq"] = faq_clean
+    return cleaned
+
+
+def validate_llm_payload(payload: Any) -> tuple[dict[str, Any] | None, str | None]:
+    if not isinstance(payload, dict):
+        return None, "top-level response was not a JSON object"
+
+    cleaned: dict[str, Any] = {}
+    useful_sections = 0
+    for locale in ("en", "zh"):
+        section = clean_llm_section(payload.get(locale))
+        cleaned[locale] = section
+        if section:
+            useful_sections += 1
+
+    if useful_sections == 0:
+        return None, "response did not include usable bilingual editorial fields"
+    return cleaned, None
+
+
 class LLMClient:
-    def __init__(self, endpoint: str, api_key: str, model: str):
-        self.endpoint = endpoint
+    def __init__(self, endpoint: str, api_key: str, model: str, timeout: int = DEFAULT_LLM_TIMEOUT, retries: int = DEFAULT_LLM_RETRIES, retry_delay_seconds: float = DEFAULT_LLM_RETRY_DELAY_SECONDS):
+        self.endpoint = normalize_llm_endpoint(endpoint)
         self.api_key = api_key
         self.model = model
+        self.timeout = max(5, int(timeout))
+        self.retries = max(0, int(retries))
+        self.retry_delay_seconds = max(0.0, float(retry_delay_seconds))
 
-    def draft_article(self, topic: Topic, examples: list[dict[str, Any]], stats: dict[str, Any]) -> dict[str, Any] | None:
+    def _request_json_payload(self, payload: dict[str, Any]) -> tuple[dict[str, Any] | None, str | None]:
+        body = json.dumps(payload).encode()
+        request = urllib.request.Request(
+            self.endpoint,
+            data=body,
+            headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=self.timeout) as response:
+                response_body = json.loads(response.read().decode())
+        except urllib.error.HTTPError as exc:
+            try:
+                detail = exc.read().decode()
+            except UnicodeDecodeError:
+                detail = "unreadable error body"
+            return None, f"http {exc.code}: {detail[:240]}"
+        except urllib.error.URLError as exc:
+            return None, f"url error: {exc.reason}"
+        except TimeoutError:
+            return None, "request timed out"
+        except json.JSONDecodeError:
+            return None, "endpoint returned invalid JSON"
+
+        if isinstance(response_body, dict) and response_body.get("error"):
+            return None, f"api error: {response_body['error']}"
+        return response_body, None
+
+    def draft_article(self, topic: Topic, examples: list[dict[str, Any]], stats: dict[str, Any]) -> DraftResult:
         system_prompt = textwrap.dedent(
             """
             You are an editorial engine for an open-source local AI infrastructure project.
@@ -583,42 +721,46 @@ class LLMClient:
             },
         }
 
-        payload = json.dumps(
-            {
-                "model": self.model,
-                "temperature": 0.6,
-                "messages": [
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": json.dumps(user_prompt, ensure_ascii=False)},
-                ],
-            }
-        ).encode()
-        request = urllib.request.Request(
-            self.endpoint,
-            data=payload,
-            headers={
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json",
-            },
-        )
-        try:
-            with urllib.request.urlopen(request, timeout=60) as response:
-                body = json.loads(response.read().decode())
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
-            return None
+        payload = {
+            "model": self.model,
+            "temperature": 0.4,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": json.dumps(user_prompt, ensure_ascii=False)},
+            ],
+        }
 
-        try:
-            content = body["choices"][0]["message"]["content"]
-        except (KeyError, IndexError, TypeError):
-            return None
+        last_error: str | None = None
+        total_attempts = self.retries + 1
 
-        match = re.search(r"\{.*\}", content, re.S)
-        if not match:
-            return None
-        try:
-            return json.loads(match.group(0))
-        except json.JSONDecodeError:
-            return None
+        for attempt in range(1, total_attempts + 1):
+            response_body, request_error = self._request_json_payload(payload)
+            if request_error:
+                last_error = request_error
+            else:
+                try:
+                    content = response_body["choices"][0]["message"]["content"]
+                except (KeyError, IndexError, TypeError):
+                    last_error = "response body did not contain choices[0].message.content"
+                else:
+                    content_text = message_content_to_text(content)
+                    if not content_text.strip():
+                        last_error = "message content was empty"
+                    else:
+                        extracted = extract_json_object(content_text)
+                        if not extracted:
+                            last_error = "message content did not contain a parseable JSON object"
+                        else:
+                            cleaned_payload, validation_error = validate_llm_payload(extracted)
+                            if cleaned_payload:
+                                return DraftResult(payload=cleaned_payload, mode="llm", attempts=attempt, error=None)
+                            last_error = validation_error
+
+            if attempt < total_attempts:
+                print(f"[content-llm] attempt {attempt}/{total_attempts} failed for {topic.slug}: {last_error}; retrying")
+                time.sleep(self.retry_delay_seconds * attempt)
+
+        return DraftResult(payload=None, mode="fallback", attempts=total_attempts, error=last_error or "unknown llm error")
 
 
 def fallback_copy(topic: Topic, stats: dict[str, Any]) -> dict[str, Any]:
@@ -868,9 +1010,9 @@ def build_article_data(topic: Topic, catalog: list[dict[str, Any]], llm_client: 
 
     stats = summarize_entries(entries)
     examples = pick_examples(entries, 5)
-    llm_payload = llm_client.draft_article(topic, examples, stats) if llm_client else None
-    copy_payload = merge_copy(topic, stats, llm_payload)
-    draft_mode = "llm" if llm_payload else "fallback"
+    draft_result = llm_client.draft_article(topic, examples, stats) if llm_client else DraftResult(payload=None, mode="fallback", attempts=0, error="llm not configured")
+    copy_payload = merge_copy(topic, stats, draft_result.payload)
+    draft_mode = draft_result.mode if draft_result.payload else "fallback"
 
     if topic.kind == "hardware":
         profile = topic.metadata["profile"]
@@ -1058,6 +1200,9 @@ def build_article_data(topic: Topic, catalog: list[dict[str, Any]], llm_client: 
         "label_zh": label_zh,
         "stats": stats,
         "draft_mode": draft_mode,
+        "draft_attempts": draft_result.attempts,
+        "draft_error": draft_result.error,
+        "draft_endpoint": llm_client.endpoint if llm_client else None,
     }
 
 
@@ -1639,6 +1784,7 @@ def select_topics(pool: list[Topic], manifest: dict[str, Any], count: int) -> li
     remaining = [topic for topic in pool if topic.topic_id not in published]
     selected: list[Topic] = []
     used_ids: set[str] = set()
+    selected_by_kind: Counter[str] = Counter()
 
     quotas = {"hardware": 2, "family": 1, "runtime": 0}
     if count >= 4:
@@ -1648,12 +1794,15 @@ def select_topics(pool: list[Topic], manifest: dict[str, Any], count: int) -> li
 
     for kind, quota in quotas.items():
         for topic in remaining:
-            if len([item for item in selected if item.kind == kind]) >= quota:
+            if len(selected) >= count:
+                return selected
+            if selected_by_kind[kind] >= quota:
                 break
             if topic.kind != kind or topic.topic_id in used_ids:
                 continue
             selected.append(topic)
             used_ids.add(topic.topic_id)
+            selected_by_kind[kind] += 1
 
     for topic in remaining:
         if len(selected) >= count:
@@ -1662,6 +1811,7 @@ def select_topics(pool: list[Topic], manifest: dict[str, Any], count: int) -> li
             continue
         selected.append(topic)
         used_ids.add(topic.topic_id)
+        selected_by_kind[topic.kind] += 1
 
     return selected
 
@@ -1675,6 +1825,11 @@ def ensure_manifest_parent(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
 
 
+def write_run_report(path: Path, report: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate bilingual site content pages for LLMFit.")
     parser.add_argument("--repo-root", default=None, help="Repository root. Defaults to the parent of this script.")
@@ -1686,6 +1841,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--llm-endpoint", default=os.environ.get("LLMFIT_CONTENT_LLM_ENDPOINT"))
     parser.add_argument("--llm-api-key", default=os.environ.get("LLMFIT_CONTENT_LLM_API_KEY"))
     parser.add_argument("--llm-model", default=os.environ.get("LLMFIT_CONTENT_LLM_MODEL", "auto"))
+    parser.add_argument("--llm-timeout", type=int, default=int(os.environ.get("LLMFIT_CONTENT_LLM_TIMEOUT", DEFAULT_LLM_TIMEOUT)))
+    parser.add_argument("--llm-retries", type=int, default=int(os.environ.get("LLMFIT_CONTENT_LLM_RETRIES", DEFAULT_LLM_RETRIES)))
+    parser.add_argument(
+        "--llm-retry-delay-seconds",
+        type=float,
+        default=float(os.environ.get("LLMFIT_CONTENT_LLM_RETRY_DELAY_SECONDS", DEFAULT_LLM_RETRY_DELAY_SECONDS)),
+    )
+    parser.add_argument("--report-file", default=os.environ.get("LLMFIT_CONTENT_RUN_REPORT_FILE"))
     return parser.parse_args()
 
 
@@ -1698,6 +1861,9 @@ def main() -> int:
     state_file = Path(args.state_file)
     if not state_file.is_absolute():
         state_file = (repo_root / state_file).resolve()
+    report_file = Path(args.report_file) if args.report_file else None
+    if report_file and not report_file.is_absolute():
+        report_file = (repo_root / report_file).resolve()
 
     catalog = load_catalog(repo_root)
     topic_pool = build_topic_pool(catalog)
@@ -1705,19 +1871,29 @@ def main() -> int:
     manifest = load_manifest(state_file)
     llm_client = None
     if args.llm_endpoint and args.llm_api_key:
-        llm_client = LLMClient(args.llm_endpoint, args.llm_api_key, args.llm_model)
+        llm_client = LLMClient(
+            args.llm_endpoint,
+            args.llm_api_key,
+            args.llm_model,
+            timeout=args.llm_timeout,
+            retries=args.llm_retries,
+            retry_delay_seconds=args.llm_retry_delay_seconds,
+        )
 
     selected = select_topics(topic_pool, manifest, max(1, min(args.count, 5)))
 
     articles = copy.deepcopy(manifest.get("articles", []))
     published_date = args.date
     drafted_articles: list[dict[str, Any]] = []
+    run_started_at = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
 
     for topic in selected:
         article = build_article_data(topic, catalog, llm_client)
         article["published_on"] = published_date
         drafted_articles.append(article)
         print(f"drafted {article['slug']} via {article['draft_mode']}")
+        if article["draft_mode"] != "llm" and article.get("draft_error") and llm_client:
+            print(f"[content-llm] fallback for {article['slug']}: {article['draft_error']}")
 
     articles.extend(drafted_articles)
     articles = sorted(articles, key=lambda item: (item["published_on"], item["slug"]), reverse=True)
@@ -1737,6 +1913,53 @@ def main() -> int:
     write_text(site_root / "zh" / "feed.xml", render_feed("zh", articles, args.site_url.rstrip("/")))
     write_text(site_root / "sitemap.xml", render_sitemap(args.site_url.rstrip("/"), articles))
 
+    llm_success_count = sum(1 for article in drafted_articles if article["draft_mode"] == "llm")
+    fallback_articles = [
+        {
+            "slug": article["slug"],
+            "error": article.get("draft_error"),
+            "attempts": article.get("draft_attempts"),
+        }
+        for article in drafted_articles
+        if article["draft_mode"] != "llm"
+    ]
+    run_report = {
+        "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
+        "run_started_at": run_started_at,
+        "publish_date": published_date,
+        "site_url": args.site_url.rstrip("/"),
+        "selected_count": len(selected),
+        "published_count": len(drafted_articles),
+        "llm_enabled": bool(llm_client),
+        "llm_endpoint": llm_client.endpoint if llm_client else None,
+        "llm_model": args.llm_model if llm_client else None,
+        "llm_timeout_seconds": args.llm_timeout if llm_client else None,
+        "llm_retries": args.llm_retries if llm_client else None,
+        "llm_success_count": llm_success_count,
+        "fallback_count": len(fallback_articles),
+        "topics": [
+            {
+                "slug": article["slug"],
+                "topic_id": article["topic_id"],
+                "kind": article["kind"],
+                "draft_mode": article["draft_mode"],
+                "draft_attempts": article.get("draft_attempts"),
+                "draft_error": article.get("draft_error"),
+            }
+            for article in drafted_articles
+        ],
+        "fallback_topics": fallback_articles,
+    }
+    if report_file:
+        write_run_report(report_file, run_report)
+        print(f"run report written to {report_file}")
+
+    print(
+        "llm summary: "
+        f"{llm_success_count} llm, "
+        f"{len(fallback_articles)} fallback, "
+        f"{'enabled' if llm_client else 'disabled'}"
+    )
     print(f"published {len(drafted_articles)} new topics")
     for topic in selected:
         print(f"- {topic.slug}")

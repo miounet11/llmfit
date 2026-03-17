@@ -137,6 +137,9 @@ deployment recipe that keeps the site isolated from existing services by default
 - Local preview: `make site-preview`
 - Generate 4 new safe programmatic-content pages: `make generate-content`
 - Build/publish generated content with an external manifest/docroot: `make publish-content`
+- Smoke-test the drafting endpoint: `make check-content-llm`
+- Force one publish cycle now: `make publish-content-now DATE=2026-03-17`
+- Pull latest code, then publish now: `make refresh-publish-content DATE=2026-03-17`
 - Local stack: `make stack-up`
 - Remote deployment helper: `scripts/deploy-site.sh user@host /opt/llmfit`
 - Production deployment guide: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
@@ -155,12 +158,20 @@ stay inside the product theme:
 Useful env vars:
 
 ```sh
-export LLMFIT_CONTENT_LLM_ENDPOINT="https://example.com/v1/chat/completions"
+export LLMFIT_CONTENT_LLM_ENDPOINT="https://example.com/v1"
 export LLMFIT_CONTENT_LLM_API_KEY="..."
 export LLMFIT_CONTENT_LLM_MODEL="auto"
+export LLMFIT_CONTENT_LLM_TIMEOUT="60"
+export LLMFIT_CONTENT_LLM_RETRIES="2"
+export LLMFIT_CONTENT_LLM_RETRY_DELAY_SECONDS="3"
 export LLMFIT_CONTENT_DOCROOT="/www/wwwroot/www.igeminicli.cn_static"
 export LLMFIT_CONTENT_STATE_FILE="/opt/llmfit-publisher/state/content-manifest.json"
+export LLMFIT_CONTENT_RUN_REPORT_FILE="/opt/llmfit-publisher/build/last-run.json"
 ```
+
+`LLMFIT_CONTENT_LLM_ENDPOINT` accepts either a base OpenAI-compatible API URL
+such as `https://example.com/v1` or the full chat completions path. The
+publisher normalizes it automatically.
 
 ## API and data references
 
