@@ -247,6 +247,15 @@ class DraftResult:
     mode: str
     attempts: int
     error: str | None
+    provider: str | None = None
+    provider_errors: list[dict[str, Any]] | None = None
+
+
+@dataclass
+class LLMProvider:
+    endpoint: str
+    api_key: str
+    model: str
 
 
 def slugify(value: str) -> str:
@@ -268,6 +277,30 @@ def human_number(num: float | int | None) -> str:
 
 def home_path(locale: str) -> str:
     return "/" if locale == "en" else "/zh/"
+
+
+def parse_env_flag(value: str | None, default: bool = False) -> bool:
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def parse_csv_values(raw: str | None) -> list[str]:
+    if not raw:
+        return []
+    return [item.strip() for item in raw.split(",") if item.strip()]
+
+
+def parse_optional_int(value: str | None) -> int | None:
+    if value is None or not str(value).strip():
+        return None
+    return int(str(value).strip())
+
+
+def parse_optional_float(value: str | None) -> float | None:
+    if value is None or not str(value).strip():
+        return None
+    return float(str(value).strip())
 
 
 def article_path(article: dict[str, Any], locale: str) -> str:
@@ -535,6 +568,42 @@ def pick_examples(entries: list[dict[str, Any]], count: int = 5) -> list[dict[st
     return selected
 
 
+def expand_provider_field(values: list[str], count: int, default_value: str, field_name: str) -> list[str]:
+    if count <= 0:
+        return []
+    if not values:
+        return [default_value] * count
+    if len(values) == 1 and count > 1:
+        return values * count
+    if len(values) != count:
+        raise ValueError(f"{field_name} count must match fallback endpoint count")
+    return values
+
+
+def build_llm_providers(
+    endpoint: str | None,
+    api_key: str | None,
+    model: str,
+    fallback_endpoints_raw: str | None = None,
+    fallback_api_keys_raw: str | None = None,
+    fallback_models_raw: str | None = None,
+) -> list[LLMProvider]:
+    if not endpoint or not api_key:
+        return []
+
+    providers = [LLMProvider(endpoint=normalize_llm_endpoint(endpoint), api_key=api_key, model=model)]
+    fallback_endpoints = [normalize_llm_endpoint(item) for item in parse_csv_values(fallback_endpoints_raw)]
+    if not fallback_endpoints:
+        return providers
+
+    fallback_api_keys = expand_provider_field(parse_csv_values(fallback_api_keys_raw), len(fallback_endpoints), api_key, "fallback api key")
+    fallback_models = expand_provider_field(parse_csv_values(fallback_models_raw), len(fallback_endpoints), model, "fallback model")
+
+    for fallback_endpoint, fallback_api_key, fallback_model in zip(fallback_endpoints, fallback_api_keys, fallback_models):
+        providers.append(LLMProvider(endpoint=fallback_endpoint, api_key=fallback_api_key, model=fallback_model))
+    return providers
+
+
 def normalize_llm_endpoint(endpoint: str) -> str:
     endpoint = endpoint.strip().rstrip("/")
     if endpoint.endswith("/chat/completions"):
@@ -627,21 +696,25 @@ def validate_llm_payload(payload: Any) -> tuple[dict[str, Any] | None, str | Non
 
 
 class LLMClient:
-    def __init__(self, endpoint: str, api_key: str, model: str, timeout: int = DEFAULT_LLM_TIMEOUT, retries: int = DEFAULT_LLM_RETRIES, retry_delay_seconds: float = DEFAULT_LLM_RETRY_DELAY_SECONDS):
-        self.endpoint = normalize_llm_endpoint(endpoint)
-        self.api_key = api_key
-        self.model = model
+    def __init__(self, providers: list[LLMProvider], timeout: int = DEFAULT_LLM_TIMEOUT, retries: int = DEFAULT_LLM_RETRIES, retry_delay_seconds: float = DEFAULT_LLM_RETRY_DELAY_SECONDS):
+        self.providers = providers
         self.timeout = max(5, int(timeout))
         self.retries = max(0, int(retries))
         self.retry_delay_seconds = max(0.0, float(retry_delay_seconds))
 
-    def _request_json_payload(self, payload: dict[str, Any]) -> tuple[dict[str, Any] | None, str | None]:
+    @property
+    def endpoint(self) -> str | None:
+        if not self.providers:
+            return None
+        return self.providers[0].endpoint
+
+    def _request_json_payload(self, provider: LLMProvider, payload: dict[str, Any]) -> tuple[dict[str, Any] | None, str | None]:
         body = json.dumps(payload).encode()
         request = urllib.request.Request(
-            self.endpoint,
+            provider.endpoint,
             data=body,
             headers={
-                "Authorization": f"Bearer {self.api_key}",
+                "Authorization": f"Bearer {provider.api_key}",
                 "Content-Type": "application/json",
                 "Accept": "application/json",
             },
@@ -721,46 +794,85 @@ class LLMClient:
             },
         }
 
-        payload = {
-            "model": self.model,
-            "temperature": 0.4,
-            "messages": [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": json.dumps(user_prompt, ensure_ascii=False)},
-            ],
-        }
+        if not self.providers:
+            return DraftResult(payload=None, mode="fallback", attempts=0, error="llm not configured")
 
         last_error: str | None = None
-        total_attempts = self.retries + 1
+        provider_errors: list[dict[str, Any]] = []
+        total_attempts = 0
+        base_messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": json.dumps(user_prompt, ensure_ascii=False)},
+        ]
 
-        for attempt in range(1, total_attempts + 1):
-            response_body, request_error = self._request_json_payload(payload)
-            if request_error:
-                last_error = request_error
-            else:
-                try:
-                    content = response_body["choices"][0]["message"]["content"]
-                except (KeyError, IndexError, TypeError):
-                    last_error = "response body did not contain choices[0].message.content"
+        for provider_index, provider in enumerate(self.providers, start=1):
+            provider_payload = {
+                "model": provider.model,
+                "temperature": 0.4,
+                "messages": base_messages,
+            }
+            provider_attempts = self.retries + 1
+
+            for attempt in range(1, provider_attempts + 1):
+                total_attempts += 1
+                response_body, request_error = self._request_json_payload(provider, provider_payload)
+                if request_error:
+                    last_error = request_error
                 else:
-                    content_text = message_content_to_text(content)
-                    if not content_text.strip():
-                        last_error = "message content was empty"
+                    try:
+                        content = response_body["choices"][0]["message"]["content"]
+                    except (KeyError, IndexError, TypeError):
+                        last_error = "response body did not contain choices[0].message.content"
                     else:
-                        extracted = extract_json_object(content_text)
-                        if not extracted:
-                            last_error = "message content did not contain a parseable JSON object"
+                        content_text = message_content_to_text(content)
+                        if not content_text.strip():
+                            last_error = "message content was empty"
                         else:
-                            cleaned_payload, validation_error = validate_llm_payload(extracted)
-                            if cleaned_payload:
-                                return DraftResult(payload=cleaned_payload, mode="llm", attempts=attempt, error=None)
-                            last_error = validation_error
+                            extracted = extract_json_object(content_text)
+                            if not extracted:
+                                last_error = "message content did not contain a parseable JSON object"
+                            else:
+                                cleaned_payload, validation_error = validate_llm_payload(extracted)
+                                if cleaned_payload:
+                                    return DraftResult(
+                                        payload=cleaned_payload,
+                                        mode="llm",
+                                        attempts=total_attempts,
+                                        error=None,
+                                        provider=provider.endpoint,
+                                        provider_errors=provider_errors,
+                                    )
+                                last_error = validation_error
 
-            if attempt < total_attempts:
-                print(f"[content-llm] attempt {attempt}/{total_attempts} failed for {topic.slug}: {last_error}; retrying")
-                time.sleep(self.retry_delay_seconds * attempt)
+                if attempt < provider_attempts:
+                    print(
+                        f"[content-llm] provider {provider_index}/{len(self.providers)} "
+                        f"attempt {attempt}/{provider_attempts} failed for {topic.slug}: {last_error}; retrying"
+                    )
+                    time.sleep(self.retry_delay_seconds * attempt)
 
-        return DraftResult(payload=None, mode="fallback", attempts=total_attempts, error=last_error or "unknown llm error")
+            provider_errors.append(
+                {
+                    "provider": provider.endpoint,
+                    "model": provider.model,
+                    "error": last_error,
+                    "attempts": provider_attempts,
+                }
+            )
+            if provider_index < len(self.providers):
+                print(
+                    f"[content-llm] provider {provider_index}/{len(self.providers)} exhausted for {topic.slug}: "
+                    f"{provider.endpoint}; failing over"
+                )
+
+        return DraftResult(
+            payload=None,
+            mode="fallback",
+            attempts=total_attempts,
+            error=last_error or "unknown llm error",
+            provider=None,
+            provider_errors=provider_errors,
+        )
 
 
 def fallback_copy(topic: Topic, stats: dict[str, Any]) -> dict[str, Any]:
@@ -1202,7 +1314,9 @@ def build_article_data(topic: Topic, catalog: list[dict[str, Any]], llm_client: 
         "draft_mode": draft_mode,
         "draft_attempts": draft_result.attempts,
         "draft_error": draft_result.error,
-        "draft_endpoint": llm_client.endpoint if llm_client else None,
+        "draft_provider": draft_result.provider,
+        "draft_endpoint": draft_result.provider or (llm_client.endpoint if llm_client else None),
+        "draft_provider_errors": draft_result.provider_errors or [],
     }
 
 
@@ -1830,6 +1944,27 @@ def write_run_report(path: Path, report: dict[str, Any]) -> None:
     path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
 
 
+def evaluate_alerts(
+    *,
+    llm_enabled: bool,
+    published_count: int,
+    llm_success_count: int,
+    fallback_count: int,
+    alert_fallback_count: int | None,
+    alert_fallback_rate: float | None,
+) -> list[str]:
+    alerts: list[str] = []
+    fallback_rate = (fallback_count / published_count) if published_count else 0.0
+
+    if llm_enabled and published_count > 0 and llm_success_count == 0 and fallback_count == published_count:
+        alerts.append("all generated topics fell back to deterministic copy")
+    if alert_fallback_count is not None and fallback_count >= alert_fallback_count:
+        alerts.append(f"fallback count {fallback_count} reached threshold {alert_fallback_count}")
+    if alert_fallback_rate is not None and fallback_rate >= alert_fallback_rate:
+        alerts.append(f"fallback rate {fallback_rate:.2%} reached threshold {alert_fallback_rate:.2%}")
+    return alerts
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate bilingual site content pages for LLMFit.")
     parser.add_argument("--repo-root", default=None, help="Repository root. Defaults to the parent of this script.")
@@ -1841,6 +1976,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--llm-endpoint", default=os.environ.get("LLMFIT_CONTENT_LLM_ENDPOINT"))
     parser.add_argument("--llm-api-key", default=os.environ.get("LLMFIT_CONTENT_LLM_API_KEY"))
     parser.add_argument("--llm-model", default=os.environ.get("LLMFIT_CONTENT_LLM_MODEL", "auto"))
+    parser.add_argument("--llm-fallback-endpoints", default=os.environ.get("LLMFIT_CONTENT_LLM_FALLBACK_ENDPOINTS"))
+    parser.add_argument("--llm-fallback-api-keys", default=os.environ.get("LLMFIT_CONTENT_LLM_FALLBACK_API_KEYS"))
+    parser.add_argument("--llm-fallback-models", default=os.environ.get("LLMFIT_CONTENT_LLM_FALLBACK_MODELS"))
     parser.add_argument("--llm-timeout", type=int, default=int(os.environ.get("LLMFIT_CONTENT_LLM_TIMEOUT", DEFAULT_LLM_TIMEOUT)))
     parser.add_argument("--llm-retries", type=int, default=int(os.environ.get("LLMFIT_CONTENT_LLM_RETRIES", DEFAULT_LLM_RETRIES)))
     parser.add_argument(
@@ -1849,6 +1987,10 @@ def parse_args() -> argparse.Namespace:
         default=float(os.environ.get("LLMFIT_CONTENT_LLM_RETRY_DELAY_SECONDS", DEFAULT_LLM_RETRY_DELAY_SECONDS)),
     )
     parser.add_argument("--report-file", default=os.environ.get("LLMFIT_CONTENT_RUN_REPORT_FILE"))
+    parser.add_argument("--alert-file", default=os.environ.get("LLMFIT_CONTENT_ALERT_FILE"))
+    parser.add_argument("--alert-fallback-count", default=os.environ.get("LLMFIT_CONTENT_ALERT_FALLBACK_COUNT"))
+    parser.add_argument("--alert-fallback-rate", default=os.environ.get("LLMFIT_CONTENT_ALERT_FALLBACK_RATE"))
+    parser.add_argument("--fail-on-alert", action="store_true", default=parse_env_flag(os.environ.get("LLMFIT_CONTENT_FAIL_ON_ALERT"), False))
     return parser.parse_args()
 
 
@@ -1864,6 +2006,11 @@ def main() -> int:
     report_file = Path(args.report_file) if args.report_file else None
     if report_file and not report_file.is_absolute():
         report_file = (repo_root / report_file).resolve()
+    alert_file = Path(args.alert_file) if args.alert_file else None
+    if alert_file and not alert_file.is_absolute():
+        alert_file = (repo_root / alert_file).resolve()
+    alert_fallback_count = parse_optional_int(args.alert_fallback_count)
+    alert_fallback_rate = parse_optional_float(args.alert_fallback_rate)
 
     catalog = load_catalog(repo_root)
     topic_pool = build_topic_pool(catalog)
@@ -1871,10 +2018,16 @@ def main() -> int:
     manifest = load_manifest(state_file)
     llm_client = None
     if args.llm_endpoint and args.llm_api_key:
-        llm_client = LLMClient(
+        providers = build_llm_providers(
             args.llm_endpoint,
             args.llm_api_key,
             args.llm_model,
+            fallback_endpoints_raw=args.llm_fallback_endpoints,
+            fallback_api_keys_raw=args.llm_fallback_api_keys,
+            fallback_models_raw=args.llm_fallback_models,
+        )
+        llm_client = LLMClient(
+            providers,
             timeout=args.llm_timeout,
             retries=args.llm_retries,
             retry_delay_seconds=args.llm_retry_delay_seconds,
@@ -1919,10 +2072,20 @@ def main() -> int:
             "slug": article["slug"],
             "error": article.get("draft_error"),
             "attempts": article.get("draft_attempts"),
+            "providers": article.get("draft_provider_errors", []),
         }
         for article in drafted_articles
         if article["draft_mode"] != "llm"
     ]
+    fallback_rate = (len(fallback_articles) / len(drafted_articles)) if drafted_articles else 0.0
+    alerts = evaluate_alerts(
+        llm_enabled=bool(llm_client),
+        published_count=len(drafted_articles),
+        llm_success_count=llm_success_count,
+        fallback_count=len(fallback_articles),
+        alert_fallback_count=alert_fallback_count,
+        alert_fallback_rate=alert_fallback_rate,
+    )
     run_report = {
         "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
         "run_started_at": run_started_at,
@@ -1932,11 +2095,13 @@ def main() -> int:
         "published_count": len(drafted_articles),
         "llm_enabled": bool(llm_client),
         "llm_endpoint": llm_client.endpoint if llm_client else None,
+        "llm_providers": [provider.endpoint for provider in llm_client.providers] if llm_client else [],
         "llm_model": args.llm_model if llm_client else None,
         "llm_timeout_seconds": args.llm_timeout if llm_client else None,
         "llm_retries": args.llm_retries if llm_client else None,
         "llm_success_count": llm_success_count,
         "fallback_count": len(fallback_articles),
+        "fallback_rate": fallback_rate,
         "topics": [
             {
                 "slug": article["slug"],
@@ -1945,25 +2110,46 @@ def main() -> int:
                 "draft_mode": article["draft_mode"],
                 "draft_attempts": article.get("draft_attempts"),
                 "draft_error": article.get("draft_error"),
+                "draft_provider": article.get("draft_provider"),
+                "draft_provider_errors": article.get("draft_provider_errors", []),
             }
             for article in drafted_articles
         ],
         "fallback_topics": fallback_articles,
+        "alerts": alerts,
     }
     if report_file:
         write_run_report(report_file, run_report)
         print(f"run report written to {report_file}")
+    if alert_file:
+        write_run_report(
+            alert_file,
+            {
+                "generated_at": run_report["generated_at"],
+                "publish_date": published_date,
+                "alert_triggered": bool(alerts),
+                "alerts": alerts,
+                "fallback_count": len(fallback_articles),
+                "fallback_rate": fallback_rate,
+                "llm_success_count": llm_success_count,
+                "llm_providers": run_report["llm_providers"],
+            },
+        )
+        print(f"alert report written to {alert_file}")
+
+    for alert in alerts:
+        print(f"[content-alert] {alert}")
 
     print(
         "llm summary: "
         f"{llm_success_count} llm, "
-        f"{len(fallback_articles)} fallback, "
+        f"{len(fallback_articles)} fallback ({fallback_rate:.0%}), "
         f"{'enabled' if llm_client else 'disabled'}"
     )
     print(f"published {len(drafted_articles)} new topics")
     for topic in selected:
         print(f"- {topic.slug}")
-    return 0
+    return 1 if alerts and args.fail_on_alert else 0
 
 
 if __name__ == "__main__":

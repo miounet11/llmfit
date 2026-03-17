@@ -161,6 +161,9 @@ Useful env vars:
 export LLMFIT_CONTENT_LLM_ENDPOINT="https://example.com/v1"
 export LLMFIT_CONTENT_LLM_API_KEY="..."
 export LLMFIT_CONTENT_LLM_MODEL="auto"
+export LLMFIT_CONTENT_LLM_FALLBACK_ENDPOINTS="https://backup-1.example.com/v1,https://backup-2.example.com/v1"
+export LLMFIT_CONTENT_LLM_FALLBACK_API_KEYS="backup-key-1,backup-key-2"
+export LLMFIT_CONTENT_LLM_FALLBACK_MODELS="auto,auto"
 export LLMFIT_CONTENT_LLM_TIMEOUT="60"
 export LLMFIT_CONTENT_LLM_RETRIES="2"
 export LLMFIT_CONTENT_LLM_RETRY_DELAY_SECONDS="3"
@@ -168,11 +171,15 @@ export LLMFIT_CONTENT_ALLOW_STALE_REPO="1"
 export LLMFIT_CONTENT_DOCROOT="/www/wwwroot/www.igeminicli.cn_static"
 export LLMFIT_CONTENT_STATE_FILE="/opt/llmfit-publisher/state/content-manifest.json"
 export LLMFIT_CONTENT_RUN_REPORT_FILE="/opt/llmfit-publisher/build/last-run.json"
+export LLMFIT_CONTENT_ALERT_FILE="/opt/llmfit-publisher/build/last-alert.json"
+export LLMFIT_CONTENT_ALERT_FALLBACK_COUNT="4"
+export LLMFIT_CONTENT_ALERT_FALLBACK_RATE="1.0"
 ```
 
 `LLMFIT_CONTENT_LLM_ENDPOINT` accepts either a base OpenAI-compatible API URL
 such as `https://example.com/v1` or the full chat completions path. The
-publisher normalizes it automatically.
+publisher normalizes it automatically. If fallback endpoints are configured, the
+publisher will try them sequentially after the primary provider fails.
 
 ## API and data references
 

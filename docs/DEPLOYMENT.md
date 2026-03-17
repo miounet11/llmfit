@@ -67,11 +67,17 @@ export LLMFIT_CONTENT_DAILY_COUNT=4
 export LLMFIT_CONTENT_LLM_ENDPOINT=https://example.com/v1
 export LLMFIT_CONTENT_LLM_API_KEY=replace-me
 export LLMFIT_CONTENT_LLM_MODEL=auto
+export LLMFIT_CONTENT_LLM_FALLBACK_ENDPOINTS=https://backup-1.example.com/v1,https://backup-2.example.com/v1
+export LLMFIT_CONTENT_LLM_FALLBACK_API_KEYS=backup-key-1,backup-key-2
+export LLMFIT_CONTENT_LLM_FALLBACK_MODELS=auto,auto
 export LLMFIT_CONTENT_LLM_TIMEOUT=60
 export LLMFIT_CONTENT_LLM_RETRIES=2
 export LLMFIT_CONTENT_LLM_RETRY_DELAY_SECONDS=3
 export LLMFIT_CONTENT_ALLOW_STALE_REPO=1
 export LLMFIT_CONTENT_RUN_REPORT_FILE=/opt/llmfit-publisher/build/last-run.json
+export LLMFIT_CONTENT_ALERT_FILE=/opt/llmfit-publisher/build/last-alert.json
+export LLMFIT_CONTENT_ALERT_FALLBACK_COUNT=4
+export LLMFIT_CONTENT_ALERT_FALLBACK_RATE=1.0
 ```
 
 Example cron entry:
@@ -85,7 +91,8 @@ directory, not inside tracked site files.
 
 The publisher accepts either a base OpenAI-compatible endpoint such as
 `https://example.com/v1` or the full `.../chat/completions` path. It normalizes
-the endpoint automatically before sending requests.
+the endpoint automatically before sending requests. If fallback endpoints are
+configured, it tries them sequentially after the primary provider fails.
 
 ### Manual operations
 
@@ -113,6 +120,7 @@ After each run, check:
 
 - `/var/log/llmfit-content.log`
 - the JSON report at `$LLMFIT_CONTENT_RUN_REPORT_FILE`
+- the alert report at `$LLMFIT_CONTENT_ALERT_FILE` when fallback thresholds fire
 
 If upstream `git fetch` fails temporarily but you still want the existing checked
 out repo to publish on schedule, leave `LLMFIT_CONTENT_ALLOW_STALE_REPO=1`.

@@ -421,11 +421,17 @@ export LLMFIT_CONTENT_SITE_BASE_URL=https://www.your-domain.com
 export LLMFIT_CONTENT_LLM_ENDPOINT=https://your-openai-compatible-endpoint/v1/chat/completions
 export LLMFIT_CONTENT_LLM_API_KEY=replace-me
 export LLMFIT_CONTENT_LLM_MODEL=auto
+export LLMFIT_CONTENT_LLM_FALLBACK_ENDPOINTS=https://backup-1.example.com/v1,https://backup-2.example.com/v1
+export LLMFIT_CONTENT_LLM_FALLBACK_API_KEYS=backup-key-1,backup-key-2
+export LLMFIT_CONTENT_LLM_FALLBACK_MODELS=auto,auto
 export LLMFIT_CONTENT_LLM_TIMEOUT=60
 export LLMFIT_CONTENT_LLM_RETRIES=2
 export LLMFIT_CONTENT_LLM_RETRY_DELAY_SECONDS=3
 export LLMFIT_CONTENT_ALLOW_STALE_REPO=1
 export LLMFIT_CONTENT_RUN_REPORT_FILE=/opt/your-project-publisher/build/last-run.json
+export LLMFIT_CONTENT_ALERT_FILE=/opt/your-project-publisher/build/last-alert.json
+export LLMFIT_CONTENT_ALERT_FALLBACK_COUNT=4
+export LLMFIT_CONTENT_ALERT_FALLBACK_RATE=1.0
 ```
 
 Notes:
@@ -436,6 +442,8 @@ Notes:
 - Keep the docroot separate from the repo clone.
 - Allow either a base OpenAI-compatible endpoint such as `.../v1` or the full
   `.../chat/completions` path. Normalize it in code.
+- Prefer configuring one or more fallback providers when the primary endpoint is
+  unstable.
 - Consider allowing stale-repo publishing when upstream git refresh fails
   temporarily, especially on unstable overseas links.
 

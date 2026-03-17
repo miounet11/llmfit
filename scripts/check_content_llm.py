@@ -6,6 +6,7 @@ import argparse
 import os
 from typing import Any
 
+from generate_site_content import build_llm_providers
 from generate_site_content import DEFAULT_LLM_RETRIES
 from generate_site_content import DEFAULT_LLM_RETRY_DELAY_SECONDS
 from generate_site_content import DEFAULT_LLM_TIMEOUT
@@ -18,6 +19,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--endpoint", default=os.environ.get("LLMFIT_CONTENT_LLM_ENDPOINT"))
     parser.add_argument("--api-key", default=os.environ.get("LLMFIT_CONTENT_LLM_API_KEY"))
     parser.add_argument("--model", default=os.environ.get("LLMFIT_CONTENT_LLM_MODEL", "auto"))
+    parser.add_argument("--fallback-endpoints", default=os.environ.get("LLMFIT_CONTENT_LLM_FALLBACK_ENDPOINTS"))
+    parser.add_argument("--fallback-api-keys", default=os.environ.get("LLMFIT_CONTENT_LLM_FALLBACK_API_KEYS"))
+    parser.add_argument("--fallback-models", default=os.environ.get("LLMFIT_CONTENT_LLM_FALLBACK_MODELS"))
     parser.add_argument("--timeout", type=int, default=int(os.environ.get("LLMFIT_CONTENT_LLM_TIMEOUT", DEFAULT_LLM_TIMEOUT)))
     parser.add_argument("--retries", type=int, default=int(os.environ.get("LLMFIT_CONTENT_LLM_RETRIES", DEFAULT_LLM_RETRIES)))
     parser.add_argument(
@@ -34,10 +38,16 @@ def main() -> int:
         print("missing endpoint or api key")
         return 2
 
-    client = LLMClient(
+    providers = build_llm_providers(
         args.endpoint,
         args.api_key,
         args.model,
+        fallback_endpoints_raw=args.fallback_endpoints,
+        fallback_api_keys_raw=args.fallback_api_keys,
+        fallback_models_raw=args.fallback_models,
+    )
+    client = LLMClient(
+        providers,
         timeout=args.timeout,
         retries=args.retries,
         retry_delay_seconds=args.retry_delay_seconds,
@@ -68,11 +78,18 @@ def main() -> int:
     }
 
     result = client.draft_article(topic, [], stats)
-    print(f"endpoint: {client.endpoint}")
+    print(f"providers: {len(client.providers)}")
+    for index, provider in enumerate(client.providers, start=1):
+        print(f"provider_{index}: {provider.endpoint} model={provider.model}")
     print(f"attempts: {result.attempts}")
     print(f"mode: {result.mode}")
+    if result.provider:
+        print(f"winner: {result.provider}")
     if result.error:
         print(f"error: {result.error}")
+    if result.provider_errors:
+        for item in result.provider_errors:
+            print(f"provider_error: {item['provider']} -> {item['error']}")
     if result.payload:
         print("status: ok")
         return 0
