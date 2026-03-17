@@ -70,6 +70,7 @@ export LLMFIT_CONTENT_LLM_MODEL=auto
 export LLMFIT_CONTENT_LLM_TIMEOUT=60
 export LLMFIT_CONTENT_LLM_RETRIES=2
 export LLMFIT_CONTENT_LLM_RETRY_DELAY_SECONDS=3
+export LLMFIT_CONTENT_ALLOW_STALE_REPO=1
 export LLMFIT_CONTENT_RUN_REPORT_FILE=/opt/llmfit-publisher/build/last-run.json
 ```
 
@@ -112,6 +113,9 @@ After each run, check:
 
 - `/var/log/llmfit-content.log`
 - the JSON report at `$LLMFIT_CONTENT_RUN_REPORT_FILE`
+
+If upstream `git fetch` fails temporarily but you still want the existing checked
+out repo to publish on schedule, leave `LLMFIT_CONTENT_ALLOW_STALE_REPO=1`.
 
 ## Reverse proxy example
 

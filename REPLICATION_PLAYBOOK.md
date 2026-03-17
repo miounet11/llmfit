@@ -424,6 +424,7 @@ export LLMFIT_CONTENT_LLM_MODEL=auto
 export LLMFIT_CONTENT_LLM_TIMEOUT=60
 export LLMFIT_CONTENT_LLM_RETRIES=2
 export LLMFIT_CONTENT_LLM_RETRY_DELAY_SECONDS=3
+export LLMFIT_CONTENT_ALLOW_STALE_REPO=1
 export LLMFIT_CONTENT_RUN_REPORT_FILE=/opt/your-project-publisher/build/last-run.json
 ```
 
@@ -435,6 +436,8 @@ Notes:
 - Keep the docroot separate from the repo clone.
 - Allow either a base OpenAI-compatible endpoint such as `.../v1` or the full
   `.../chat/completions` path. Normalize it in code.
+- Consider allowing stale-repo publishing when upstream git refresh fails
+  temporarily, especially on unstable overseas links.
 
 ## 15. Deployment Modes
 
